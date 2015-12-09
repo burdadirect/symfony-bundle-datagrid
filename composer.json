@@ -1,5 +1,5 @@
 {
-  "name": "HBM Datagrid Bundle",
+  "name": "burdanews/datagrid-bundle",
   "description": "HBM Datagrid Bundle - List, filter, sort and paginate (query builder) results.",
   "author" : [{
     "name" : "Christian Puchinger",
