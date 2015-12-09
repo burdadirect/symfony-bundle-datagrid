@@ -1,0 +1,11 @@
+{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+
+<thead>
+	<tr>
+		{% for column, cell in datagrid.cells %}
+			 <th {{ cell.attr('th')|raw }}>
+			 	{% include 'HBMDatagridBundle:Datagrid:table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column } only %}
+			 </th>
+		{% endfor %}
+	</tr>
+</thead>

@@ -1,0 +1,13 @@
+{% include datagrid.menu.template with { 'datagrid': datagrid } only %}
+
+{% if datagrid.results|length == 0 %}
+	<p>{{ 'Keine Einträge gefunden.'|trans }}</p>
+{% else %}
+<table class="table table-hover table-bordered table-condensed">
+	{% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid } only %}
+
+	{% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid } only %}
+</table>
+{% endif %}
+
+{% include datagrid.pagination.template with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}

@@ -1,0 +1,10 @@
+<div class="input-group input-group-sm">
+	<span class="input-group-addon">{{ searchField['label']|trans }}</span>
+	<select class="form-control" name="{{ searchKey }}">
+		<option></option>
+{% set keys = datagrid.menu.searchValue(searchKey) %}
+{% for key, value in searchField['values'] %}
+		<option value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}>{{ value }}</option>
+{% endfor %}
+	</select>
+</div>

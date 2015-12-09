@@ -1,0 +1,26 @@
+{
+  "name": "hbm_datagrid",
+  "description": "HBM Datagrid",
+  "author" : [{
+    "name" : "Christian Puchinger",
+    "email" : "puchinger@burda.com"
+  }],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:burdanews/hbm_datagrid.git"
+  },
+  "type": "symfony-bundle",
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.6",
+    "ext-mbstring": "*",
+    "symfony/symfony": "2.7.*",
+    "doctrine/orm": "^2.4.8",
+    "doctrine/doctrine-bundle": "~1.4"
+  }
+}

@@ -1,0 +1,11 @@
+<tbody>
+	{% for row, obj in datagrid.results %}
+		<tr>
+			{% for column, cell in datagrid.cells %}
+				<td {{ cell.attr('td')|raw }}>
+					{% include cell.template(column, row, obj) with cell.templateParams|merge({ 'datagrid': datagrid, 'cell': cell, 'column': column, 'row': row, 'obj': obj }) only %}
+				</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+</tbody>

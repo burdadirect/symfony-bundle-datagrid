@@ -1,0 +1,13 @@
+# COMPOSER
+/composer.phar
+/vendor/
+
+
+# PHPSTORM
+/.idea/*
+
+
+# ECLIPSE
+.buildpath
+.project
+/.settings/*
