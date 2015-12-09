@@ -1,4 +1,4 @@
-# hbm_datagrid
+# HBM Datagrid Bundle
 
 ## Team
 
