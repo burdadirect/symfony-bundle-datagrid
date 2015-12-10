@@ -5,40 +5,52 @@ namespace HBM\DatagridBundle\Model;
 
 class Route {
 
-	/**
-	 * @var string
-	 */
-	protected $name;
+  /**
+   * @var string
+   */
+  protected $name;
 
-	/**
-	 * @var array
-	 */
-	protected $defaults = array();
+  /**
+   * @var array
+   */
+  protected $defaults = array();
 
-	/**
-	 * Constructor
-	 */
-	public function __construct($name, $defaults = array())
-	{
-		$this->name = $name;
-		$this->defaults = $defaults;
-	}
+  /**
+   * Route constructor.
+   *
+   * @param $name
+   * @param array $defaults
+   */
+  public function __construct($name, $defaults = array()) {
+    $this->name = $name;
+    $this->defaults = $defaults;
+  }
 
-	/* GETTER/SETTER **********************************************************/
+  /* GETTER/SETTER **********************************************************/
 
-	public function setName($name) { $this->name = $name; }
-	public function getName() { return $this->name; }
+  public function setName($name) {
+    $this->name = $name;
+  }
 
-	public function setDefaults($defaults) { $this->defaults = $defaults; }
-	public function getDefaults() { return $this->defaults; }
+  public function getName() {
+    return $this->name;
+  }
 
-	/* CUSTOM *****************************************************************/
+  public function setDefaults($defaults) {
+    $this->defaults = $defaults;
+  }
 
-	public function getMerged() {
-		return $this->getDefaults();
-	}
+  public function getDefaults() {
+    return $this->defaults;
+  }
 
-	public function __toString() {
-		return 'ROUTE: '.$this->name.'('.json_encode($this->getDefaults()).')';
-	}
+  /* CUSTOM *****************************************************************/
+
+  public function getMerged() {
+    return $this->getDefaults();
+  }
+
+  public function __toString() {
+    return 'ROUTE: ' . $this->name . '(' . json_encode($this->getDefaults()) . ')';
+  }
 }
