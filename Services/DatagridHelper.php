@@ -218,7 +218,7 @@ class DatagridHelper {
     if ($this->qb) {
       $qbNum = clone $this->qb;
       $rootAliases = $qbNum->getRootAliases();
-      $rootAlias = reset($qbNum->getRootAliases());
+      $rootAlias = reset($rootAliases);
       $qbNum->select($qbNum->expr()->countDistinct($rootAlias.'.id'));
       $qbNum->resetDQLPart('orderBy');
 
