@@ -1,7 +1,7 @@
 <tbody>
 	{% for row, obj in datagrid.results %}
 		<tr>
-			{% for column, cell in datagrid.cells if not cell.extended or datagrid.extended or (not datagrid.extended and not cell.extended) %}
+			{% for column, cell in datagrid.cells if not cell.extended or datagrid.extended %}
 				<td {{ cell.attr('td')|raw }}>
 					{% include cell.template(column, row, obj) with cell.templateParams(column, row, obj)|merge({ 'datagrid': datagrid, 'cell': cell, 'column': column, 'row': row, 'obj': obj }) only %}
 				</td>
