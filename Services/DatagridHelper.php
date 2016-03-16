@@ -1,6 +1,7 @@
 <?php
 namespace HBM\DatagridBundle\Services;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use HBM\DatagridBundle\Model\TableCell;
 use Psr\Log\LoggerInterface;
@@ -89,6 +90,7 @@ class DatagridHelper {
 
     // MENU
     $this->getDatagrid()->setSort(FALSE);
+    $this->getDatagrid()->setExtended(FALSE);
     $this->getDatagrid()->getMenu()->setShow(FALSE);
 
     // PAGINATON
@@ -118,6 +120,7 @@ class DatagridHelper {
     $this->getDatagrid()->setRoute($route);
     $this->getDatagrid()->getMenu()->setRoute($route);
     $this->getDatagrid()->getMenu()->setRouteReset($route);
+    $this->getDatagrid()->getMenu()->setRouteExtended($route);
     $this->getDatagrid()->getMenu()->setRouteSearch($route);
     $this->getDatagrid()->getPagination()->setRoute($route);
   }
@@ -147,7 +150,6 @@ class DatagridHelper {
 
     $params[$key] = $this->handleParam($params, $key, $default);
 
-
     return $params;
   }
 
@@ -163,12 +165,12 @@ class DatagridHelper {
       // Load from session
       if ($params[$key] === NULL) {
         if (in_array($key, $use_for)) {
-          $params[$key] = $this->session->get($prefix . $key, $default);
+          $params[$key] = $this->session->get($prefix.$key, $default);
         }
       }
       // Save to session
       if (in_array($key, $use_for)) {
-        $this->session->set($prefix . $key, $params[$key]);
+        $this->session->set($prefix.$key, $params[$key]);
       }
 
       return $params[$key];
@@ -215,14 +217,16 @@ class DatagridHelper {
 
     if ($this->qb) {
       $qbNum = clone $this->qb;
-      $qbNum->select($qbNum->expr()->countDistinct($qbNum->getRootAlias() . '.id'));
+      $rootAlias = reset($qbNum->getRootAliases());
+      $qbNum->select($qbNum->expr()->countDistinct($rootAlias.'.id'));
       $qbNum->resetDQLPart('orderBy');
 
       $query = $qbNum->getQuery();
       $query->useResultCache(
         $this->getDatagrid()->getCacheEnabled(),
         $this->getDatagrid()->getCacheSeconds(),
-        $this->getDatagrid()->getCachePrefix().'_scalar');
+        $this->getDatagrid()->getCachePrefix().'_scalar'
+      );
 
       return $query->getSingleScalarResult();
     }
@@ -242,16 +246,16 @@ class DatagridHelper {
         ->getOffset());
       $qbRes->setMaxResults($this->getDatagrid()->getMaxEntriesPerPage());
 
-      $query = $qbRes->getQuery();
-      $query->useResultCache($this->getDatagrid()
+      $query = $qbRes->getQuery()
+        ->useResultCache($this->getDatagrid()
         ->getCacheEnabled(), $this->getDatagrid()
         ->getCacheSeconds(), $this->getDatagrid()
-          ->getCachePrefix() . '_result');
+        ->getCachePrefix().'_result');
 
       return $query->getResult();
     }
 
-    return new \Doctrine\Common\Collections\ArrayCollection();
+    return new ArrayCollection();
   }
 
   /**

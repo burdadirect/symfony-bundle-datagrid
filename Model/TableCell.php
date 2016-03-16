@@ -2,7 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
-abstract class TableCell {
+class TableCell {
 
   /**
    * @var string
@@ -10,9 +10,19 @@ abstract class TableCell {
   protected $key;
 
   /**
-   * @var label
+   * @var string
    */
   protected $label;
+
+  /**
+   * @var Route
+   */
+  private $route;
+
+  /**
+   * @var bool
+   */
+  protected $extended;
 
   /**
    * @var array
@@ -20,15 +30,33 @@ abstract class TableCell {
   protected $options;
 
   /**
-   * @var array
-   */
-  protected $validOptions = [];
-
-  /**
    * @var RouteLink
    */
   protected $theadLink;
 
+  /**
+   * @var array
+   */
+  protected $validOptions = [
+    'value' => 'string|callback',
+    'th_attr' => 'string|array',
+    'td_attr' => 'string|array',
+    'a_attr' => 'string|array',
+    'sort_key' => 'string',
+    'params' => 'array|callback',
+    'template' => 'string|callback',
+    'templateParams' => 'array|callback',
+    'format' => 'string',
+  ];
+
+  public function __construct($key, $label, $route, $extended, $options = []) {
+    $this->key = $key;
+    $this->label = $label;
+    $this->route = $route;
+    $this->extended = $extended;
+
+    $this->setOptions($options);
+  }
   /* GETTER/SETTER ************************************************************/
 
   public function setKey($key) {
@@ -45,6 +73,22 @@ abstract class TableCell {
 
   public function getLabel() {
     return $this->label;
+  }
+
+  public function setRoute($route) {
+    $this->route = $route;
+  }
+
+  public function getRoute() {
+    return $this->route;
+  }
+
+  public function setExtended($extended) {
+    $this->extended = $extended;
+  }
+
+  public function getExtended() {
+    return $this->extended;
   }
 
   public function setTheadLink($theadLink) {
@@ -67,36 +111,56 @@ abstract class TableCell {
 
   /* CUSTOM *******************************************************************/
 
-  public function getTemplate($column, $row, $obj, $default = NULL) {
-    if ($this->hasOption('template')) {
-      $template = $this->getOption('template');
-      if (is_string($template)) {
-        return $template;
-      }
-      else {
-        if (is_callable($template)) {
-          return $template($column, $row, $obj);
+  public function getLink($column, $row, $obj) {
+    return new RouteLink($this->getParams($column, $row, $obj), $this->getRoute());
+  }
+
+  public function getParams($column, $row, $obj) {
+    if ($this->hasOption('params')) {
+      $params = $this->getOption('params');
+      if (is_string($params)) {
+        return $params;
+      } else {
+        if (is_callable($params)) {
+          return $params($column, $row, $obj);
         } else {
           throw new \Exception("How come?");
         }
       }
     }
 
-    return $default;
+    return array();
   }
 
-  public function getTemplateParams() {
-    if ($this->hasOption('templateParams')) {
-      $templateParams = $this->getOption('templateParams');
-
-      if (is_array($templateParams)) {
-        return $templateParams;
+  public function getTemplate($column, $row, $obj, $default = 'HBMDatagridBundle:Datagrid:table-cell.html.twig') {
+    if ($this->hasOption('template')) {
+      $template = $this->getOption('template');
+      if (is_string($template)) {
+        return $template;
+      } elseif (is_callable($template)) {
+        return $template($column, $row, $obj);
       } else {
         throw new \Exception("How come?");
       }
     }
 
-    return array();
+    return $default;
+  }
+
+  public function getTemplateParams($column, $row, $obj, $default = []) {
+    if ($this->hasOption('templateParams')) {
+      $templateParams = $this->getOption('templateParams');
+
+      if (is_array($templateParams)) {
+        return $templateParams;
+      } elseif (is_callable($templateParams)) {
+        return $templateParams($column, $row, $obj);
+      } else {
+        throw new \Exception("How come?");
+      }
+    }
+
+    return $default;
   }
 
   public function getOption($key, $default = NULL) {

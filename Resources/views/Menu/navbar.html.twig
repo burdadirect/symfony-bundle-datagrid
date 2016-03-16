@@ -3,60 +3,63 @@
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
 {% if datagrid.menu.show %}
-<nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-            {% if datagrid.menu.showHeader %}
-			<span class="navbar-brand highlightable">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        {% if datagrid.menu.showHeader %}
+          <span class="navbar-brand highlightable">
 				<span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
 			</span>
-            {% endif %}
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{ datagrid_menu_id }}" aria-expanded="false">
-                <span class="sr-only">{{ 'Menü anzeigen'|trans }}</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-		</div>
+        {% endif %}
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{ datagrid_menu_id }}" aria-expanded="false">
+          <span class="sr-only">{{ 'Menü anzeigen'|trans }}</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
 
-		<div class="collapse navbar-collapse" id="{{ datagrid_menu_id }}">
-            {% if datagrid.menu.showRange %}
-    		<div class="navbar-text highlightable">
-    			{{ 'Einträge'|trans }}
-    			<span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
-    			{{ 'bis'|trans }}
-    			<span class="highlight">{{ datagrid.pagination.numberThru }}</span>
-    		</div>
-    		{% endif %}
+      <div class="collapse navbar-collapse" id="{{ datagrid_menu_id }}">
+        {% if datagrid.menu.showRange %}
+          <div class="navbar-text highlightable">
+            {{ 'Einträge'|trans }}
+            <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+            {{ 'bis'|trans }}
+            <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+          </div>
+        {% endif %}
 
-    		<ul class="nav navbar-nav navbar-right">
-          	{% if datagrid.menu.showReset %}
-          		<li><a href="{{ dgMacros.dgPath(datagrid.menu.routeReset) }}" title="{{ 'Sortierung und Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
-    		{% endif %}
-    		{% if datagrid.menu.showMaxEntriesSelection %}
-    			{% include 'HBMDatagridBundle:Menu:max-entries-selection.html.twig' with { 'datagrid': datagrid } only %}
-    		{% endif %}
-    		</ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if datagrid.menu.showExtended %}
+            <li><a href="{{ dgMacros.dgPath(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}"><span class="glyphicon glyphicon-resize-horizontal"></span> <span class="visible-xs-inline">{{ 'Erweiterte Felder ein-/ausblenden'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Extend'|trans }}</span></a></li>
+          {% endif %}
+          {% if datagrid.menu.showReset %}
+            <li><a href="{{ dgMacros.dgPath(datagrid.menu.routeReset) }}" title="{{ 'Sortierung und Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
+          {% endif %}
+          {% if datagrid.menu.showMaxEntriesSelection %}
+            {% include 'HBMDatagridBundle:Menu:max-entries-selection.html.twig' with { 'datagrid': datagrid } only %}
+          {% endif %}
+        </ul>
 
-    		{% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-    		<form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dgMacros.dgPath(datagrid.menu.routeSearch) }}" method="post">
+        {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
+          <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dgMacros.dgPath(datagrid.menu.routeSearch) }}" method="post">
 
-                {% for searchKey, searchField in datagrid.menu.searchFields %}
-                    <div class="form-group">
-    				{% if searchField['type'] == 'number' %}
-    					{% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
-    				{% elseif searchField['type'] == 'select' %}
-    					{% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
-    				{% else %}
-    					{% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
-    				{% endif %}
-    				</div>
-    			{% endfor %}
+            {% for searchKey, searchField in datagrid.menu.searchFields %}
+              <div class="form-group">
+                {% if searchField['type'] == 'number' %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
+                {% elseif searchField['type'] == 'select' %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
+                {% else %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
+                {% endif %}
+              </div>
+            {% endfor %}
 
-            	<button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"></span> {{ 'Suchen'|trans }}</button>
-          	</form>
-          	{% endif %}
-        </div>
-	</div>
-</nav>
+            <button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"></span> {{ 'Suchen'|trans }}</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 {% endif %}

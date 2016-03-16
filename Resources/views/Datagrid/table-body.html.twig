@@ -1,9 +1,9 @@
 <tbody>
 	{% for row, obj in datagrid.results %}
 		<tr>
-			{% for column, cell in datagrid.cells %}
+			{% for column, cell in datagrid.cells if datagrid.extended and cell.extended %}
 				<td {{ cell.attr('td')|raw }}>
-					{% include cell.template(column, row, obj) with cell.templateParams|merge({ 'datagrid': datagrid, 'cell': cell, 'column': column, 'row': row, 'obj': obj }) only %}
+					{% include cell.template(column, row, obj) with cell.templateParams(column, row, obj)|merge({ 'datagrid': datagrid, 'cell': cell, 'column': column, 'row': row, 'obj': obj }) only %}
 				</td>
 			{% endfor %}
 		</tr>

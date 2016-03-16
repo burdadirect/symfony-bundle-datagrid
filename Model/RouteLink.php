@@ -22,6 +22,8 @@ class RouteLink extends Route {
    * @param \HBM\DatagridBundle\Model\Route $route
    */
   public function __construct($params, Route $route) {
+    parent::__construct(NULL);
+
     $this->params = $params;
 
     if ($route !== NULL) {

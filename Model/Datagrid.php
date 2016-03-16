@@ -2,6 +2,8 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Datagrid {
 
   /* SESSION ******************************************************************/
@@ -48,6 +50,11 @@ class Datagrid {
   private $queryEncode;
 
   /* CONFIG *******************************************************************/
+
+  /**
+   * @var boolean
+   */
+  private $extended;
 
   /**
    * @var boolean
@@ -115,7 +122,7 @@ class Datagrid {
   /* CONSTRUCTOR **************************************************************/
 
   public function __construct($config) {
-    $this->results = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->results = new ArrayCollection();
 
     $this->setSort($config['datagrid']['sort']);
     $this->setMultiSort($config['datagrid']['multi_sort']);
@@ -221,6 +228,14 @@ class Datagrid {
     return $this->queryEncode;
   }
 
+
+  public function setExtended($extended) {
+    $this->extended = $extended;
+  }
+
+  public function getExtended() {
+    return $this->extended;
+  }
 
   public function setSort($sort) {
     $this->sort = $sort;
@@ -345,6 +360,8 @@ class Datagrid {
     $string .= 'DATAGRID-VARS:' . "\n";
     $string .= 'maxEntriesPerPage: ' . $this->getMaxEntriesPerPage() . "\n";
     $string .= 'multiSort: ' . $this->getMultiSort() . "\n";
+    $string .= 'sort: ' . $this->getSort() . "\n";
+    $string .= 'extended: ' . $this->getExtended() . "\n";
     $string .= "\n";
     $string .= 'DATAGRID-PARAM-NAMES:' . "\n";
     $string .= 'currentPage: ' . $this->getParamNameCurrentPage() . "\n";

@@ -34,6 +34,11 @@ class DatagridMenu {
   /**
    * @var boolean
    */
+  private $showExtended;
+
+  /**
+   * @var boolean
+   */
   private $showReset;
 
   /**
@@ -76,6 +81,11 @@ class DatagridMenu {
   /**
    * @var Route
    */
+  private $routeExtended;
+
+  /**
+   * @var Route
+   */
   private $routeSearch;
 
   /* LINKS ********************************************************************/
@@ -92,6 +102,7 @@ class DatagridMenu {
     $this->setShowSearch($config['menu']['show_search']);
     $this->setSearchFields($config['menu']['search_fields']);
     $this->setShowReset($config['menu']['show_reset']);
+    $this->setShowExtended($config['menu']['show_extended']);
     $this->setShowRange($config['menu']['show_range']);
     $this->setShowHeader($config['menu']['show_header']);
     $this->setShowMaxEntriesSelection($config['menu']['show_max_entries_selection']);
@@ -140,6 +151,14 @@ class DatagridMenu {
 
   public function getSearchValues() {
     return $this->searchValues;
+  }
+
+  public function setShowExtended($showExtended) {
+    $this->showExtended = $showExtended;
+  }
+
+  public function getShowExtended() {
+    return $this->showExtended;
   }
 
   public function setShowReset($showReset) {
@@ -197,6 +216,14 @@ class DatagridMenu {
 
   public function getRoute() {
     return $this->route;
+  }
+
+  public function setRouteExtended(Route $routeExtended) {
+    $this->routeExtended = $routeExtended;
+  }
+
+  public function getRouteExtended() {
+    return $this->routeExtended;
   }
 
   public function setRouteReset(Route $routeReset) {

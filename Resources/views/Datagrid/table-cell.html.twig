@@ -1,0 +1,7 @@
+{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+
+{% if cell.route %}
+  <a href="{{ dgMacros.dgPath(cell.link(column, row, obj)) }}" {{ cell.attr('a')|raw }}>{{ cell.parseValue(column, row, obj)|raw }}</a>
+{% else %}
+  {{ cell.parseValue(column, row, obj)|raw }}
+{% endif %}
