@@ -2,7 +2,7 @@
 
 <thead>
 	<tr>
-		{% for column, cell in datagrid.cells if (not datagrid.extended and not cell.extended) or datagrid.extended %}
+		{% for column, cell in datagrid.cells if cell.extended or datagrid.extended or (not datagrid.extended and not cell.extended) %}
 			 <th {{ cell.attr('th')|raw }}>
 			 	{% include 'HBMDatagridBundle:Datagrid:table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column } only %}
 			 </th>
