@@ -21,7 +21,7 @@ class Route {
    * @param $name
    * @param array $defaults
    */
-  public function __construct($name, $defaults = array()) {
+  public function __construct($name = NULL, $defaults = array()) {
     $this->name = $name;
     $this->defaults = $defaults;
   }
