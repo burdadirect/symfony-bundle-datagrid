@@ -44,7 +44,7 @@
         {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
           <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dgMacros.dgPath(datagrid.menu.routeSearch) }}" method="post">
 
-            {% for searchKey, searchField in datagrid.menu.searchFields if not is defined searchField['extended'] or datagrid.extended or (not datagrid.extended and not searchField['extended']) %}
+            {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or datagrid.extended or (not datagrid.extended and not searchField['extended']) %}
               <div class="form-group">
                 {% if searchField['type'] == 'number' %}
                   {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
