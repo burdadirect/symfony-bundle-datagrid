@@ -8,7 +8,7 @@
         <option value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}>{{ value }}</option>
       {% endfor %}
     {% endif %}
-    {% if searchField['values'] is defined %}
+    {% if searchField['optgroups'] is defined %}
       {% for optgroupLabel, optgroupValues in searchField['optgroups'] %}
         <optgroup label="{{ optgroupLabel }}">
           {% for key, value in optgroupValues %}
