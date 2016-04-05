@@ -49,6 +49,11 @@ class DatagridHelper {
    */
   private $results;
 
+  /**
+   * @var integer
+   */
+  private $resultsNumber;
+
   public function __construct($config, $logger) {
     $this->config = $config;
     $this->logger = $logger;
@@ -129,8 +134,23 @@ class DatagridHelper {
     $this->qb = $qb;
   }
 
+  /**
+   * Set a fixed set of results.
+   * 
+   * @param $results
+   */
   public function setResults($results) {
     $this->results = $results;
+    $this->resultsNumber = count($results);
+  }
+
+  /**
+   * Make sure to set this after setting the results.
+   *
+   * @param $resultsNumber
+   */
+  public function setResultsNumber($resultsNumber) {
+    $this->resultsNumber = $resultsNumber;
   }
 
   public function setSession(Session $session) {
@@ -211,8 +231,8 @@ class DatagridHelper {
 
 
   private function getNumber() {
-    if ($this->results) {
-      return count($this->results);
+    if ($this->resultsNumber !== NULL) {
+      return $this->resultsNumber;
     }
 
     if ($this->qb) {
@@ -236,7 +256,7 @@ class DatagridHelper {
   }
 
   private function getResults() {
-    if ($this->results) {
+    if ($this->results !== NULL) {
       return $this->results;
     }
 
