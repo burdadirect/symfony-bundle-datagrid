@@ -37,12 +37,18 @@ class TableCell {
   /**
    * @var array
    */
+  protected $theadLinks = [];
+
+  /**
+   * @var array
+   */
   protected $validOptions = [
     'value' => 'string|callback',
     'th_attr' => 'string|array',
     'td_attr' => 'string|array',
     'a_attr' => 'string|array',
-    'sort_key' => 'string',
+    'sort_key' => 'string|array',
+    'sort_key_sep' => 'string',
     'params' => 'array|callback',
     'template' => 'string|callback',
     'templateParams' => 'array|callback',
@@ -89,6 +95,10 @@ class TableCell {
 
   public function getExtended() {
     return $this->extended;
+  }
+
+  public function addTheadLink($theadLink) {
+    return $this->theadLinks[] = $theadLink;
   }
 
   public function setTheadLink($theadLink) {
@@ -276,8 +286,22 @@ class TableCell {
     return $this->hasOption("sort_key");
   }
 
-  public function getSortKey() {
-    return $this->getOption("sort_key");
+  public function getSortKeys() {
+    $sortKey = $this->getOption("sort_key");
+
+    if (!is_array($sortKey)) {
+      $sortKey = array($sortKey => $this->getLabel());
+    }
+
+    return $sortKey;
+  }
+
+  public function getSortKeySep() {
+    if ($this->hasOption('sort_key_sep')) {
+      return $this->getOption("sort_key_sep");
+    }
+
+    return ' | ';
   }
 
 }

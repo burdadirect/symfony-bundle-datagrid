@@ -1,17 +1,22 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
 
-{% if cell.theadLink is not null %}
-	<a href="{{ dgMacros.dgPath(cell.theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ cell.label|trans }}">
-		{{ cell.label|trans|raw }}
-	{% if datagrid.isSorted(cell.getSortKey()) %}
-		{% if datagrid.getSortationDirection(cell.sortKey) == 'asc' %}
-		<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
-		{% endif %}
-		{% if datagrid.getSortationDirection(cell.sortKey) == 'desc' %}
-		<span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
-		{% endif %}
-	{% endif %}
-	</a>
+{% if cell.theadLinks|length > 0 %}
+  {% for theadLink in cell.theadLinks %}
+    <a href="{{ dgMacros.dgPath(cell.theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ cell.label|trans }}">
+      {{ cell.label|trans|raw }}
+    {% if datagrid.isSorted(cell.getSortKey()) %}
+      {% if datagrid.getSortationDirection(cell.sortKey) == 'asc' %}
+      <span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
+      {% endif %}
+      {% if datagrid.getSortationDirection(cell.sortKey) == 'desc' %}
+      <span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
+      {% endif %}
+    {% endif %}
+    </a>
+    {% if not loop.last %}
+      {{ cell.getSortKeySep }}
+    {% endif %}
+  {% endfor %}
 {% else %}
 	{{ cell.label|trans|raw }}
 {% endif %}

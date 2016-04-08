@@ -136,7 +136,7 @@ class DatagridHelper {
 
   /**
    * Set a fixed set of results.
-   * 
+   *
    * @param $results
    */
   public function setResults($results) {
@@ -402,19 +402,22 @@ class DatagridHelper {
             $new_sortations = [];
           }
 
-          if (isset($sortations[$cell->getSortKey()]) && ($sortations[$cell->getSortKey()] === 'asc')) {
-            // If asc is set, offer desc as next direction
-            $new_sortations[$cell->getSortKey()] = 'desc';
-          } elseif (isset($sortations[$cell->getSortKey()]) && ($sortations[$cell->getSortKey()] === 'desc')) {
-            // If desc is set, unset direction
-            unset($new_sortations[$cell->getSortKey()]);
-          } else {
-            // If nothing is set, offer as as next direction
-            $new_sortations[$cell->getSortKey()] = 'asc';
-          }
+          foreach ($cell->getSortKeys() as $sortKeyKey => $sortKeyValue) {
+            if (isset($sortations[$sortKeyKey]) && ($sortations[$sortKeyKey] === 'asc')) {
+              // If asc is set, offer desc as next direction
+              $new_sortations[$sortKeyKey] = 'desc';
+            } elseif (isset($sortations[$sortKeyKey]) && ($sortations[$sortKeyKey] === 'desc')) {
+              // If desc is set, unset direction
+              unset($new_sortations[$sortKeyKey]);
+            } else {
+              // If nothing is set, offer as as next direction
+              $new_sortations[$sortKeyKey] = 'asc';
+            }
 
-          $params = [$datagrid->getParamNameSortation() => $this->getQueryString($new_sortations)];
-          $cell->setTheadLink(new RouteLink($params, $datagrid->getRoute()));
+            $params = [$datagrid->getParamNameSortation() => $this->getQueryString($new_sortations)];
+            $cell->setTheadLink(new RouteLink($params, $datagrid->getRoute()));
+            $cell->addTheadLink(new RouteLink($params, $datagrid->getRoute()));
+          }
         }
       }
     }
