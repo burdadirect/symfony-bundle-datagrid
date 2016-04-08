@@ -30,11 +30,6 @@ class TableCell {
   protected $options;
 
   /**
-   * @var RouteLink
-   */
-  protected $theadLink;
-
-  /**
    * @var array
    */
   protected $theadLinks = [];
@@ -101,12 +96,8 @@ class TableCell {
     return $this->theadLinks[] = $theadLink;
   }
 
-  public function setTheadLink($theadLink) {
-    $this->theadLink = $theadLink;
-  }
-
-  public function getTheadLink() {
-    return $this->theadLink;
+  public function getTheadLinks() {
+    return $this->theadLinks;
   }
 
   public function setOptions($options) {
