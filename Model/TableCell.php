@@ -44,6 +44,7 @@ class TableCell {
     'a_attr' => 'string|array',
     'sort_key' => 'string|array',
     'sort_key_sep' => 'string',
+    'label_pos' => 'string',
     'params' => 'array|callback',
     'template' => 'string|callback',
     'templateParams' => 'array|callback',
@@ -303,6 +304,14 @@ class TableCell {
     }
 
     return ' | ';
+  }
+
+  public function getLabelPos() {
+    if ($this->hasOption('label_pos')) {
+      return $this->getOption('label_pos');
+    }
+
+    return 'before';
   }
 
 }
