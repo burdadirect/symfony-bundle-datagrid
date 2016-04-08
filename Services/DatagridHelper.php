@@ -415,7 +415,7 @@ class DatagridHelper {
             }
 
             $params = [$datagrid->getParamNameSortation() => $this->getQueryString($new_sortations)];
-            $cell->addTheadLink(new RouteLink($params, $datagrid->getRoute()));
+            $cell->addTheadLink($sortKeyKey, new RouteLink($params, $datagrid->getRoute()));
           }
         }
       }

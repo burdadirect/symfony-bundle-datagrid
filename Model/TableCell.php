@@ -92,8 +92,8 @@ class TableCell {
     return $this->extended;
   }
 
-  public function addTheadLink($theadLink) {
-    return $this->theadLinks[] = $theadLink;
+  public function addTheadLink($sortKey, $theadLink) {
+    return $this->theadLinks[$sortKey] = $theadLink;
   }
 
   public function getTheadLinks() {
@@ -285,6 +285,16 @@ class TableCell {
     }
 
     return $sortKey;
+  }
+
+  public function getSortKeyLabel($sortKey) {
+    $sortKeys = $this->getSortKeys();
+
+    if (isset($sortKeys[$sortKey])) {
+      return $sortKeys[$sortKey];
+    }
+
+    return $this->getLabel();
   }
 
   public function getSortKeySep() {
