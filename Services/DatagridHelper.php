@@ -397,12 +397,12 @@ class DatagridHelper {
       foreach ($datagrid->getCells() as $cell) {
         /** @var TableCell $cell */
         if ($cell->isSortable()) {
-          $new_sortations = $sortations;
-          if (!$datagrid->getMultiSort()) {
-            $new_sortations = [];
-          }
-
           foreach ($cell->getSortKeys() as $sortKeyKey => $sortKeyValue) {
+            $new_sortations = $sortations;
+            if (!$datagrid->getMultiSort()) {
+              $new_sortations = [];
+            }
+
             if (isset($sortations[$sortKeyKey]) && ($sortations[$sortKeyKey] === 'asc')) {
               // If asc is set, offer desc as next direction
               $new_sortations[$sortKeyKey] = 'desc';

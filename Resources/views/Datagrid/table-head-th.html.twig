@@ -1,6 +1,9 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
 
 {% if cell.theadLinks|length > 0 %}
+  {% if cell.theadLinks|length > 1 %}
+    {{ cell.label|trans|raw }}
+  {% endif %}
   {% for sortKey, theadLink in cell.theadLinks %}
     <a href="{{ dgMacros.dgPath(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ cell.getSortKeyLabel(sortKey)|trans }}">
       {{ cell.getSortKeyLabel(sortKey)|trans|raw }}
