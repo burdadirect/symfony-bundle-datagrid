@@ -6,6 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Datagrid {
 
+  /**
+   * @var string
+   */
+  private $translationDomain;
+
   /* SESSION ******************************************************************/
 
   /**
@@ -124,6 +129,8 @@ class Datagrid {
   public function __construct($config) {
     $this->results = new ArrayCollection();
 
+    $this->setTranslationDomain($config['translation_domain']);
+
     $this->setSort($config['datagrid']['sort']);
     $this->setMultiSort($config['datagrid']['multi_sort']);
     $this->setMaxEntriesPerPage($config['datagrid']['max_entries_per_page']);
@@ -143,6 +150,15 @@ class Datagrid {
   }
 
   /* GETTER/SETTER **********************************************************/
+
+  public function setTranslationDomain($translationDomain) {
+    $this->translationDomain = $translationDomain;
+  }
+
+  public function getTranslationDomain() {
+    return $this->translationDomain;
+  }
+
 
   public function setSessionPrefix($sessionPrefix) {
     $this->sessionPrefix = $sessionPrefix;

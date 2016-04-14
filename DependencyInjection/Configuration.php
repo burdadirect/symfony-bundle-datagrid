@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
 
     $rootNode
       ->children()
+        ->scalarNode('translation_domain')->defaultValue('HBMDatagridBundle')->end()
         ->arrayNode('session')
           ->children()
             ->scalarNode('prefix')->defaultValue('hbm_datagrid:')->end()
