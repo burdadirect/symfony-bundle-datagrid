@@ -2,11 +2,11 @@
 
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ cell.label|trans|raw }}
+    {{ dgMacros.dgTrans(cell.label)|raw }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="datagrid-table-link" href="{{ dgMacros.dgPath(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ cell.getSortKeyLabel(sortKey)|trans }}">
-      {{- cell.getSortKeyLabel(sortKey)|trans|raw -}}
+    <a class="datagrid-table-link" href="{{ dgMacros.dgPath(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ dgMacros.dgTrans(cell.getSortKeyLabel(sortKey)) }}">
+      {{- dgMacros.dgTrans(cell.getSortKeyLabel(sortKey))|raw -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
@@ -21,8 +21,8 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ cell.label|trans|raw }}
+    {{ dgMacros.dgTrans(cell.label)|raw }}
   {%- endif -%}
 {% else %}
-  {{ cell.label|trans|raw }}
+  {{ dgMacros.dgTrans(cell.label)|raw }}
 {% endif %}

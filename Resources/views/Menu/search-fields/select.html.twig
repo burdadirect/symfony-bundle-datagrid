@@ -1,5 +1,7 @@
+{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+
 <div class="input-group input-group-sm">
-  <span class="input-group-addon">{{ searchField['label']|trans }}</span>
+  <span class="input-group-addon">{{ dgMacros.dgTrans(searchField['label']) }}</span>
   <select class="form-control" name="{{ searchKey }}">
     <option></option>
     {% set keys = datagrid.menu.searchValue(searchKey) %}
