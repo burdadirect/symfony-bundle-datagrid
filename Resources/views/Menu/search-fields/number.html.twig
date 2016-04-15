@@ -1,8 +1,8 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 <div class="input-group input-group-sm">
   <span class="input-group-addon">123</span>
-  <input type="text" class="form-control" placeholder="{{ dgMacros.dgTrans(searchField['label']) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
+  <input type="text" class="form-control" placeholder="{{ dg.trans(searchField['label'], transDomain) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
 </div>

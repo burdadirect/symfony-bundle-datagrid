@@ -1,6 +1,6 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% if pagination.pageMax > 1 %}
   <div class="datagrid-pagination">
@@ -8,7 +8,7 @@
 
       {% if pagination.linkFirst is not null and pagination.showFirst %}
         <li>
-          <a href="{{ dgMacros.dgPath(pagination.linkFirst) }}" title="{{ 'Erste Seite'|trans }}"><span class="glyphicon glyphicon-fast-backward"></span></a>
+          <a href="{{ dg.path(pagination.linkFirst) }}" title="{{ 'Erste Seite'|trans }}"><span class="glyphicon glyphicon-fast-backward"></span></a>
         </li>
       {% elseif pagination.showFirst %}
         <li class="disabled">
@@ -18,7 +18,7 @@
 
       {% if pagination.linkPrev is not null and pagination.showPrev %}
         <li>
-          <a href="{{ dgMacros.dgPath(pagination.linkPrev) }}" title="{{ 'Vorherige Seite'|trans }}"><span class="glyphicon glyphicon-step-backward"></span></a>
+          <a href="{{ dg.path(pagination.linkPrev) }}" title="{{ 'Vorherige Seite'|trans }}"><span class="glyphicon glyphicon-step-backward"></span></a>
         </li>
       {% elseif pagination.showPrev %}
         <li class="disabled">
@@ -36,7 +36,7 @@
 
         {% if link.value != pagination.pageCurrent %}
           <li>
-            <a href="{{ dgMacros.dgPath(link) }}">{{ link.value }}</a>
+            <a href="{{ dg.path(link) }}">{{ link.value }}</a>
           </li>
         {% else %}
           <li class="active">
@@ -54,7 +54,7 @@
 
       {% if pagination.linkNext is not null and pagination.showNext %}
         <li>
-          <a href="{{ dgMacros.dgPath(pagination.linkNext) }}" title="{{ 'Nächste Seite'|trans }}"><span class="glyphicon glyphicon-step-forward"></span></a>
+          <a href="{{ dg.path(pagination.linkNext) }}" title="{{ 'Nächste Seite'|trans }}"><span class="glyphicon glyphicon-step-forward"></span></a>
         </li>
       {% elseif pagination.showNext %}
         <li class="disabled">
@@ -64,7 +64,7 @@
 
       {% if pagination.linkLast is not null and pagination.showLast %}
         <li>
-          <a href="{{ dgMacros.dgPath(pagination.linkLast) }}" title="{{ 'Letzte Seite'|trans }}"><span class="glyphicon glyphicon-fast-forward"></span></a>
+          <a href="{{ dg.path(pagination.linkLast) }}" title="{{ 'Letzte Seite'|trans }}"><span class="glyphicon glyphicon-fast-forward"></span></a>
         </li>
       {% elseif pagination.showLast %}
         <li class="disabled">

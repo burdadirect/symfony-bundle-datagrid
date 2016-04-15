@@ -1,9 +1,9 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% if cell.route %}
-  <a href="{{ dgMacros.dgPath(cell.link(column, row, obj)) }}" {{ cell.attr('a')|raw }}>{{ cell.parseValue(column, row, obj)|raw }}</a>
+  <a href="{{ dg.path(cell.link(column, row, obj)) }}" {{ cell.attr('a')|raw }}>{{ cell.parseValue(column, row, obj)|raw }}</a>
 {% else %}
   {{ cell.parseValue(column, row, obj)|raw }}
 {% endif %}

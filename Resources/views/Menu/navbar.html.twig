@@ -1,6 +1,6 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
@@ -33,10 +33,10 @@
 
         <ul class="nav navbar-nav navbar-right">
           {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
-            <li><a href="{{ dgMacros.dgPath(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}"><span class="glyphicon {{ datagrid.extended?'glyphicon-resize-small':'glyphicon-resize-full' }}"></span> <span class="visible-xs-inline">{{ 'Erweiterte Felder ein-/ausblenden'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}</span></a></li>
+            <li><a href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}"><span class="glyphicon {{ datagrid.extended?'glyphicon-resize-small':'glyphicon-resize-full' }}"></span> <span class="visible-xs-inline">{{ 'Erweiterte Felder ein-/ausblenden'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}</span></a></li>
           {% endif %}
           {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
-            <li><a href="{{ dgMacros.dgPath(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
+            <li><a href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
           {% endif %}
           {% if datagrid.menu.showMaxEntriesSelection %}
             {% include 'HBMDatagridBundle:Menu:max-entries-selection.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
@@ -44,7 +44,7 @@
         </ul>
 
         {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-          <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dgMacros.dgPath(datagrid.menu.routeSearch) }}" method="post">
+          <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
             {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
               <div class="form-group">

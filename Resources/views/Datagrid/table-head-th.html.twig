@@ -1,14 +1,14 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ dgMacros.dgTrans(cell.label)|raw }}
+    {{ dg.trans(cell.label, transDomain)|raw }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="datagrid-table-link" href="{{ dgMacros.dgPath(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ dgMacros.dgTrans(cell.getSortKeyLabel(sortKey)) }}">
-      {{- dgMacros.dgTrans(cell.getSortKeyLabel(sortKey))|raw -}}
+    <a class="datagrid-table-link" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ dg.trans(cell.getSortKeyLabel(sortKey), transDomain) }}">
+      {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
@@ -23,8 +23,8 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ dgMacros.dgTrans(cell.label)|raw }}
+    {{ dg.trans(cell.label, transDomain)|raw }}
   {%- endif -%}
 {% else %}
-  {{ dgMacros.dgTrans(cell.label)|raw }}
+  {{ dg.trans(cell.label, transDomain)|raw }}
 {% endif %}

@@ -1,6 +1,6 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dgMacros %}
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% if datagrid.menu.links|length > 0 %}
   <li class="dropdown">
@@ -12,7 +12,7 @@
     </a>
     <ul class="dropdown-menu" role="menu">
       {% for link in datagrid.menu.links -%}
-        <li><a href="{{ dgMacros.dgPath(link) }}" title="{{ link.value }}{{ ' Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
+        <li><a href="{{ dg.path(link) }}" title="{{ link.value }}{{ ' Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
       {%- endfor %}
     </ul>
   </li>
