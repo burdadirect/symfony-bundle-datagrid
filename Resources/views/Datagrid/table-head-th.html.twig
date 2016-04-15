@@ -7,7 +7,7 @@
     {{ dg.trans(cell.label, transDomain)|raw }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="datagrid-table-link" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach: '|trans }} {{ dg.trans(cell.getSortKeyLabel(sortKey), transDomain) }}">
+    <a class="datagrid-table-link" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyLabel(sortKey), transDomain) }}">
       {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
