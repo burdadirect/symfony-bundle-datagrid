@@ -1,15 +1,15 @@
-{% translation_domain datagrid.translationDomain %}
+{% set transDomain = datagrid.translationDomain %}
 
-{% include datagrid.menu.template with { 'datagrid': datagrid } only %}
+{% include datagrid.menu.template with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
 {% if datagrid.results|length == 0 %}
-	<p>{{ 'Keine Einträge gefunden.'|trans }}</p>
+  <p>{{ 'Keine Einträge gefunden.'|trans }}</p>
 {% else %}
-<table class="table table-hover table-bordered table-condensed datagrid-table">
-	{% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid } only %}
+  <table class="table table-hover table-bordered table-condensed datagrid-table">
+    {% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
-	{% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid } only %}
-</table>
+    {% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
+  </table>
 {% endif %}
 
-{% include datagrid.pagination.template with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}
+{% include datagrid.pagination.template with { 'datagrid': datagrid, 'pagination': datagrid.pagination, 'transDomain': transDomain } only %}

@@ -1,3 +1,3 @@
 {% macro dgPath(route) %}{{ path(route.name, route.merged) }}{% endmacro %}
 
-{% macro dgTrans(text) %}(translation_domain is same as(false) ? text : text|trans({}, translation_domain)){% endmacro %}
+{% macro dgTrans(text) %}(transDomain is same as(false) ? text : text|trans({}, transDomain)){% endmacro %}
