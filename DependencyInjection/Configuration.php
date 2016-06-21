@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
     $rootNode = $treeBuilder->root('hbm_datagrid');
 
     $rootNode
-      ->children()
+      ->children()->addDefaultsIfNotSet()
         ->scalarNode('translation_domain')->defaultValue(false)->end()
         ->arrayNode('session')
           ->children()

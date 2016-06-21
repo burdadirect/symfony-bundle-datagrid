@@ -1,4 +1,4 @@
 services:
     hbm.datagrid.helper:
         class: HBM\DatagridBundle\Services\DatagridHelper
-        arguments: ["%hbm_datagrid.config%", "@logger"]
+        arguments: ["%hbm_datagrid%", "@logger"]

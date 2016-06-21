@@ -17,12 +17,11 @@
     }
   },
   "require": {
+    "php": ">=7.0",
     "symfony/symfony": "~3.0",
     "doctrine/orm": "~2.5"
   },
   "require-dev": {
-    "php": ">=5.6",
-    "ext-mbstring": "*"
   },
   "target-dir": "HBM/DatagridBundle"
 }
