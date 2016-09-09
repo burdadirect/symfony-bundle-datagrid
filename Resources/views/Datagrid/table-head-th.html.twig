@@ -2,6 +2,15 @@
 
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
+
+{% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
+{% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
+{% if datagrid.bootstrap == 'v4' %}
+  {% set classesSortAsc = 'fa fa-sort-amount-asc' %}
+  {% set classesSortDesc = 'fa fa-sort-amount-desc' %}
+{% endif %}
+
+
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
     {{ dg.trans(cell.label, transDomain)|raw }}
@@ -11,10 +20,10 @@
       {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
-          &nbsp;<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
+          &nbsp;<span class="{{ classesSortAsc }}"></span>
         {%- endif -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'desc' -%}
-          &nbsp;<span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
+          &nbsp;<span class="{{ classesSortDesc }}"></span>
         {%- endif -%}
       {%- endif -%}
     </a>

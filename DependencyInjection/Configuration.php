@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
     $rootNode
       ->children()
         ->scalarNode('translation_domain')->defaultValue(false)->end()
+        ->scalarNode('bootstrap')->defaultValue('v3')->end()
         ->arrayNode('session')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('prefix')->defaultValue('hbm_datagrid:')->end()

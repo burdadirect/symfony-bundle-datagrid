@@ -1,0 +1,79 @@
+{% trans_default_domain "HBMDatagridBundle" %}
+
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
+
+{% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
+
+{% if datagrid.menu.show %}
+  <nav class="navbar navbar-default datagrid-menu" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        {% if datagrid.menu.showHeader %}
+          <span class="navbar-brand highlightable">
+				<span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
+			</span>
+        {% endif %}
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{ datagrid_menu_id }}" aria-expanded="false">
+          <span class="sr-only">{{ 'Menü anzeigen'|trans }}</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="{{ datagrid_menu_id }}">
+        {% if datagrid.menu.showRange %}
+          <div class="navbar-text highlightable">
+            {{ 'Einträge'|trans }}
+            <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+            {{ 'bis'|trans }}
+            <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+          </div>
+        {% endif %}
+
+        <ul class="nav navbar-nav navbar-right">
+          {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
+            <li><a href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}"><span class="glyphicon {{ datagrid.extended?'glyphicon-resize-small':'glyphicon-resize-full' }}"></span> <span class="visible-xs-inline">{{ 'Erweiterte Felder ein-/ausblenden'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}</span></a></li>
+          {% endif %}
+          {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
+            <li><a href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
+          {% endif %}
+          {% if datagrid.menu.showMaxEntriesSelection %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="{{ 'Anzahl der Einträge wählen'|trans }}">
+                {{ datagrid.maxEntriesPerPage }}
+                <span class="visible-xs-inline">{{ 'Einträge anzeigen'|trans }}</span>
+                <span class="visible-md-inline visible-lg-inline">{{ 'Einträge'|trans }}</span>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                {% for link in datagrid.menu.links -%}
+                  <li><a href="{{ dg.path(link) }}" title="{{ link.value }} {{ 'Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
+                {%- endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        </ul>
+
+        {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
+          <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+
+            {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+              <div class="form-group">
+                {% if searchField['type'] == 'number' %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                {% elseif searchField['type'] == 'select' %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                {% else %}
+                  {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"></span> {{ 'Suchen'|trans }}</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+{% endif %}

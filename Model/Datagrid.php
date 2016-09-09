@@ -11,6 +11,11 @@ class Datagrid {
    */
   private $translationDomain;
 
+  /**
+   * @var string
+   */
+  private $bootstrap;
+
   /* SESSION ******************************************************************/
 
   /**
@@ -130,6 +135,7 @@ class Datagrid {
     $this->results = new ArrayCollection();
 
     $this->setTranslationDomain($config['translation_domain']);
+    $this->setBootstrap($config['bootstrap']);
 
     $this->setSort($config['datagrid']['sort']);
     $this->setMultiSort($config['datagrid']['multi_sort']);
@@ -157,6 +163,14 @@ class Datagrid {
 
   public function getTranslationDomain() {
     return $this->translationDomain;
+  }
+
+  public function setBootstrap($bootstrap) {
+    $this->bootstrap = $bootstrap;
+  }
+
+  public function getBootstrap() {
+    return $this->bootstrap;
   }
 
 

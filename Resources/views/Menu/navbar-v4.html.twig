@@ -1,0 +1,76 @@
+{% trans_default_domain "HBMDatagridBundle" %}
+
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
+
+{% set datagrid_collapsable_id = 'datagrid-'~random()~'-collapsable' %}
+{% set datagrid_btngroup_id = 'datagrid-'~random()~'-btngroup' %}
+
+{% if datagrid.menu.show %}
+  <div class="datagrid-menu m-b-1">
+    <div class="datagrid-menu-header">
+      {% if datagrid.menu.showHeader %}
+        <div class="datagrid-menu-num">
+          <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
+        </div>
+      {% endif %}
+      <button class="datagrid-menu-toggler btn btn-secondary btn-sm" type="button" data-pbytools-toogle-class="[{'t':'.{{ datagrid_collapsable_id }}','c':'datagrid-open'},{'t':'.{{ datagrid_btngroup_id }}','c':'btn-group'},{'t':'.{{ datagrid_btngroup_id }}','c':'btn-group-vertical'}]">
+        &#9776;
+      </button>
+    </div>
+
+    {% if datagrid.menu.showRange %}
+      <div class="datagrid-menu-range highlightable datagrid-collapsable {{ datagrid_collapsable_id }}">
+        {{ 'Einträge'|trans }}
+        <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+        {{ 'bis'|trans }}
+        <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+      </div>
+    {% endif %}
+
+    <div class="datagrid-menu-actions datagrid-collapsable {{ datagrid_collapsable_id }}">
+      {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
+        <a class="btn btn-secondary btn-sm" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">
+          <span class="fa {{ datagrid.extended?'fa-compress':'fa-expand' }}"></span> {{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}
+        </a>
+      {% endif %}
+
+      {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
+        <a class="btn btn-secondary btn-sm" href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}">
+          <span class="fa fa-bolt"></span> {{ 'Reset'|trans }}
+        </a>
+      {% endif %}
+
+      {% if datagrid.menu.showMaxEntriesSelection %}
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+            {{ datagrid.maxEntriesPerPage }} {{ 'Einträge'|trans }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            {% for link in datagrid.menu.links -%}
+              <li><a class="dropdown-item" href="{{ dg.path(link) }}" title="{{ link.value }} {{ 'Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
+            {%- endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
+      <form class="datagrid-menu-search datagrid-collapsable {{ datagrid_collapsable_id }} form-inline" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+
+        {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+          <div class="form-group">
+            {% if searchField['type'] == 'number' %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% elseif searchField['type'] == 'select' %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% else %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-secondary btn-sm"> <span class="fa fa-search"></span> {{ 'Suchen'|trans }}</button>
+      </form>
+    {% endif %}
+  </div>
+{% endif %}

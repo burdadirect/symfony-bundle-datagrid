@@ -4,7 +4,7 @@
 
 <div class="input-group input-group-sm">
   <span class="input-group-addon">{{ dg.trans(searchField['label'], transDomain) }}</span>
-  <select class="form-control" name="{{ searchKey }}">
+  <select class="form-control" name="{{ searchKey }}" title="{{ dg.trans(searchField['label'], transDomain) }}">
     <option></option>
     {% set keys = datagrid.menu.searchValue(searchKey) %}
     {% if searchField['values'] is defined %}
