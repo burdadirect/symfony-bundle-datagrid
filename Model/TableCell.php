@@ -113,18 +113,18 @@ class TableCell {
 
   /* CUSTOM *******************************************************************/
 
-  public function getLink($column, $row, $obj) {
-    return new RouteLink($this->getParams($column, $row, $obj), $this->getRoute());
+  public function getLink($obj, $column, $row) {
+    return new RouteLink($this->getParams($obj, $column, $row), $this->getRoute());
   }
 
-  public function getParams($column, $row, $obj) {
+  public function getParams($obj, $column, $row) {
     if ($this->hasOption('params')) {
       $params = $this->getOption('params');
       if (is_string($params)) {
         return $params;
       } else {
         if (is_callable($params)) {
-          return $params($column, $row, $obj);
+          return $params($obj, $column, $row);
         } else {
           throw new \Exception("How come?");
         }
@@ -134,13 +134,13 @@ class TableCell {
     return array();
   }
 
-  public function getTemplate($column, $row, $obj, $default = 'HBMDatagridBundle:Datagrid:table-cell.html.twig') {
+  public function getTemplate($obj, $column, $row, $default = 'HBMDatagridBundle:Datagrid:table-cell.html.twig') {
     if ($this->hasOption('template')) {
       $template = $this->getOption('template');
       if (is_string($template)) {
         return $template;
       } elseif (is_callable($template)) {
-        return $template($column, $row, $obj);
+        return $template($obj, $column, $row);
       } else {
         throw new \Exception("How come?");
       }
@@ -149,14 +149,14 @@ class TableCell {
     return $default;
   }
 
-  public function getTemplateParams($column, $row, $obj, $default = []) {
+  public function getTemplateParams($obj, $column, $row, $default = []) {
     if ($this->hasOption('templateParams')) {
       $templateParams = $this->getOption('templateParams');
 
       if (is_array($templateParams)) {
         return $templateParams;
       } elseif (is_callable($templateParams)) {
-        return $templateParams($column, $row, $obj);
+        return $templateParams($obj, $column, $row);
       } else {
         throw new \Exception("How come?");
       }
@@ -185,14 +185,14 @@ class TableCell {
     return $this->getHtmlAttrString($this->getOption($scope . '_attr', array()));
   }
 
-  public function parseValue($column, $row, $obj) {
+  public function parseValue($obj, $column, $row) {
     if ($this->hasOption("value")) {
       $value = $this->getOption("value");
       if (is_string($value)) {
         return $value;
       } else {
         if (is_callable($value)) {
-          return $value($column, $row, $obj);
+          return $value($obj, $column, $row);
         } else {
           throw new \Exception("How come?");
         }

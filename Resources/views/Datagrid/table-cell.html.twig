@@ -3,7 +3,7 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 {% if cell.route %}
-  <a href="{{ dg.path(cell.link(column, row, obj)) }}" {{ cell.attr('a')|raw }}>{{ cell.parseValue(column, row, obj)|raw }}</a>
+  <a href="{{ dg.path(cell.link(obj, column, row)) }}" {{ cell.attr('a')|raw }}>{{ cell.parseValue(obj, column, row)|raw }}</a>
 {% else %}
-  {{ cell.parseValue(column, row, obj)|raw }}
+  {{ cell.parseValue(obj, column, row)|raw }}
 {% endif %}
