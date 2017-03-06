@@ -40,6 +40,24 @@
         </a>
       {% endif %}
 
+      {% if datagrid.menu.showExport %}
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+            {{ 'Export'|trans }}
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            {% for export in datagrid.menu.exportsSelection %}
+              <li>
+                <a class="dropdown-item" href="#" onclick="document.getElementById('{{ datagrid_menu_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
+                <form id="{{ datagrid_menu_id~'-export-'~export }}" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+                  <input type="hidden" name="export-type" value="{{ export }}" />
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
       {% if datagrid.menu.showMaxEntriesSelection %}
         <div class="btn-group" role="group">
           <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">

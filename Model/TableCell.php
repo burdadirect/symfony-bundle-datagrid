@@ -4,11 +4,13 @@ namespace HBM\DatagridBundle\Model;
 
 class TableCell {
 
-  const VISIBLE_NORMAL   = 0b000001;
-  const VISIBLE_EXTENDED = 0b000010;
-  const VISIBLE_BOTH     = 0b000011;
-  const VISIBLE_EXPORT   = 0b000100;
-  const VISIBLE_ALL      = 0b000111;
+  const VISIBLE_NORMAL      = 0b000001;
+  const VISIBLE_NORMAL_EX   = 0b000101;
+  const VISIBLE_EXTENDED    = 0b000010;
+  const VISIBLE_EXTENDED_EX = 0b000110;
+  const VISIBLE_BOTH        = 0b000011;
+  const VISIBLE_EXPORT      = 0b000100;
+  const VISIBLE_ALL         = 0b000111;
 
   /**
    * @var string

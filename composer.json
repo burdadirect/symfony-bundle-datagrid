@@ -19,7 +19,8 @@
   "require": {
     "php": ">=7.0",
     "symfony/symfony": "~3.0",
-    "doctrine/orm": "~2.5"
+    "doctrine/orm": "~2.5",
+    "phpoffice/phpexcel": "^1.8"
   },
   "require-dev": {
   },

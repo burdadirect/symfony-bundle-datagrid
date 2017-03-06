@@ -39,6 +39,16 @@ class DatagridMenu {
   /**
    * @var boolean
    */
+  private $showExport;
+
+  /**
+   * @var array
+   */
+  private $exportsSelection;
+
+  /**
+   * @var boolean
+   */
   private $showReset;
 
   /**
@@ -103,6 +113,8 @@ class DatagridMenu {
     $this->setSearchFields($config['menu']['search_fields']);
     $this->setShowReset($config['menu']['show_reset']);
     $this->setShowExtended($config['menu']['show_extended']);
+    $this->setShowExport($config['menu']['show_export']);
+    $this->setExportsSelection($config['menu']['exports_selection']);
     $this->setShowRange($config['menu']['show_range']);
     $this->setShowHeader($config['menu']['show_header']);
     $this->setShowMaxEntriesSelection($config['menu']['show_max_entries_selection']);
@@ -159,6 +171,22 @@ class DatagridMenu {
 
   public function getShowExtended() {
     return $this->showExtended;
+  }
+
+  public function setShowExport($showExport) {
+    $this->showExport = $showExport;
+  }
+
+  public function getShowExport() {
+    return $this->showExport;
+  }
+
+  public function setExportsSelection($exportsSelection) {
+    $this->exportsSelection = $exportsSelection;
+  }
+
+  public function getExportsSelection() {
+    return $this->exportsSelection;
   }
 
   public function setShowReset($showReset) {
@@ -277,6 +305,7 @@ class DatagridMenu {
     $string .= 'MENU-VARS:' . "\n";
     $string .= 'show: ' . $this->getShow() . "\n";
     $string .= 'showSearch: ' . $this->getShowSearch() . "\n";
+    $string .= 'showExport: ' . $this->getShowExport() . "\n";
     $string .= 'showMaxEntriesSelection: ' . $this->getShowMaxEntriesSelection() . "\n";
     $string .= 'maxEntriesSelection: ' . json_encode($this->getMaxEntriesSelection()) . "\n";
     $string .= "\n";
@@ -288,6 +317,10 @@ class DatagridMenu {
     $string .= "\n";
     $string .= 'MENU-ROUTE-RESET:' . "\n";
     $string .= $this->routeReset . "\n";
+    $string .= "\n";
+    $string .= 'MENU-ROUTE-EXTENDED:' . "\n";
+    $string .= $this->routeExtended . "\n";
+    $string .= "\n";
     $string .= 'MENU-LINKS:' . "\n";
     foreach ($this->links as $link) {
       $string .= $link . "\n";

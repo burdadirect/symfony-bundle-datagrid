@@ -306,7 +306,7 @@ class DatagridPagination {
 
 
   public function setPageCurrent($pageCurrent) {
-    $this->pageCurrent = $pageCurrent;
+    $this->pageCurrent = max(1, intval($pageCurrent));
   }
 
   public function getPageCurrent() {

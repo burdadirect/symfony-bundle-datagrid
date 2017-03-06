@@ -38,6 +38,25 @@
           {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
             <li><a href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}"><span class="glyphicon glyphicon-flash"></span> <span class="visible-xs-inline">{{ 'Sortierung/Filter zurücksetzen'|trans }}</span><span class="visible-md-inline visible-lg-inline">{{ 'Reset'|trans }}</span></a></li>
           {% endif %}
+          {% if datagrid.menu.showExport %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="{{ 'Daten exportieren'|trans }}">
+                <span class="visible-xs-inline">{{ 'Daten exportieren'|trans }}</span>
+                <span class="visible-md-inline visible-lg-inline">{{ 'Export'|trans }}</span>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                {% for export in datagrid.menu.exportsSelection %}
+                  <li>
+                    <a href="#" onclick="document.getElementById('{{ datagrid_menu_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
+                    <form id="{{ datagrid_menu_id~'-export-'~export }}" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+                      <input type="hidden" name="export-type" value="{{ export }}" />
+                    </form>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
           {% if datagrid.menu.showMaxEntriesSelection %}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="{{ 'Anzahl der Einträge wählen'|trans }}">
