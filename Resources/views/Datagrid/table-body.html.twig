@@ -3,7 +3,7 @@
 <tbody class="datagrid-table-body">
 {% for row, obj in datagrid.results %}
   <tr>
-    {% for column, cell in datagrid.cells if not cell.extended or datagrid.extended %}
+    {% for column, cell in datagrid.cells if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
       <td {{ cell.attr('td')|raw }}>
         {% include cell.template(obj, column, row) with cell.templateParams(obj, column, row)|merge({ 'datagrid': datagrid, 'cell': cell, 'column': column, 'row': row, 'obj': obj, 'transDomain': transDomain }) only %}
       </td>

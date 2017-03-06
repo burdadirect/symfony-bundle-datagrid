@@ -52,6 +52,16 @@ class Datagrid {
    */
   private $paramNameSortation;
 
+  /**
+   * @var string
+   */
+  private $paramNameSearch;
+
+  /**
+   * @var string
+   */
+  private $paramNameExtended;
+
   /* QUERY ********************************************************************/
 
   /**
@@ -148,6 +158,8 @@ class Datagrid {
     $this->setParamNameCurrentPage($config['query']['param_names']['current_page']);
     $this->setParamNameMaxEntries($config['query']['param_names']['max_entries']);
     $this->setParamNameSortation($config['query']['param_names']['sortation']);
+    $this->setParamNameSearch($config['query']['param_names']['search']);
+    $this->setParamNameExtended($config['query']['param_names']['extended']);
 
     $this->setQueryEncode($config['query']['encode']);
 
@@ -225,28 +237,44 @@ class Datagrid {
   }
 
 
-  public function setParamNameCurrentPage($paramNameCurrentPage) {
-    $this->paramNameCurrentPage = $paramNameCurrentPage;
+  public function setParamNameCurrentPage($paramName) {
+    $this->paramNameCurrentPage = $paramName;
   }
 
   public function getParamNameCurrentPage() {
     return $this->paramNameCurrentPage;
   }
 
-  public function setParamNameMaxEntries($paramNameMaxEntries) {
-    $this->paramNameMaxEntries = $paramNameMaxEntries;
+  public function setParamNameMaxEntries($paramName) {
+    $this->paramNameMaxEntries = $paramName;
   }
 
   public function getParamNameMaxEntries() {
     return $this->paramNameMaxEntries;
   }
 
-  public function setParamNameSortation($paramNameSortation) {
-    $this->paramNameSortation = $paramNameSortation;
+  public function setParamNameSortation($paramName) {
+    $this->paramNameSortation = $paramName;
   }
 
   public function getParamNameSortation() {
     return $this->paramNameSortation;
+  }
+
+  public function setParamNameSearch($paramName) {
+    $this->paramNameSearch = $paramName;
+  }
+
+  public function getParamNameSearch() {
+    return $this->paramNameSearch;
+  }
+
+  public function setParamNameExtended($paramName) {
+    $this->paramNameExtended = $paramName;
+  }
+
+  public function getParamNameExtended() {
+    return $this->paramNameExtended;
   }
 
 
@@ -397,6 +425,8 @@ class Datagrid {
     $string .= 'currentPage: ' . $this->getParamNameCurrentPage() . "\n";
     $string .= 'maxEntries: ' . $this->getParamNameMaxEntries() . "\n";
     $string .= 'sortation: ' . $this->getParamNameSortation() . "\n";
+    $string .= 'search: ' . $this->getParamNameSearch() . "\n";
+    $string .= 'extended: ' . $this->getParamNameExtended() . "\n";
     $string .= "\n";
     $string .= 'DATAGRID-ROUTE:' . "\n";
     $string .= $this->route . "\n";

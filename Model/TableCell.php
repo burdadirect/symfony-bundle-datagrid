@@ -4,6 +4,12 @@ namespace HBM\DatagridBundle\Model;
 
 class TableCell {
 
+  const VISIBLE_NORMAL   = 0b000001;
+  const VISIBLE_EXTENDED = 0b000010;
+  const VISIBLE_BOTH     = 0b000011;
+  const VISIBLE_EXPORT   = 0b000100;
+  const VISIBLE_ALL      = 0b000111;
+
   /**
    * @var string
    */
@@ -20,9 +26,9 @@ class TableCell {
   private $route;
 
   /**
-   * @var bool
+   * @var integer
    */
-  protected $extended;
+  protected $visibility;
 
   /**
    * @var array
@@ -51,11 +57,18 @@ class TableCell {
     'format' => 'string',
   ];
 
-  public function __construct($key, $label, $route, $extended, $options = []) {
+  public function __construct($key, $label, $route, $visibility, $options = []) {
     $this->key = $key;
     $this->label = $label;
     $this->route = $route;
-    $this->extended = $extended;
+    if ($visibility === TRUE) {
+      $this->visibility = self::VISIBLE_EXTENDED;
+    } elseif ($visibility === FALSE) {
+      $this->visibility = self::VISIBLE_BOTH;
+    } else {
+      $this->visibility = $visibility;
+    }
+
 
     $this->setOptions($options);
   }
@@ -85,12 +98,12 @@ class TableCell {
     return $this->route;
   }
 
-  public function setExtended($extended) {
-    $this->extended = $extended;
+  public function setVisibility($visibility) {
+    $this->visibility = $visibility;
   }
 
-  public function getExtended() {
-    return $this->extended;
+  public function getVisibility() {
+    return $this->visibility;
   }
 
   public function addTheadLink($sortKey, $theadLink) {
@@ -112,6 +125,25 @@ class TableCell {
   }
 
   /* CUSTOM *******************************************************************/
+
+  public function isVisible($visibility) {
+    if (($this->getVisibility() & $visibility) === $visibility) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  public function isVisibleNormal() {
+    return $this->isVisible(self::VISIBLE_NORMAL);
+  }
+
+  public function isVisibleExtended() {
+    return $this->isVisible(self::VISIBLE_EXTENDED);
+  }
+
+  public function isVisibleExport() {
+    return $this->isVisible(self::VISIBLE_EXPORT);
+  }
 
   public function getLink($obj, $column, $row) {
     return new RouteLink($this->getParams($obj, $column, $row), $this->getRoute());
@@ -213,6 +245,8 @@ class TableCell {
         }
       }
     }
+    
+    return NULL;
   }
 
   private function validateOptions($options, $validOptions) {
