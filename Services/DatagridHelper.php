@@ -10,13 +10,17 @@ use HBM\DatagridBundle\Model\ExportJSON;
 use HBM\DatagridBundle\Model\ExportXLSX;
 use HBM\DatagridBundle\Model\TableCell;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use HBM\DatagridBundle\Model\Datagrid;
 use HBM\DatagridBundle\Model\DatagridMenu;
 use HBM\DatagridBundle\Model\DatagridPagination;
 use HBM\DatagridBundle\Model\RouteLink;
 use HBM\DatagridBundle\Model\Route;
+use Symfony\Component\Routing\Router;
 
 /**
  * Service
@@ -29,6 +33,9 @@ class DatagridHelper {
    * @var array
    */
   private $config;
+
+  /** @var Router */
+  protected $router;
 
   /**
    * @var LoggerInterface
@@ -63,8 +70,9 @@ class DatagridHelper {
   /** @var array */
   private $exports = [];
 
-  public function __construct($config, $logger) {
+  public function __construct($config, Router $router, LoggerInterface $logger) {
     $this->config = $config;
+    $this->router = $router;
     $this->logger = $logger;
 
     $this->setExport('csv', new ExportCSV());
@@ -270,6 +278,16 @@ class DatagridHelper {
     $this->qb = $qb;
   }
 
+  public function handleSearch(Request $request, $searchFields) {
+    if ($request->isMethod('post') && !$request->request->has('export-type')) {
+      $params = $this->handleSearchParams($request, $searchFields);
+      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $params);
+      return new RedirectResponse($url);
+    }
+
+    return FALSE;
+  }
+
   public function handleSearchParams(Request $request, $searchFields) {
     $searchParams = [];
     foreach ($searchFields as $key => $value) {
@@ -287,12 +305,24 @@ class DatagridHelper {
     ];
   }
 
-  public function handleExport($exportType, $name, EntityManager $em) {
-    if ($export = $this->getExport($exportType)) {
-      $export->init();
-      $export->setName($name);
-      $export = $this->runExport($export, $em);
-      return $export->output();
+  public function handleExport(Request $request, $name, EntityManager $em, FlashBagInterface $flashBag = NULL) {
+    if ($request->isMethod('post') && $request->request->has('export-type')) {
+      foreach ($this->getDatagrid()->getMenu()->getExportsResources() as $key => $value) {
+        ini_set($key, $value);
+      }
+
+      if ($export = $this->getExport($request->request->get('export-type'))) {
+        $export->init();
+        $export->setName($name);
+        $export = $this->runExport($export, $em);
+        return $export->output();
+      } else {
+        if ($flashBag) {
+          $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
+        }
+        $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
+        return new RedirectResponse($url);
+      }
     }
 
     return FALSE;

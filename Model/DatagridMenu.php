@@ -47,6 +47,11 @@ class DatagridMenu {
   private $exportsSelection;
 
   /**
+   * @var array
+   */
+  private $exportsResources;
+
+  /**
    * @var boolean
    */
   private $showReset;
@@ -115,6 +120,7 @@ class DatagridMenu {
     $this->setShowExtended($config['menu']['show_extended']);
     $this->setShowExport($config['menu']['show_export']);
     $this->setExportsSelection($config['menu']['exports_selection']);
+    $this->setExportsResources($config['menu']['exports_resources']);
     $this->setShowRange($config['menu']['show_range']);
     $this->setShowHeader($config['menu']['show_header']);
     $this->setShowMaxEntriesSelection($config['menu']['show_max_entries_selection']);
@@ -187,6 +193,14 @@ class DatagridMenu {
 
   public function getExportsSelection() {
     return $this->exportsSelection;
+  }
+
+  public function setExportsResources($exportsResources) {
+    $this->exportsResources = $exportsResources;
+  }
+
+  public function getExportsResources() {
+    return $this->exportsResources;
   }
 
   public function setShowReset($showReset) {

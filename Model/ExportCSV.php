@@ -18,7 +18,7 @@ class ExportCSV extends Export {
     /** @var TableCell $cell */
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $line[] = $this->encloseValue($cell->getLabel());
+        $line[] = $this->encloseValue($this->prepareLabel($cell->getLabel()));
       }
     }
 
@@ -40,6 +40,10 @@ class ExportCSV extends Export {
     }
 
     $this->lines[] = implode(';', $line);
+  }
+
+  private function prepareLabel($label) {
+    return html_entity_decode(strip_tags($label));
   }
 
   private function prepareValue($value) {

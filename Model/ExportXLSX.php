@@ -28,7 +28,7 @@ class ExportXLSX extends Export {
     $column = 0;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $cell->getLabel());
+        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabel()));
         $column++;
       }
     }
@@ -47,6 +47,10 @@ class ExportXLSX extends Export {
     }
 
     $this->row++;
+  }
+
+  private function prepareLabel($label) {
+    return html_entity_decode(strip_tags($label));
   }
 
   private function prepareValue($value) {

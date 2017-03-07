@@ -86,6 +86,9 @@ hbm_datagrid:
         show_reset: true
         show_export: false
         exports_selection: ['csv', 'xlsx', 'json']
+        exports_resources:
+            - { key: max_execution_time, value: 300 }
+            - { key: memory_limit, value: '1G' }
         show_range: true
         show_header: true
         show_max_entries_selection: true
@@ -192,14 +195,12 @@ With search fields, extended mode and export.
     ];
 
     // DATAGRID
-    $datagridHelper = $this->getDatagridHelper();
+    $datagridHelper = $this->container->get('hbm.helper.datagrid')
     $datagridHelper->setSession($this->getSession(), 'an_additional_session_prefix:');
     $datagridHelper->initDatagrid('name_of_a_route', $defaults, $page, $num, $sort, $search, $extended);
 
     // SEARCH
-    if ($request->isMethod('post') && !$request->request->has('export-type')) {
-      return $this->redirect($this->generateUrl('name_of_a_route', $datagridHelper->handleSearchParams($request, $searchFields)));
-    }
+    if ($res = $datagridHelper->handleSearch($request, $searchFields)) return $res;
 
     // QUERY BUILDER
     $em = $this->container->get('doctrine')->getManager();
@@ -209,25 +210,21 @@ With search fields, extended mode and export.
     $datagridHelper->setQueryBuilder($qb);
 
     // MISC
-    $datagridHelper->getDatagrid()->setCells($this->getTableCellsList());
+    $datagridHelper->getDatagrid()->setCells($this->getTableCells());
     $datagridHelper->getDatagrid()->getMenu()->setSearchFields($searchFields);
-    $datagridHelper->getDatagrid()->getMenu()->setShowExport(TRUE);
 
     // EXPORT
-    if ($request->isMethod('post') && $request->request->has('export-type')) {
-      if ($export = $datagridHelper->handleExport($request->request->get('export-type'), 'Bar_'.date('Y-m-d'), $em)) {
-        return $export;
-      } else {
-        $this->addFlash('error', 'The export has failed!');
-        return $this->redirect($this->generateUrl('name_of_a_route', ['page' => $page, 'num' => $num, 'sort' => $sort, 'search' => $search, 'extended' => $extended]));
-      }
-    }
+    if ($res = $datagridHelper->handleExport($request, 'Orders_'.date('Y-m-d'), $em, $this->getSession()->getFlashBag())) return $res;
 
     return $this->render('HBMFooBundle:Bar:list.html.twig', [
       'datagrid' => $datagridHelper->paginate(),
     ]);
   }
-  
+```
+
+Create a query builder that suits your needs. You have to take care of your search values and sortations.
+
+```php
   protected function prepareQueryBuilderList($sortations, $searchValues) {
     $searchValue1 = [];
     if (isset($searchValues['value1'])) {
