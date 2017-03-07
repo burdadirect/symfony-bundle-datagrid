@@ -26,7 +26,7 @@ Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
 
 ```php
-<?php
+
 // app/AppKernel.php
 
 // ...
@@ -45,6 +45,7 @@ class AppKernel extends Kernel
 
     // ...
 }
+
 ```
 
 ### Configuration
@@ -53,13 +54,15 @@ class AppKernel extends Kernel
 hbm_datagrid:
     session:
         prefix:  'hbm_datagrid:'
-        use_for: ['num', 'sort']
+        use_for: ['num', 'sort', 'extended']
     query:
         encode: 'json'
         param_names:
             current_page: "page"
             max_entries:  "num"
             sortation:    "sort"
+            search:       "search"
+            extended:     "extended"
     datagrid:
         sort: true
         multi_sort: true
@@ -81,9 +84,303 @@ hbm_datagrid:
         show_search: true
         search_fields: ~
         show_reset: true
+        show_export: false
+        exports_selection: ['csv', 'xlsx', 'json']
         show_range: true
         show_header: true
         show_max_entries_selection: true
         max_entries_selection: [5, 10, 20, 50, 100]
         template: 'HBMDatagridBundle:Menu:navbar.html.twig'
+```
+
+## Usage
+
+### Simple datagrid
+
+```php
+// src/HBM/FooBundle/Controller/BarController.php
+
+  public function indexAction($page, $mode) {
+
+    // ...
+    
+    $em = $this->container->get('doctrine')->getManager();
+    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+    
+    $datagridHelper = $this->getDatagridHelper();
+    $datagridHelper->setQueryBuilder($qb);
+    $datagridHelper->createSimpleDatagrid(
+      new Route('name_of_a_route', [ 'page' => $page ]),
+      [ 'page' => $page, 'num' => 12 ]
+    );
+    
+    return $this->render('HBMFooBundle:Bar:index.html.twig', [
+      'datagrid' => $datagridHelper->paginate(),
+    ]);
+  }
+
+```
+
+```twig
+
+// src/HBM/FooBundle/Resources/views/Bar/index.html.twig
+
+{% for item in datagrid.results %}
+    // Output item as you like.
+{% endfor %}
+
+{% include 'HBMDatagridBundle:Pagination:pagination.html.twig' with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}
+      
+```
+
+### Advanced datagrid (basic example)
+
+```php
+
+// src/HBM/FooBundle/Controller/BarController.php
+
+  public function listAction($page, $num, $sort) {
+    // DEFAULTS
+    $defaults = [
+      'page' => 1,
+      'num' => 50,
+      'sort' => NULL,
+    ];
+
+    // DATAGRID
+    $datagridHelper = $this->getDatagridHelper();
+    $datagridHelper->initDatagrid('name_of_a_route', $defaults, $page, $num, $sort);
+
+    // QUERY BUILDER
+    $em = $this->container->get('doctrine')->getManager();
+    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+    $datagridHelper->setQueryBuilder($qb);
+
+    // MISC
+    $datagridHelper->getDatagrid()->setCells($this->getTableCellsList());
+
+    return $this->render('HBMFooBundle:Bar:list.html.twig', [
+      'datagrid' => $datagridHelper->paginate(),
+    ]);
+  }
+
+```
+
+### Advanced datagrid (extended example)
+
+With search fields, extended mode and export.
+
+```php
+
+// src/HBM/FooBundle/Controller/BarController.php
+
+  public function listAction(Request $request, $page, $num, $sort, $search, $extended) {
+    // DEFAULTS
+    $defaults = [
+      'page' => 1,
+      'num' => 50,
+      'sort' => NULL,
+      'search' => NULL,
+      'extended' => NULL,
+    ];
+
+    // SEARCH FIELDS
+    $searchFields = [
+      'value1'  => ['type' => 'text',   'label' => 'Value 1'],
+      'value2'  => ['type' => 'number', 'label' => 'Value 2'],
+      'value3'  => ['type' => 'select', 'label' => 'Value 3', 'extended' => 1, 'values' => ['yes' => 'with something', 'no' => 'without something']],
+    ];
+
+    // DATAGRID
+    $datagridHelper = $this->getDatagridHelper();
+    $datagridHelper->setSession($this->getSession(), 'an_additional_session_prefix:');
+    $datagridHelper->initDatagrid('name_of_a_route', $defaults, $page, $num, $sort, $search, $extended);
+
+    // SEARCH
+    if ($request->isMethod('post') && !$request->request->has('export-type')) {
+      return $this->redirect($this->generateUrl('name_of_a_route', $datagridHelper->handleSearchParams($request, $searchFields)));
+    }
+
+    // QUERY BUILDER
+    $em = $this->container->get('doctrine')->getManager();
+    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+        
+    $qb = $this->prepareQueryBuilderList($datagridHelper->getSortations(), $datagridHelper->getSearchValues());
+    $datagridHelper->setQueryBuilder($qb);
+
+    // MISC
+    $datagridHelper->getDatagrid()->setCells($this->getTableCellsList());
+    $datagridHelper->getDatagrid()->getMenu()->setSearchFields($searchFields);
+    $datagridHelper->getDatagrid()->getMenu()->setShowExport(TRUE);
+
+    // EXPORT
+    if ($request->isMethod('post') && $request->request->has('export-type')) {
+      if ($export = $datagridHelper->handleExport($request->request->get('export-type'), 'Bar_'.date('Y-m-d'), $em)) {
+        return $export;
+      } else {
+        $this->addFlash('error', 'The export has failed!');
+        return $this->redirect($this->generateUrl('name_of_a_route', ['page' => $page, 'num' => $num, 'sort' => $sort, 'search' => $search, 'extended' => $extended]));
+      }
+    }
+
+    return $this->render('HBMFooBundle:Bar:list.html.twig', [
+      'datagrid' => $datagridHelper->paginate(),
+    ]);
+  }
+  
+  protected function prepareQueryBuilderList($sortations, $searchValues) {
+    $searchValue1 = [];
+    if (isset($searchValues['value1'])) {
+      $searchValue1 = array_diff(array_map('trim', explode(' ', $searchValues['value1'])), ['']);
+    }
+  
+    $searchValue2 = [];
+    if (isset($searchValues['value2']) && !empty($searchValues['value2'])) {
+      $searchValue2 = array_diff(array_map('trim', explode(' ', $searchValues['value2'])), ['']);
+    }
+  
+    $em = $this->container->get('doctrine')->getManager();
+    $qb = $em->getRepository('HBMFooBundle:Bar')->search($searchValue1, $searchValue2);
+  
+    if (isset($searchValues['value3']) && ($searchValues['value3'] === 'yes')) {
+      $qb->andWhere('b.fieldXYZ IS NOT NULL');
+    } elseif (isset($searchValues['value3']) && ($searchValues['value3'] === 'no')) {
+      $qb->andWhere('b.fieldXYZ IS NULL');
+    }
+  
+    // QUERY BUILDER SORT
+    if (count($sortations) == 0) {
+      $qb->addOrderBy('b.id', 'DESC');
+    }
+    foreach ($sortations as $key => $value) {
+      $qb->addOrderBy($key, $value);
+    }
+  
+    return $qb;
+  }
+
+```
+
+The base template will render header (with search and export options), the datagrid table itself and the pagination.
+
+```twig
+
+// src/HBM/FooBundle/Resources/views/Bar/list.html.twig
+
+{% include 'HBMDatagridBundle::base.html.twig' with { 'datagrid': datagrid } only %}
+
+```
+
+If `session` is configured to be used, `num`, `sort` and `extended` will be loaded from session when no url parameter are provided.
+
+```yml
+
+name_of_a_route:
+    path:     /list/{page}/{num}/{sort}/{search}/{extended}
+    defaults: { _controller: HBMFooBundle:Bar:list, page: 1, num: null, sort: null, search: null, extended: null }
+    requirements:
+        page: -?\d+
+        num:  -?\d+
+
+```
+
+### Cells (full example)
+
+Usage: `new TableCell($key, $label, $route, $visibility, $options)`
+
+#### Visiblities:
+
+- `TableCell::VISIBLE_NORMAL` (only visible in normal mode)
+- `TableCell::VISIBLE_NORMAL_EX` (visible in normal mode and export)
+- `TableCell::VISIBLE_EXTENDED` (only visible in extended mode)
+- `TableCell::VISIBLE_EXTENDED_EX` (visible in extended mode and export)
+- `TableCell::VISIBLE_EXPORT` (only visible in export)
+- `TableCell::VISIBLE_BOTH` (visible in normal and extended mode)
+- `TableCell::VISIBLE_ALL` (always visible)
+
+
+#### Valid options are:
+
+- `value` => string|callback
+- `th_attr` => string|array
+- `td_attr` => string|array
+- `a_attr` => string|array
+- `sort_key` => string|array
+- `sort_key_sep` => string
+- `label_pos` => string
+- `params` => array|callback
+- `template` => string|callback
+- `templateParams` => array|callback
+- `format` => string
+
+#### Displaying values:
+
+If a `template` option is provided, it will be used. Otherwise the default value will be used and the value will be parsed.
+
+#### Parsing values:
+
+If no `value` option is provided, `$key` will be used to get a value: `$obj->{'get'.ucfirst($key)}`
+If the returned value is an `DateTime` instance, it can be formated with the `format` option.
+
+```php
+
+  protected function getTableCells(){
+    return [
+      // Simple text/numeric value (not sortable).
+      new TableCell('field', 'Column 1', NULL, TableCell::VISIBLE_ALL, [
+      ]),
+      
+      // Simple text/numeric value (sortable).
+      new TableCell('field', 'Column 2', NULL, TableCell::VISIBLE_EXTENDED, [
+        "sort_key" => "g.field",
+      ]),
+
+      // Button (with static value)
+      new TableCell('field', 'Column 3', new Route('name_of_another_route'), FALSE, [
+        'value' => '<span class="glyphicon glyphicon-wrench"></span>',
+        'a_attr' => ['class' => 'btn btn-primary btn-xs'],
+        'params' => function(Bar $obj) {
+          return ['id' => $obj->getId()];
+        },
+      ]),
+
+      // Button (with dynamic value)
+      new TableCell('field', 'Column 4', new Route('name_of_another_route'), TableCell::VISIBLE_NORMAL, [
+        'a_attr' => ['class' => 'btn btn-primary btn-xs'],
+        'params' => function(Bar $obj) {
+          return ['id' => $obj->getId()];
+        },
+        "sort_key" => "g.id",
+      ]),
+      
+      // Template ( "obj" is always available in the template).
+      new TableCell('field', 'Column 5', NULL, TableCell::VISIBLE_BOTH, [
+        'template' => 'HBMFooBundle:Bar:table-column-template1.html.twig',
+      ]),
+
+      // Template (with additional params).
+      new TableCell('field', 'Column 6', NULL, TableCell::VISIBLE_BOTH, [
+        'template' => 'HBMFooBundle:Bar:table-column-template1.html.twig',
+        'templateParams' => ['mode' => 'thisAndthat'],
+        'th_attr' => ['style' => 'width:265px;']
+      ]),
+
+      // Value callable.
+      new TableCell('field', 'Column 7:<br />Subtitle', NULL, TableCell::VISIBLE_EXTENDED, [
+        'value' => function(Bar $obj) {
+          return implode(' / ', [$obj->someFunction(), $obj->someOtherFunction()]);
+        },
+      ]),
+
+      // Value callable with multiple sortation possibilities.
+      new TableCell('views', 'Column 8:<br />', NULL, TRUE, [
+        'value' => function(Bar $obj) {
+          return implode(' / ', [$obj->someFunction(), $obj->someOtherFunction(), $obj->someOtherFunction2()]);
+        },
+        'sort_key' => ['b.field1' => 'Bla1', 'b.field2' => 'Bla2', 'b.field3' => 'Bla3'],
+        'sort_key_sep' => '&nbsp;|&nbsp;'
+      ]),
+    ];
+  }
+
 ```
