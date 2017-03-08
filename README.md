@@ -107,8 +107,8 @@ hbm_datagrid:
 
     // ...
     
-    $em = $this->container->get('doctrine')->getManager();
-    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+    $om = $this->container->get('doctrine')->getManager();
+    $qb = $om->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
     
     $datagridHelper = $this->getDatagridHelper();
     $datagridHelper->setQueryBuilder($qb);
@@ -155,8 +155,8 @@ hbm_datagrid:
     $datagridHelper->initDatagrid('name_of_a_route', $defaults, $page, $num, $sort);
 
     // QUERY BUILDER
-    $em = $this->container->get('doctrine')->getManager();
-    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+    $om = $this->container->get('doctrine')->getManager();
+    $qb = $om->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
     $datagridHelper->setQueryBuilder($qb);
 
     // MISC
@@ -203,8 +203,8 @@ With search fields, extended mode and export.
     if ($res = $datagridHelper->handleSearch($request, $searchFields)) return $res;
 
     // QUERY BUILDER
-    $em = $this->container->get('doctrine')->getManager();
-    $qb = $em->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
+    $om = $this->container->get('doctrine')->getManager();
+    $qb = $om->getRepository('HBMFooBundle:Bar')->createQueryBuilder('b');
         
     $qb = $this->prepareQueryBuilderList($datagridHelper->getSortations(), $datagridHelper->getSearchValues());
     $datagridHelper->setQueryBuilder($qb);
@@ -214,7 +214,7 @@ With search fields, extended mode and export.
     $datagridHelper->getDatagrid()->getMenu()->setSearchFields($searchFields);
 
     // EXPORT
-    if ($res = $datagridHelper->handleExport($request, 'Orders_'.date('Y-m-d'), $em, $this->getSession()->getFlashBag())) return $res;
+    if ($res = $datagridHelper->handleExport($request, 'Orders_'.date('Y-m-d'), $om, $this->getSession()->getFlashBag())) return $res;
 
     return $this->render('HBMFooBundle:Bar:list.html.twig', [
       'datagrid' => $datagridHelper->paginate(),
@@ -236,8 +236,8 @@ Create a query builder that suits your needs. You have to take care of your sear
       $searchValue2 = array_diff(array_map('trim', explode(' ', $searchValues['value2'])), ['']);
     }
   
-    $em = $this->container->get('doctrine')->getManager();
-    $qb = $em->getRepository('HBMFooBundle:Bar')->search($searchValue1, $searchValue2);
+    $om = $this->container->get('doctrine')->getManager();
+    $qb = $om->getRepository('HBMFooBundle:Bar')->search($searchValue1, $searchValue2);
   
     if (isset($searchValues['value3']) && ($searchValues['value3'] === 'yes')) {
       $qb->andWhere('b.fieldXYZ IS NOT NULL');
