@@ -2,7 +2,7 @@
 namespace HBM\DatagridBundle\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\QueryBuilder;
 use HBM\DatagridBundle\Model\Export;
 use HBM\DatagridBundle\Model\ExportCSV;
@@ -10,7 +10,6 @@ use HBM\DatagridBundle\Model\ExportJSON;
 use HBM\DatagridBundle\Model\ExportXLSX;
 use HBM\DatagridBundle\Model\TableCell;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -305,7 +304,7 @@ class DatagridHelper {
     ];
   }
 
-  public function handleExport(Request $request, $name, EntityManager $em, FlashBagInterface $flashBag = NULL) {
+  public function handleExport(Request $request, $name, ObjectManager $om, FlashBagInterface $flashBag = NULL) {
     if ($request->isMethod('post') && $request->request->has('export-type')) {
       foreach ($this->getDatagrid()->getMenu()->getExportsResources() as $key => $value) {
         ini_set($key, $value);
@@ -314,7 +313,7 @@ class DatagridHelper {
       if ($export = $this->getExport($request->request->get('export-type'))) {
         $export->init();
         $export->setName($name);
-        $export = $this->runExport($export, $em);
+        $export = $this->runExport($export, $om);
         return $export->output();
       } else {
         if ($flashBag) {
@@ -328,7 +327,7 @@ class DatagridHelper {
     return FALSE;
   }
 
-  public function runExport(Export $export, EntityManager $em) {
+  public function runExport(Export $export, ObjectManager $om) {
     $export->setCells($this->getDatagrid()->getCells());
     $export->addHeader();
 
@@ -355,7 +354,7 @@ class DatagridHelper {
           $offset++;
         }
 
-        $em->clear();
+        $om->clear();
       }
     }
 
