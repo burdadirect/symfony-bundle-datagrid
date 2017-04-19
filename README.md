@@ -1,5 +1,11 @@
 # HBM Datagrid Bundle
 
+## Status
+
+### Dependencies
+
+[![Dependency Status](https://gemnasium.com/badges/github.com/burdanews/datagrid-bundle.svg)](https://gemnasium.com/github.com/burdanews/datagrid-bundle)
+
 ## Team
 
 ### Developers
