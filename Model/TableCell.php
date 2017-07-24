@@ -63,14 +63,13 @@ class TableCell {
     $this->key = $key;
     $this->label = $label;
     $this->route = $route;
+    $this->visibility = $visibility;
+
     if ($visibility === TRUE) {
       $this->visibility = self::VISIBLE_EXTENDED;
     } elseif ($visibility === FALSE) {
       $this->visibility = self::VISIBLE_BOTH;
-    } else {
-      $this->visibility = $visibility;
     }
-
 
     $this->setOptions($options);
   }
@@ -129,10 +128,7 @@ class TableCell {
   /* CUSTOM *******************************************************************/
 
   public function isVisible($visibility) {
-    if (($this->getVisibility() & $visibility) === $visibility) {
-      return TRUE;
-    }
-    return FALSE;
+   return ($this->getVisibility() & $visibility) === $visibility;
   }
 
   public function isVisibleNormal() {
@@ -156,13 +152,13 @@ class TableCell {
       $params = $this->getOption('params');
       if (is_string($params)) {
         return $params;
-      } else {
-        if (is_callable($params)) {
-          return $params($obj, $column, $row);
-        } else {
-          throw new \Exception("How come?");
-        }
       }
+
+      if (is_callable($params)) {
+        return $params($obj, $column, $row);
+      }
+
+      throw new \InvalidArgumentException('How come?');
     }
 
     return array();
@@ -173,11 +169,13 @@ class TableCell {
       $template = $this->getOption('template');
       if (is_string($template)) {
         return $template;
-      } elseif (is_callable($template)) {
-        return $template($obj, $column, $row);
-      } else {
-        throw new \Exception("How come?");
       }
+
+      if (is_callable($template)) {
+        return $template($obj, $column, $row);
+      }
+
+      throw new \InvalidArgumentException('How come?');
     }
 
     return $default;
@@ -189,11 +187,13 @@ class TableCell {
 
       if (is_array($templateParams)) {
         return $templateParams;
-      } elseif (is_callable($templateParams)) {
-        return $templateParams($obj, $column, $row);
-      } else {
-        throw new \Exception("How come?");
       }
+
+      if (is_callable($templateParams)) {
+        return $templateParams($obj, $column, $row);
+      }
+
+      throw new \InvalidArgumentException('How come?');
     }
 
     return $default;
@@ -220,34 +220,32 @@ class TableCell {
   }
 
   public function parseValue($obj, $column, $row) {
-    if ($this->hasOption("value")) {
-      $value = $this->getOption("value");
+    if ($this->hasOption('value')) {
+      $value = $this->getOption('value');
       if (is_string($value)) {
         return $value;
-      } else {
-        if (is_callable($value)) {
-          return $value($obj, $column, $row);
-        } else {
-          throw new \Exception("How come?");
-        }
       }
-    } else {
-      if (method_exists($obj, 'get' . ucfirst($this->getKey()))) {
-        $value = $obj->{'get' . ucfirst($this->getKey())}();
-
-        if ($value instanceof \DateTime) {
-          $format = 'Y-m-d H:i:s';
-          if (isset($this->options['format'])) {
-            $format = $this->options['format'];
-          }
-
-          return $value->format($format);
-        } else {
-          return $value;
-        }
+      if (is_callable($value)) {
+        return $value($obj, $column, $row);
       }
+      throw new \InvalidArgumentException('How come?');
     }
-    
+
+    if (method_exists($obj, 'get' . ucfirst($this->getKey()))) {
+      $value = $obj->{'get' . ucfirst($this->getKey())}();
+
+      if ($value instanceof \DateTime) {
+        $format = 'Y-m-d H:i:s';
+        if (isset($this->options['format'])) {
+          $format = $this->options['format'];
+        }
+
+        return $value->format($format);
+      }
+
+      return $value;
+    }
+
     return NULL;
   }
 
@@ -273,27 +271,27 @@ class TableCell {
                 $valid = TRUE;
               }
             } else {
-              throw new \Exception("Unknown type for option '$option'");
+              throw new \InvalidArgumentException('Unknown type for option "'.$option.'".');
             }
           }
         }
       }
 
       if (!$valid) {
-        throw new \Exception("Option '$option' is not valid");
+        throw new \InvalidArgumentException('Option "'.$option.'" is not valid.');
       }
     }
   }
 
   private function getOptionTypes($option, $validOptions) {
     if (!isset($validOptions[$option])) {
-      throw new \Exception("Not a valid option '$option'");
+      throw new \InvalidArgumentException('Not a valid option "'.$option.'".');
     }
 
     $types = $validOptions[$option];
 
-    if (strstr($types, "|") !== FALSE) {
-      $types = preg_split("/\|/", $types);
+    if (strpos($types, '|') !== FALSE) {
+      $types = explode('|', $types);
     } elseif (!is_array($types)) {
       $types = [$types];
     }
@@ -311,11 +309,11 @@ class TableCell {
   }
 
   public function isSortable() {
-    return $this->hasOption("sort_key");
+    return $this->hasOption('sort_key');
   }
 
   public function getSortKeys() {
-    $sortKey = $this->getOption("sort_key");
+    $sortKey = $this->getOption('sort_key');
 
     if (!is_array($sortKey)) {
       $sortKey = array($sortKey => $this->getLabel());
@@ -336,7 +334,7 @@ class TableCell {
 
   public function getSortKeySep() {
     if ($this->hasOption('sort_key_sep')) {
-      return $this->getOption("sort_key_sep");
+      return $this->getOption('sort_key_sep');
     }
 
     return ' | ';

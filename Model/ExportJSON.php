@@ -15,7 +15,7 @@ class ExportJSON extends Export {
   public function init() {
   }
 
-  function addHeader() {
+  public function addHeader() {
     $this->labels = [];
 
     /** @var TableCell $cell */
@@ -61,7 +61,7 @@ class ExportJSON extends Export {
     return new Response($content, 200, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
-      'Last-Modified' => gmdate("D, d M Y H:i:s").' GMT',
+      'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/json',
       'Content-Disposition' => 'attachment; filename="'.$this->name.'.json"',
       'Content-Length' => strlen($content),

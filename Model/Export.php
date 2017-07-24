@@ -26,12 +26,12 @@ abstract class Export {
     return $this->cells;
   }
 
-  abstract function init();
+  abstract public function init();
 
-  abstract function addHeader();
+  abstract public function addHeader();
 
-  abstract function addRow($obj);
+  abstract public function addRow($obj);
 
-  abstract function output();
+  abstract public function output();
 
 }

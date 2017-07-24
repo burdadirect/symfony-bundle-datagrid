@@ -23,7 +23,7 @@ class ExportXLSX extends Export {
     $this->sheet->setTitle('Export');
   }
 
-  function addHeader() {
+  public function addHeader() {
     /** @var TableCell $cell */
     $column = 0;
     foreach ($this->getCells() as $cell) {
@@ -71,7 +71,7 @@ class ExportXLSX extends Export {
     return new StreamedResponse($callable, 200, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
-      'Last-Modified' => gmdate("D, d M Y H:i:s").' GMT',
+      'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'application/vnd.ms-excel',
       'Content-Disposition' => 'attachment; filename="'.$this->name.'.xlsx"',
       'Accept-Ranges' => 'bytes',

@@ -12,7 +12,7 @@ class ExportCSV extends Export {
   public function init() {
   }
 
-  function addHeader() {
+  public function addHeader() {
     $line = [];
 
     /** @var TableCell $cell */
@@ -64,7 +64,7 @@ class ExportCSV extends Export {
     return new Response($content, 200, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
-      'Last-Modified' => gmdate("D, d M Y H:i:s").' GMT',
+      'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/csv',
       'Content-Disposition' => 'attachment; filename="'.$this->name.'.csv"',
       'Content-Length' => strlen($content),

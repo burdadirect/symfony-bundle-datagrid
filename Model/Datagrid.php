@@ -204,7 +204,7 @@ class Datagrid {
 
 
   public function setMaxEntriesPerPage($maxEntriesPerPage) {
-    $this->maxEntriesPerPage = max(1, intval($maxEntriesPerPage));
+    $this->maxEntriesPerPage = max(1, (int) $maxEntriesPerPage);
   }
 
   public function getMaxEntriesPerPage() {
@@ -288,7 +288,7 @@ class Datagrid {
 
 
   public function setExtended($extended) {
-    $this->extended = boolval($extended);
+    $this->extended = (bool) $extended;
   }
 
   public function getExtended() {

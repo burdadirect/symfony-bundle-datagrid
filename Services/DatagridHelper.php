@@ -147,35 +147,35 @@ class DatagridHelper {
 
     $key = $paramNamePage;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?$defaults[$key]:'1';
+      $fallback = $defaults[$key]?:'1';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
       $this->getDatagrid()->getPagination()->setPageCurrent($paramsHandled[$key]);
     }
 
     $key = $paramNameMaxEntries;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?$defaults[$key]:$this->getDatagrid()->getMaxEntriesPerPage();
+      $fallback = $defaults[$key]?:$this->getDatagrid()->getMaxEntriesPerPage();
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
       $this->getDatagrid()->setMaxEntriesPerPage($paramsHandled[$key]);
     }
 
     $key = $paramNameSortation;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?$defaults[$key]:'{}';
+      $fallback = $defaults[$key]?:'{}';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
       $this->getDatagrid()->setSortations($this->getQueryParams($paramsHandled[$key]));
     }
 
     $key = $paramNameSearch;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?$defaults[$key]:'{}';
+      $fallback = $defaults[$key]?:'{}';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
       $this->getDatagrid()->getMenu()->setSearchValues($this->getQueryParams($paramsHandled[$key]));
     }
 
     $key = $paramNameExtended;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?$defaults[$key]:'0';
+      $fallback = $defaults[$key]?:'0';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
       $this->getDatagrid()->setExtended($paramsHandled[$key]);
     }
@@ -315,13 +315,14 @@ class DatagridHelper {
         $export->setName($name);
         $export = $this->runExport($export, $om);
         return $export->output();
-      } else {
-        if ($flashBag) {
-          $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
-        }
-        $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
-        return new RedirectResponse($url);
       }
+
+
+      if ($flashBag) {
+        $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
+      }
+      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
+      return new RedirectResponse($url);
     }
 
     return FALSE;
@@ -422,7 +423,7 @@ class DatagridHelper {
 
     if (array_key_exists($key, $params)) {
       // Set default value
-      if (($params[$key] === '-1')) {
+      if ($params[$key] === '-1') {
         $params[$key] = $default;
       }
 
@@ -459,7 +460,7 @@ class DatagridHelper {
         }
       }
     } else {
-      throw new \Exception('No other query encoding implemented yet!');
+      throw new \InvalidArgumentException('No other query encoding implemented yet!');
     }
 
     return $queryParams;
@@ -472,7 +473,7 @@ class DatagridHelper {
       }
       $queryString = json_encode($vars, JSON_FORCE_OBJECT);
     } else {
-      throw new \Exception('No other query decoding implemented yet!');
+      throw new \InvalidArgumentException('No other query decoding implemented yet!');
     }
 
     return $queryString;
@@ -575,16 +576,16 @@ class DatagridHelper {
     // Calculate pages
     $pagination->setPageFrom(max(array(
       1,
-      ($pagination->getPageCurrent() - floor(($max_links - 1) / 2))
+      $pagination->getPageCurrent() - floor(($max_links - 1) / 2)
     )));
     $pagination->setPageThru(min(array(
       $pagination->getPageMax(),
-      ($pagination->getPageFrom() + $max_links - 1)
+      $pagination->getPageFrom() + $max_links - 1
     )));
-    if ($pagination->getPageThru() == $pagination->getPageMax()) {
+    if ($pagination->getPageThru() === $pagination->getPageMax()) {
       $pagination->setPageFrom(max(array(
         1,
-        ($pagination->getPageThru() - $max_links)
+        $pagination->getPageThru() - $max_links
       )));
     }
 
@@ -618,10 +619,10 @@ class DatagridHelper {
   private function handlePaginationLinks() {
     $pagination = $this->getDatagrid()->getPagination();
 
-    if ($pagination->getPageCurrent() != 1) {
+    if ($pagination->getPageCurrent() !== 1) {
       $pagination->setLinkFirst($pagination->createLink(1));
     }
-    if ($pagination->getPageCurrent() != $pagination->getPageMax()) {
+    if ($pagination->getPageCurrent() !== $pagination->getPageMax()) {
       $pagination->setLinkLast($pagination->createLink($pagination->getPageMax()));
     }
 
@@ -670,5 +671,3 @@ class DatagridHelper {
   }
 
 }
-
-?>
