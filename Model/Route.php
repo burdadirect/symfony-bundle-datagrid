@@ -16,14 +16,21 @@ class Route {
   protected $defaults = array();
 
   /**
+   * @var string
+   */
+  protected $hash;
+
+  /**
    * Route constructor.
    *
    * @param $name
    * @param array $defaults
+   * @param string $hash
    */
-  public function __construct($name = NULL, $defaults = array()) {
+  public function __construct($name = NULL, $defaults = array(), $hash = NULL) {
     $this->name = $name;
     $this->defaults = $defaults;
+    $this->hash = $hash;
   }
 
   /* GETTER/SETTER **********************************************************/
@@ -42,6 +49,18 @@ class Route {
 
   public function getDefaults() {
     return $this->defaults;
+  }
+
+  public function setHash($hash) {
+    $this->hash = $hash;
+  }
+
+  public function getHash($prefix = '#') {
+    if ($this->hash) {
+      return $prefix.$this->hash;
+    }
+
+    return NULL;
   }
 
   /* CUSTOM *****************************************************************/
