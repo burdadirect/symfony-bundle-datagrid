@@ -55,7 +55,7 @@ class Route {
     $this->hash = $hash;
   }
 
-  public function getHash($prefix = '#') {
+  public function getHash($prefix = '') {
     if ($this->hash) {
       return $prefix.$this->hash;
     }

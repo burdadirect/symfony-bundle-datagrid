@@ -29,6 +29,7 @@ class RouteLink extends Route {
     if ($route !== NULL) {
       $this->name = $route->getName();
       $this->defaults = $route->getDefaults();
+      $this->hash = $route->getHash();
     }
   }
 
