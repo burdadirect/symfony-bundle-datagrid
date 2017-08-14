@@ -2,7 +2,12 @@
 
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
-<div class="input-group input-group-sm">
+{% set classes = 'input-group input-group-sm' %}
+{% if datagrid.bootstrap == 'v4' %}
+  {% set classes = 'input-group input-group-sm my-1 mr-sm-2' %}
+{% endif %}
+
+<div class="{{ classes }}">
   <span class="input-group-addon">{{ dg.trans(searchField['label'], transDomain) }}</span>
   <select class="form-control" name="{{ searchKey }}" title="{{ dg.trans(searchField['label'], transDomain) }}">
     <option></option>

@@ -3,6 +3,7 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 
+{% set classesPagination = 'pagination' %}
 {% set classesPaginationItem = '' %}
 {% set classesPaginationLink = '' %}
 {% set classesFirst = 'glyphicon glyphicon-fast-backward' %}
@@ -10,6 +11,7 @@
 {% set classesNext = 'glyphicon glyphicon-step-forward' %}
 {% set classesLast = 'glyphicon glyphicon-fast-forward' %}
 {% if datagrid.bootstrap == 'v4' %}
+  {% set classesPagination = 'pagination justify-content-center' %}
   {% set classesPaginationItem = 'page-item ' %}
   {% set classesPaginationLink = 'page-link ' %}
   {% set classesFirst = 'fa fa-fast-backward' %}
@@ -21,7 +23,7 @@
 
 {% if pagination.pageMax > 1 %}
   <div class="datagrid-pagination">
-    <ul class="pagination">
+    <ul class="{{ classesPagination }}">
 
       {% if pagination.linkFirst is not null and pagination.showFirst %}
         <li class="{{ classesPaginationItem }}">
