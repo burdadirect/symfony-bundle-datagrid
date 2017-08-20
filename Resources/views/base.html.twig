@@ -13,11 +13,13 @@
 {% if datagrid.results|length == 0 %}
   <p>{{ 'Keine Einträge gefunden.'|trans }}</p>
 {% else %}
-  <table class="{{ classesTable }}">
-    {% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
+  <div class="datagrid-table-wrapper">
+    <table class="{{ classesTable }}">
+      {% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
-    {% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
-  </table>
+      {% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
+    </table>
+  </div>
 {% endif %}
 
 {% include datagrid.pagination.template with { 'datagrid': datagrid, 'pagination': datagrid.pagination, 'transDomain': transDomain } only %}
