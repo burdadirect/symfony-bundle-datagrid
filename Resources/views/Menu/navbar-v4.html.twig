@@ -2,91 +2,94 @@
 
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
-{% set datagrid_collapsable_id = 'datagrid-'~random()~'-collapsable' %}
-{% set datagrid_btngroup_id = 'datagrid-'~random()~'-btngroup' %}
+{% set datagrid_id = 'datagrid-'~random() %}
 
 {% if datagrid.menu.show %}
-  <div class="datagrid-menu mb-3">
-    <div class="datagrid-menu-header">
+  <div class="datagrid-menu navbar navbar-light bg-light navbar-expand-sm mb-3">
+    <div class="datagrid-menu-header navbar-brand">
       {% if datagrid.menu.showHeader %}
         <div class="datagrid-menu-num">
           <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
         </div>
       {% endif %}
-      <button class="datagrid-menu-toggler btn btn-secondary btn-sm" type="button" data-pbytools-toogle-class="[{'t':'.{{ datagrid_collapsable_id }}','c':'datagrid-open'},{'t':'.{{ datagrid_btngroup_id }}','c':'btn-group'},{'t':'.{{ datagrid_btngroup_id }}','c':'btn-group-vertical'}]">
-        &#9776;
-      </button>
     </div>
 
-    {% if datagrid.menu.showRange %}
-      <div class="datagrid-menu-range highlightable datagrid-collapsable {{ datagrid_collapsable_id }}">
-        {{ 'Einträge'|trans }}
-        <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
-        {{ 'bis'|trans }}
-        <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+    <button class="datagrid-menu-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ datagrid_id~'-navbar' }}" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle datagrid navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="{{ datagrid_id~'-navbar' }}">
+      {% if datagrid.menu.showRange %}
+        <div class="datagrid-menu-range highlightable navbar-text text-nowrap mr-sm-3">
+          {{ 'Einträge'|trans }}
+          <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+          {{ 'bis'|trans }}
+          <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+        </div>
+      {% endif %}
+
+      {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
+        <form class="datagrid-menu-search form-inline justify-content-center mr-sm-3" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+
+          {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+            {% if searchField['type'] == 'number' %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% elseif searchField['type'] == 'select' %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% else %}
+              {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% endif %}
+          {% endfor %}
+
+          <button type="submit" class="btn btn-secondary btn-sm"> <span class="fa fa-search"></span> {{ 'Suchen'|trans }}</button>
+        </form>
+      {% endif %}
+
+      {% set datagrid_actions_classes = 'my-1 mx-1' %}
+      <div class="datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center mt-3 mt-sm-0">
+        {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
+          <a class="btn btn-secondary btn-sm {{ datagrid_actions_classes }}" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">
+            <span class="fa {{ datagrid.extended?'fa-compress':'fa-expand' }}"></span> {{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}
+          </a>
+        {% endif %}
+
+        {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
+          <a class="btn btn-secondary btn-sm {{ datagrid_actions_classes }}" href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}">
+            <span class="fa fa-bolt"></span> {{ 'Reset'|trans }}
+          </a>
+        {% endif %}
+
+        {% if datagrid.menu.showExport %}
+          <div class="btn-group" role="group">
+            <button class="btn btn-secondary btn-sm dropdown-toggle {{ datagrid_actions_classes }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ 'Export'|trans }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="{{ datagrid_id~'-export' }}">
+              {% for export in datagrid.menu.exportsSelection %}
+                <li>
+                  <a class="dropdown-item" href="#" onclick="document.getElementById('{{ datagrid_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
+                  <form id="{{ datagrid_id~'-export-'~export }}" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+                    <input type="hidden" name="export-type" value="{{ export }}" />
+                  </form>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if datagrid.menu.showMaxEntriesSelection %}
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-sm dropdown-toggle {{ datagrid_actions_classes }}" type="button" id="{{ datagrid_id~'-maxentries' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ datagrid.maxEntriesPerPage }} {{ 'Einträge'|trans }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ datagrid_id~'-maxentries' }}">
+              {% for link in datagrid.menu.links -%}
+                <li><a class="dropdown-item" href="{{ dg.path(link) }}" title="{{ link.value }} {{ 'Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
+              {%- endfor %}
+            </ul>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
-
-    <div class="datagrid-menu-actions datagrid-collapsable {{ datagrid_collapsable_id }}">
-      {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
-        <a class="btn btn-secondary btn-sm" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">
-          <span class="fa {{ datagrid.extended?'fa-compress':'fa-expand' }}"></span> {{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}
-        </a>
-      {% endif %}
-
-      {% if datagrid.menu.showReset and datagrid.menu.routeReset %}
-        <a class="btn btn-secondary btn-sm" href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}">
-          <span class="fa fa-bolt"></span> {{ 'Reset'|trans }}
-        </a>
-      {% endif %}
-
-      {% if datagrid.menu.showExport %}
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-            {{ 'Export'|trans }}
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            {% for export in datagrid.menu.exportsSelection %}
-              <li>
-                <a class="dropdown-item" href="#" onclick="document.getElementById('{{ datagrid_menu_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
-                <form id="{{ datagrid_menu_id~'-export-'~export }}" action="{{ dg.path(datagrid.menu.route) }}" method="post">
-                  <input type="hidden" name="export-type" value="{{ export }}" />
-                </form>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-
-      {% if datagrid.menu.showMaxEntriesSelection %}
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-            {{ datagrid.maxEntriesPerPage }} {{ 'Einträge'|trans }}
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            {% for link in datagrid.menu.links -%}
-              <li><a class="dropdown-item" href="{{ dg.path(link) }}" title="{{ link.value }} {{ 'Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
-            {%- endfor %}
-          </ul>
-        </div>
-      {% endif %}
     </div>
-
-    {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-      <form class="datagrid-menu-search datagrid-collapsable {{ datagrid_collapsable_id }} form-inline justify-content-center" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
-
-        {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
-          {% if searchField['type'] == 'number' %}
-            {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-          {% elseif searchField['type'] == 'select' %}
-            {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-          {% else %}
-            {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-          {% endif %}
-        {% endfor %}
-
-        <button type="submit" class="btn btn-secondary btn-sm"> <span class="fa fa-search"></span> {{ 'Suchen'|trans }}</button>
-      </form>
-    {% endif %}
   </div>
 {% endif %}

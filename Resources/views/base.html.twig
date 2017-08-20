@@ -2,14 +2,13 @@
 
 {% set transDomain = datagrid.translationDomain %}
 
-{% include datagrid.menu.template with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
-
-
 {% set classesTable = 'table table-hover table-bordered table-condensed datagrid-table' %}
 {% if datagrid.bootstrap == 'v4' %}
   {% set classesTable = 'table table-hover table-bordered table-sm datagrid-table' %}
 {% endif %}
 
+
+{% include datagrid.menu.template with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
 {% if datagrid.results|length == 0 %}
   <p>{{ 'Keine Einträge gefunden.'|trans }}</p>

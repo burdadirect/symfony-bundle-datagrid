@@ -3,9 +3,11 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 
+{% set classesLink = 'datagrid-table-link' %}
 {% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
 {% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
 {% if datagrid.bootstrap == 'v4' %}
+  {% set classesLink = 'datagrid-table-link text-nowrap' %}
   {% set classesSortAsc = 'fa fa-sort-amount-asc' %}
   {% set classesSortDesc = 'fa fa-sort-amount-desc' %}
 {% endif %}
@@ -16,7 +18,7 @@
     {{ dg.trans(cell.label, transDomain)|raw }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="datagrid-table-link" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyLabel(sortKey), transDomain) }}">
+    <a class="{{ classesLink }}" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyLabel(sortKey), transDomain) }}">
       {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
