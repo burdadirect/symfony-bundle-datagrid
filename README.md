@@ -313,7 +313,7 @@ Usage: `new TableCell($key, $label, $route, $visibility, $options)`
 - `label_pos` => string
 - `params` => array|callback
 - `template` => string|callback
-- `templateParams` => array|callback
+- `template_params` => array|callback
 - `format` => string
 
 #### Displaying values:
