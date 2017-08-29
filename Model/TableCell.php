@@ -55,7 +55,7 @@ class TableCell {
     'label_pos' => 'string',
     'params' => 'array|callback',
     'template' => 'string|callback',
-    'templateParams' => 'array|callback',
+    'template_params' => 'array|callback',
     'format' => 'string',
   ];
 
@@ -182,8 +182,8 @@ class TableCell {
   }
 
   public function getTemplateParams($obj, $column, $row, $default = []) {
-    if ($this->hasOption('templateParams')) {
-      $templateParams = $this->getOption('templateParams');
+    if ($this->hasOption('template_params')) {
+      $templateParams = $this->getOption('template_params');
 
       if (is_array($templateParams)) {
         return $templateParams;
