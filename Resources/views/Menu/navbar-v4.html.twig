@@ -28,7 +28,7 @@
 
     <div class="collapse navbar-collapse justify-content-between" id="{{ datagrid_id~'-navbar' }}">
       {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-        <form class="datagrid-menu-search form-inline justify-content-center mr-sm-3" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+        <form class="datagrid-menu-search form-inline justify-content-center" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
           {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
             {% if searchField['type'] == 'number' %}
@@ -45,7 +45,7 @@
       {% endif %}
 
       {% set datagrid_actions_classes = 'my-1 mx-1' %}
-      <div class="datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center mt-3 mt-sm-0">
+      <div class="datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center ml-sm-3 mt-3 mt-sm-0">
         {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
           <a class="btn btn-secondary btn-sm {{ datagrid_actions_classes }}" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">
             <span class="fa {{ datagrid.extended?'fa-compress':'fa-expand' }}"></span> {{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}
