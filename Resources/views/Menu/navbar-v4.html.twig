@@ -8,8 +8,16 @@
   <div class="datagrid-menu navbar navbar-light bg-light navbar-expand-sm mb-3">
     <div class="datagrid-menu-header navbar-brand">
       {% if datagrid.menu.showHeader %}
-        <div class="datagrid-menu-num">
+        <div class="datagrid-menu-num highlightable">
           <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
+        </div>
+      {% endif %}
+      {% if datagrid.menu.showRange %}
+        <div class="datagrid-menu-range highlightable text-nowrap small">
+          {{ 'Einträge'|trans }}
+          <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+          {{ 'bis'|trans }}
+          <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
         </div>
       {% endif %}
     </div>
@@ -19,15 +27,6 @@
     </button>
 
     <div class="collapse navbar-collapse justify-content-between" id="{{ datagrid_id~'-navbar' }}">
-      {% if datagrid.menu.showRange %}
-        <div class="datagrid-menu-range highlightable navbar-text text-nowrap mr-sm-3">
-          {{ 'Einträge'|trans }}
-          <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
-          {{ 'bis'|trans }}
-          <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
-        </div>
-      {% endif %}
-
       {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
         <form class="datagrid-menu-search form-inline justify-content-center mr-sm-3" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
