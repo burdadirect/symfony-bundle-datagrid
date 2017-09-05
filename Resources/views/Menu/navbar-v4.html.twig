@@ -26,7 +26,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse justify-content-between" id="{{ datagrid_id~'-navbar' }}">
+    <div class="collapse navbar-collapse justify-content-end" id="{{ datagrid_id~'-navbar' }}">
       {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
         <form class="datagrid-menu-search form-inline justify-content-center" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
