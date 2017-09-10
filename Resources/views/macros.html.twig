@@ -1,3 +1,26 @@
 {% macro path(route) %}{{ path(route.name, route.merged) ~ route.hash('#') }}{% endmacro %}
 
 {% macro trans(text, transDomain) %}{{ (transDomain is same as(false) ? text|raw : text|trans({}, transDomain)|raw) }}{% endmacro %}
+
+{% macro size(datagrid, component, prefix) %}
+  {%- if datagrid.bootstrap['sizes'][component] -%}
+    {{- ' ' ~ prefix|default(component) ~ '-' ~ datagrid.bootstrap['sizes'][component] -}}
+  {%- endif -%}
+{% endmacro %}
+
+{% macro classes(datagrid, component) %}
+  {%- if datagrid.bootstrap['classes'][component] is defined -%}
+    {{- ' ' ~ datagrid.bootstrap['classes'][component] -}}
+  {%- endif -%}
+{% endmacro %}
+
+{% macro classesAndSize(datagrid, component, prefix) %}
+  {% import _self as self %}
+  {{- self.classes(datagrid, component) ~ self.size(datagrid, component, prefix) -}}
+{% endmacro %}
+
+{% macro icon(datagrid, icon) %}
+  {%- if datagrid.bootstrap['icons'][icon] is defined -%}
+    {{- datagrid.bootstrap['icons'][icon] -}}
+  {%- endif -%}
+{% endmacro %}

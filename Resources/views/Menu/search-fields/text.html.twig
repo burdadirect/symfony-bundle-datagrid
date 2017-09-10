@@ -2,10 +2,13 @@
 
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
-{% set classes = 'input-group input-group-sm' %}
-{% if datagrid.bootstrap == 'v4' %}
-  {% set classes = 'input-group input-group-sm my-1 mr-sm-2' %}
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
+  {% set classes = 'my-1 mr-sm-2' ~ dg.classesAndSize(datagrid, 'input-group') %}
+{% else %}
+  {% set classes = 'input-group input-group-sm' %}
 {% endif %}
+
 
 <div class="{{ classes }}">
   <span class="input-group-addon">abc</span>

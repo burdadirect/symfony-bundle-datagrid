@@ -3,13 +3,14 @@
 {% import 'HBMDatagridBundle::macros.html.twig' as dg %}
 
 
-{% set classesLink = 'datagrid-table-link' %}
-{% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
-{% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
-{% if datagrid.bootstrap == 'v4' %}
+{% if datagrid.bootstrap['version'] == 'v4' %}
   {% set classesLink = 'datagrid-table-link text-nowrap' %}
-  {% set classesSortAsc = 'fa fa-sort-amount-asc' %}
-  {% set classesSortDesc = 'fa fa-sort-amount-desc' %}
+  {% set classesSortAsc = dg.icon(datagrid, 'sort-asc') %}
+  {% set classesSortDesc = dg.icon(datagrid, 'sort-desc') %}
+{% else %}
+  {% set classesLink = 'datagrid-table-link' %}
+  {% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
+  {% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
 {% endif %}
 
 

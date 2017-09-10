@@ -1,10 +1,14 @@
 {% trans_default_domain "HBMDatagridBundle" %}
 
+{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
+
 {% set transDomain = datagrid.translationDomain %}
 
-{% set classesTable = 'table table-hover table-bordered table-condensed datagrid-table' %}
-{% if datagrid.bootstrap == 'v4' %}
-  {% set classesTable = 'table table-hover table-bordered table-sm datagrid-table' %}
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
+  {% set classesTable = 'datagrid-table' ~ dg.classes(datagrid, 'table') %}
+{% else %}
+  {% set classesTable = 'datagrid-table table table-hover table-bordered table-condensed' %}
 {% endif %}
 
 

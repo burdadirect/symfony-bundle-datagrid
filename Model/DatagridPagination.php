@@ -306,7 +306,7 @@ class DatagridPagination {
 
 
   public function setPageCurrent($pageCurrent) {
-    $this->pageCurrent = max(1, intval($pageCurrent));
+    $this->pageCurrent = max(1, (int) $pageCurrent);
   }
 
   public function getPageCurrent() {
@@ -314,7 +314,7 @@ class DatagridPagination {
   }
 
   public function setPageMax($pageMax) {
-    $this->pageMax = $pageMax;
+    $this->pageMax = (int) $pageMax;
   }
 
   public function getPageMax() {
@@ -322,7 +322,7 @@ class DatagridPagination {
   }
 
   public function setPageFrom($pageFrom) {
-    $this->pageFrom = $pageFrom;
+    $this->pageFrom = (int) $pageFrom;
   }
 
   public function getPageFrom() {
@@ -330,7 +330,7 @@ class DatagridPagination {
   }
 
   public function setPageThru($pageThru) {
-    $this->pageThru = $pageThru;
+    $this->pageThru = (int) $pageThru;
   }
 
   public function getPageThru() {

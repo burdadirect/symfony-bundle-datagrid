@@ -12,7 +12,7 @@ class Datagrid {
   private $translationDomain;
 
   /**
-   * @var string
+   * @var array
    */
   private $bootstrap;
 

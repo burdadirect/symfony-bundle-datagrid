@@ -4,7 +4,8 @@
 
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
-{% if datagrid.bootstrap == 'v4' %}
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
   {% include 'HBMDatagridBundle:Menu:navbar-v4.html.twig' %}
 {% else %}
   {% include 'HBMDatagridBundle:Menu:navbar-v3.html.twig' %}
