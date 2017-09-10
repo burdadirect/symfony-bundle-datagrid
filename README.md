@@ -58,6 +58,37 @@ class AppKernel extends Kernel
 
 ```yml
 hbm_datagrid:
+    bootstrap:
+        version:  'v4'
+        sizes:
+            btn: 'sm'
+            btn_group: 'sm'
+            input_group: 'sm'
+            table: 'sm'
+            pagination: 'sm'
+        classes:
+            btn: 'btn btn-secondary'
+            btn_group: 'btn-group'
+            input_group: 'input-group'
+            navbar: 'navbar navbar-light bg-light navbar-expand-sm mb-3'
+            table: 'table table-hover table-bordered'
+            pagination: 'pagination justify-content-center'
+            page_item: 'page-item'
+            page_link: 'page-link'
+        icons:
+            # Sortation
+            sort_asc: 'fa fa-sort-amount-asc'
+            sort_desc: 'fa fa-sort-amount-desc'
+            # Navigation
+            search: 'fa fa-search'
+            reset: 'fa fa-bolt'
+            expand: 'fa fa-expand'
+            compress: 'fa fa-compress'
+            # Pagination
+            page_first: 'fa fa-fast-backward'
+            page_prev: 'fa fa-step-backward'
+            page_next: 'fa fa-step-forward'
+            page_last: 'fa fa-fast-forward'
     session:
         prefix:  'hbm_datagrid:'
         use_for: ['num', 'sort', 'extended']

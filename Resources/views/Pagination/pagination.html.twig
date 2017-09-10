@@ -4,9 +4,9 @@
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesPagination = dg.classesAndSize(datagrid, 'pagination')|trim %}
-  {% set classesPaginationItem = dg.classes(datagrid, 'page-item')|trim %}
-  {% set classesPaginationLink = dg.classes(datagrid, 'page-link')|trim %}
+  {% set classesPagination = dg.classesAndSize(datagrid, 'pagination') %}
+  {% set classesPaginationItem = dg.classes(datagrid, 'page-item') %}
+  {% set classesPaginationLink = dg.classes(datagrid, 'page-link') %}
   {% set classesFirst = dg.icon(datagrid, 'page-first') %}
   {% set classesPrev = dg.icon(datagrid, 'page-prev') %}
   {% set classesNext = dg.icon(datagrid, 'page-next') %}

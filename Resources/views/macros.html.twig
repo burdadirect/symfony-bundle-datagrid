@@ -2,25 +2,28 @@
 
 {% macro trans(text, transDomain) %}{{ (transDomain is same as(false) ? text|raw : text|trans({}, transDomain)|raw) }}{% endmacro %}
 
-{% macro size(datagrid, component, prefix) %}
-  {%- if datagrid.bootstrap['sizes'][component] -%}
-    {{- ' ' ~ prefix|default(component) ~ '-' ~ datagrid.bootstrap['sizes'][component] -}}
+{%- macro size(datagrid, component, prefix) -%}
+  {%- set key = component|replace({'-': '_'}) -%}
+  {%- if datagrid.bootstrap['sizes'][key] is defined and datagrid.bootstrap['sizes'][key]  -%}
+    {{- ' ' ~ prefix|default(component) ~ '-' ~ datagrid.bootstrap['sizes'][key] -}}
   {%- endif -%}
 {% endmacro %}
 
-{% macro classes(datagrid, component) %}
-  {%- if datagrid.bootstrap['classes'][component] is defined -%}
-    {{- ' ' ~ datagrid.bootstrap['classes'][component] -}}
+{%- macro classes(datagrid, component) -%}
+  {%- set key = component|replace({'-': '_'}) -%}
+  {%- if datagrid.bootstrap['classes'][key] is defined -%}
+    {{- datagrid.bootstrap['classes'][key] -}}
   {%- endif -%}
-{% endmacro %}
+{%- endmacro -%}
 
-{% macro classesAndSize(datagrid, component, prefix) %}
+{%- macro classesAndSize(datagrid, component, prefix) -%}
   {% import _self as self %}
   {{- self.classes(datagrid, component) ~ self.size(datagrid, component, prefix) -}}
-{% endmacro %}
+{%- endmacro -%}
 
-{% macro icon(datagrid, icon) %}
-  {%- if datagrid.bootstrap['icons'][icon] is defined -%}
-    {{- datagrid.bootstrap['icons'][icon] -}}
+{%- macro icon(datagrid, icon) -%}
+  {%- set key = icon|replace({'-': '_'}) -%}
+  {%- if datagrid.bootstrap['icons'][key] is defined -%}
+    {{- datagrid.bootstrap['icons'][key] -}}
   {%- endif -%}
-{% endmacro %}
+{%- endmacro -%}

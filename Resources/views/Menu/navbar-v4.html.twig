@@ -5,7 +5,7 @@
 {% set datagrid_id = 'datagrid-'~random() %}
 
 {% if datagrid.menu.show %}
-  <div class="datagrid-menu{{ dg.classes(datagrid, 'navbar') }}">
+  <div class="datagrid-menu {{ dg.classes(datagrid, 'navbar') }}">
     <div class="datagrid-menu-header navbar-brand">
       {% if datagrid.menu.showHeader %}
         <div class="datagrid-menu-num highlightable">
@@ -44,7 +44,7 @@
         </form>
       {% endif %}
 
-      {% set datagrid_actions_classes = 'my-1 mx-1' %}
+      {% set datagrid_actions_classes = 'my-1 mx-1 ' %}
       <div class="datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center ml-sm-3 mt-3 mt-sm-0">
         {% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
           <a class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn') }}" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">

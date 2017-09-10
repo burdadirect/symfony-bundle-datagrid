@@ -6,7 +6,7 @@
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesTable = 'datagrid-table' ~ dg.classes(datagrid, 'table') %}
+  {% set classesTable = 'datagrid-table ' ~ dg.classesAndSize(datagrid, 'table') %}
 {% else %}
   {% set classesTable = 'datagrid-table table table-hover table-bordered table-condensed' %}
 {% endif %}

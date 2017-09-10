@@ -4,7 +4,7 @@
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classes = 'my-1 mr-sm-2' ~ dg.classesAndSize(datagrid, 'input-group') %}
+  {% set classes = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input-group') %}
 {% else %}
   {% set classes = 'input-group' %}
 {% endif %}
