@@ -1,4 +1,6 @@
 services:
+    _defaults: { public: true }
+
     hbm.helper.datagrid:
         class: HBM\DatagridBundle\Services\DatagridHelper
         arguments: ["%hbm_datagrid%", "@router", "@logger"]
