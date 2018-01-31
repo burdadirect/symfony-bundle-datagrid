@@ -4,13 +4,15 @@
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classes = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input-group') %}
+  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input-group') %}
+  {% set classesAddon = 'input-group-prepend' %}
 {% else %}
-  {% set classes = 'input-group input-group-sm' %}
+  {% set classesGroup = 'input-group input-group-sm' %}
+  {% set classesAddon = 'input-group-addon' %}
 {% endif %}
 
 
-<div class="{{ classes }}">
-  <span class="input-group-addon">abc</span>
+<div class="{{ classesGroup }}">
+  <span class="{{ classesAddon }}">abc</span>
   <input type="text" class="form-control" placeholder="{{ dg.trans(searchField['label'], transDomain) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
 </div>
