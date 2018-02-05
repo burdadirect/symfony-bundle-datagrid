@@ -17,10 +17,11 @@
     }
   },
   "require": {
-    "php": ">=7.0",
-    "symfony/symfony": "~3.0",
-    "doctrine/orm": "~2.5",
-    "phpoffice/phpexcel": "^1.8"
+    "php": ">=7.1",
+    "symfony/symfony": "^4.0",
+    "doctrine/orm": "^2.5",
+    "phpoffice/phpexcel": "^1.8",
+    "roave/security-advisories": "dev-master"
   },
   "require-dev": {
   },
