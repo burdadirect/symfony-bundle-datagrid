@@ -18,10 +18,14 @@
   },
   "require": {
     "php": ">=7.1",
-    "symfony/symfony": "^3.0|^4.0",
+    "symfony/config": "^3.0|^4.0",
+    "symfony/routing": "^3.0|^4.0",
+    "symfony/http-foundation": "^3.0|^4.0",
+    "symfony/dependency-injection": "^3.0|^4.0",
     "doctrine/orm": "^2.5",
     "phpoffice/phpexcel": "^1.8",
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "psr/log": "^1.0"
   },
   "require-dev": {
   },
