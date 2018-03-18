@@ -115,7 +115,7 @@ hbm_datagrid:
         show_next:  true
         show_last:  true
         show_sep:   true
-        template: 'HBMDatagridBundle:Pagination:pagination.html.twig'
+        template: '@HBMDatagrid/Pagination/pagination.html.twig'
     menu:
         show: true
         show_search: true
@@ -130,7 +130,7 @@ hbm_datagrid:
         show_header: true
         show_max_entries_selection: true
         max_entries_selection: [5, 10, 20, 50, 100]
-        template: 'HBMDatagridBundle:Menu:navbar.html.twig'
+        template: '@HBMDatagrid/Menu/navbar.html.twig'
 ```
 
 ## Usage
@@ -169,7 +169,7 @@ hbm_datagrid:
     // Output item as you like.
 {% endfor %}
 
-{% include 'HBMDatagridBundle:Pagination:pagination.html.twig' with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}
+{% include '@HBMDatagrid/Pagination/pagination.html.twig' with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}
       
 ```
 
@@ -301,7 +301,7 @@ The base template will render header (with search and export options), the datag
 
 // src/HBM/FooBundle/Resources/views/Bar/list.html.twig
 
-{% include 'HBMDatagridBundle::base.html.twig' with { 'datagrid': datagrid } only %}
+{% include '@HBMDatagrid/base.html.twig' with { 'datagrid': datagrid } only %}
 
 ```
 

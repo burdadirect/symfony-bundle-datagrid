@@ -164,7 +164,7 @@ class TableCell {
     return array();
   }
 
-  public function getTemplate($obj, $column, $row, $default = 'HBMDatagridBundle:Datagrid:table-cell.html.twig') {
+  public function getTemplate($obj, $column, $row, $default = '@HBMDatagrid/Datagrid/table-cell.html.twig') {
     if ($this->hasOption('template')) {
       $template = $this->getOption('template');
       if (is_string($template)) {

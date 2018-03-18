@@ -1,6 +1,6 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import '@HBMDatagridBundle/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% set datagrid_id = 'datagrid-'~random() %}
 
@@ -32,11 +32,11 @@
 
           {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
             {% if searchField['type'] == 'number' %}
-              {% include 'HBMDatagridBundle:Menu/search-fields:number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+              {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
             {% elseif searchField['type'] == 'select' %}
-              {% include 'HBMDatagridBundle:Menu/search-fields:select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+              {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
             {% else %}
-              {% include 'HBMDatagridBundle:Menu/search-fields:text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+              {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
             {% endif %}
           {% endfor %}
 
