@@ -1,12 +1,12 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import 'HBMDatagridBundle/macros.html.twig' as dg %}
+{% import '@HBMDatagridBundle/macros.html.twig' as dg %}
 
 <thead class="datagrid-table-head">
   <tr>
     {% for column, cell in datagrid.cells if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
       <th {{ cell.attr('th')|raw }}>
-        {% include 'HBMDatagridBundle/Datagrid/table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column, 'transDomain': transDomain } only %}
+        {% include '@HBMDatagridBundle/Datagrid/table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column, 'transDomain': transDomain } only %}
       </th>
     {% endfor %}
   </tr>
