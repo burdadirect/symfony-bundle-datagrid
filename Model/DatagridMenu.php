@@ -27,7 +27,7 @@ class DatagridMenu {
   private $searchFields;
 
   /**
-   * @var string
+   * @var array
    */
   private $searchValues;
 

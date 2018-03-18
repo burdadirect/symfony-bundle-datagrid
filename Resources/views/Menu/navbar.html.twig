@@ -1,12 +1,12 @@
-{% trans_default_domain "HBMDatagridBundle" %}
+{% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
+{% import 'HBMDatagridBundle/macros.html.twig' as dg %}
 
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% include 'HBMDatagridBundle:Menu:navbar-v4.html.twig' %}
+  {% include 'HBMDatagridBundle/Menu/navbar-v4.html.twig' %}
 {% else %}
-  {% include 'HBMDatagridBundle:Menu:navbar-v3.html.twig' %}
+  {% include 'HBMDatagridBundle/Menu/navbar-v3.html.twig' %}
 {% endif %}

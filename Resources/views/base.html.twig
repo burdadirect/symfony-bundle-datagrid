@@ -1,6 +1,6 @@
-{% trans_default_domain "HBMDatagridBundle" %}
+{% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import 'HBMDatagridBundle::macros.html.twig' as dg %}
+{% import 'HBMDatagridBundle/macros.html.twig' as dg %}
 
 {% set transDomain = datagrid.translationDomain %}
 
@@ -19,9 +19,9 @@
 {% else %}
   <div class="datagrid-table-wrapper">
     <table class="{{ classesTable }}">
-      {% include 'HBMDatagridBundle:Datagrid:table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
+      {% include 'HBMDatagridBundle/Datagrid/table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
-      {% include 'HBMDatagridBundle:Datagrid:table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
+      {% include 'HBMDatagridBundle/Datagrid/table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
     </table>
   </div>
 {% endif %}
