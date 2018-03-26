@@ -8,7 +8,7 @@ class RouteLink extends Route {
   /**
    * @var array
    */
-  private $params = array();
+  private $params;
 
   /**
    * @var integer
@@ -35,25 +35,25 @@ class RouteLink extends Route {
 
   /* GETTER/SETTER **********************************************************/
 
-  public function setValue($value) {
+  public function setValue($value) : void {
     $this->value = $value;
   }
 
-  public function getValue() {
+  public function getValue() : ?int {
     return $this->value;
   }
 
-  public function setParams($params) {
+  public function setParams($params) : void {
     $this->params = $params;
   }
 
-  public function getParams() {
+  public function getParams() : array {
     return $this->params;
   }
 
   /* CUSTOM *****************************************************************/
 
-  public function getMerged() {
+  public function getMerged() : array {
     return array_merge($this->getDefaults(), $this->getParams());
   }
 

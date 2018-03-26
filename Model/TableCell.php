@@ -4,13 +4,13 @@ namespace HBM\DatagridBundle\Model;
 
 class TableCell {
 
-  const VISIBLE_NORMAL      = 0b000001;
-  const VISIBLE_NORMAL_EX   = 0b000101;
-  const VISIBLE_EXTENDED    = 0b000010;
-  const VISIBLE_EXTENDED_EX = 0b000110;
-  const VISIBLE_BOTH        = 0b000011;
-  const VISIBLE_EXPORT      = 0b000100;
-  const VISIBLE_ALL         = 0b000111;
+  public const VISIBLE_NORMAL      = 0b000001;
+  public const VISIBLE_NORMAL_EX   = 0b000101;
+  public const VISIBLE_EXTENDED    = 0b000010;
+  public const VISIBLE_EXTENDED_EX = 0b000110;
+  public const VISIBLE_BOTH        = 0b000011;
+  public const VISIBLE_EXPORT      = 0b000100;
+  public const VISIBLE_ALL         = 0b000111;
 
   /**
    * @var string
@@ -45,7 +45,7 @@ class TableCell {
   /**
    * @var array
    */
-  protected $validOptions = [
+  public static $validOptions = [
     'value' => 'string|callback',
     'th_attr' => 'string|array',
     'td_attr' => 'string|array',
@@ -59,7 +59,18 @@ class TableCell {
     'format' => 'string',
   ];
 
-  public function __construct($key, $label, $route, $visibility, $options = []) {
+  /**
+   * TableCell constructor.
+   *
+   * @param $key
+   * @param $label
+   * @param $route
+   * @param $visibility
+   * @param array $options
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function __construct($key, $label, $route, $visibility, array $options = []) {
     $this->key = $key;
     $this->label = $label;
     $this->route = $route;
@@ -75,35 +86,35 @@ class TableCell {
   }
   /* GETTER/SETTER ************************************************************/
 
-  public function setKey($key) {
+  public function setKey($key) : void {
     $this->key = $key;
   }
 
-  public function getKey() {
+  public function getKey() : ?string {
     return $this->key;
   }
 
-  public function setLabel($label) {
+  public function setLabel($label) : void {
     $this->label = $label;
   }
 
-  public function getLabel() {
+  public function getLabel() : ?string {
     return $this->label;
   }
 
-  public function setRoute($route) {
+  public function setRoute(Route $route) : void {
     $this->route = $route;
   }
 
-  public function getRoute() {
+  public function getRoute() : ?Route {
     return $this->route;
   }
 
-  public function setVisibility($visibility) {
+  public function setVisibility($visibility) : void {
     $this->visibility = $visibility;
   }
 
-  public function getVisibility() {
+  public function getVisibility() : ?int {
     return $this->visibility;
   }
 
@@ -111,50 +122,73 @@ class TableCell {
     return $this->theadLinks[$sortKey] = $theadLink;
   }
 
-  public function getTheadLinks() {
+  public function getTheadLinks() : array {
     return $this->theadLinks;
   }
 
-  public function setOptions($options) {
-    $this->validateOptions($options, $this->validOptions);
+  /**
+   * @param $options
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function setOptions($options) : void {
+    $this->validateOptions($options, self::$validOptions);
 
     $this->options = $options;
   }
 
-  public function getOptions() {
+  public function getOptions() : array {
     return $this->options;
   }
 
   /* CUSTOM *******************************************************************/
 
-  public function isVisible($visibility) {
+  public function isVisible($visibility) : bool {
    return ($this->getVisibility() & $visibility) === $visibility;
   }
 
-  public function isVisibleNormal() {
+  public function isVisibleNormal() : bool {
     return $this->isVisible(self::VISIBLE_NORMAL);
   }
 
-  public function isVisibleExtended() {
+  public function isVisibleExtended() : bool {
     return $this->isVisible(self::VISIBLE_EXTENDED);
   }
 
-  public function isVisibleExport() {
+  public function isVisibleExport() : bool {
     return $this->isVisible(self::VISIBLE_EXPORT);
   }
 
-  public function getLink($obj, $column, $row) {
+  /**
+   * @param $obj
+   * @param $column
+   * @param $row
+   *
+   * @return RouteLink
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function getLink($obj, $column, $row) : RouteLink {
     return new RouteLink($this->getParams($obj, $column, $row), $this->getRoute());
   }
 
+  /**
+   * @param $obj
+   * @param $column
+   * @param $row
+   *
+   * @return array|mixed|null
+   *
+   * @throws \InvalidArgumentException
+   */
   public function getParams($obj, $column, $row) {
     if ($this->hasOption('params')) {
       $params = $this->getOption('params');
-      if (is_string($params)) {
+      if (\is_string($params)) {
         return $params;
       }
 
-      if (is_callable($params)) {
+      if (\is_callable($params)) {
         return $params($obj, $column, $row);
       }
 
@@ -164,14 +198,24 @@ class TableCell {
     return array();
   }
 
+  /**
+   * @param $obj
+   * @param $column
+   * @param $row
+   * @param string $default
+   *
+   * @return mixed|null|string
+   *
+   * @throws \InvalidArgumentException
+   */
   public function getTemplate($obj, $column, $row, $default = '@HBMDatagrid/Datagrid/table-cell.html.twig') {
     if ($this->hasOption('template')) {
       $template = $this->getOption('template');
-      if (is_string($template)) {
+      if (\is_string($template)) {
         return $template;
       }
 
-      if (is_callable($template)) {
+      if (\is_callable($template)) {
         return $template($obj, $column, $row);
       }
 
@@ -181,15 +225,25 @@ class TableCell {
     return $default;
   }
 
-  public function getTemplateParams($obj, $column, $row, $default = []) {
+  /**
+   * @param $obj
+   * @param $column
+   * @param $row
+   * @param array $default
+   *
+   * @return array|mixed|null
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function getTemplateParams($obj, $column, $row, array $default = []) {
     if ($this->hasOption('template_params')) {
       $templateParams = $this->getOption('template_params');
 
-      if (is_array($templateParams)) {
+      if (\is_array($templateParams)) {
         return $templateParams;
       }
 
-      if (is_callable($templateParams)) {
+      if (\is_callable($templateParams)) {
         return $templateParams($obj, $column, $row);
       }
 
@@ -207,7 +261,7 @@ class TableCell {
     return $default;
   }
 
-  public function hasOption($key) {
+  public function hasOption($key) : bool {
     if (isset($this->options[$key])) {
       return TRUE;
     }
@@ -215,17 +269,26 @@ class TableCell {
     return FALSE;
   }
 
-  public function getAttr($scope) {
+  public function getAttr($scope) : string {
     return $this->getHtmlAttrString($this->getOption($scope . '_attr', array()));
   }
 
+  /**
+   * @param $obj
+   * @param $column
+   * @param $row
+   *
+   * @return mixed|null|string
+   *
+   * @throws \InvalidArgumentException
+   */
   public function parseValue($obj, $column, $row) {
     if ($this->hasOption('value')) {
       $value = $this->getOption('value');
-      if (is_string($value)) {
+      if (\is_string($value)) {
         return $value;
       }
-      if (is_callable($value)) {
+      if (\is_callable($value)) {
         return $value($obj, $column, $row);
       }
       throw new \InvalidArgumentException('How come?');
@@ -249,7 +312,13 @@ class TableCell {
     return NULL;
   }
 
-  private function validateOptions($options, $validOptions) {
+  /**
+   * @param $options
+   * @param $validOptions
+   *
+   * @throws \InvalidArgumentException
+   */
+  private function validateOptions($options, $validOptions) : void {
     foreach ($options as $option => $value) {
       $types = $this->getOptionTypes($option, $validOptions);
 
@@ -257,17 +326,17 @@ class TableCell {
 
       foreach ($types as $type) {
         if ($type === 'string') {
-          if (is_string($value)) {
+          if (\is_string($value)) {
             $valid = TRUE;
           }
         } else {
           if ($type === 'array') {
-            if (is_array($value)) {
+            if (\is_array($value)) {
               $valid = TRUE;
             }
           } else {
             if ($type === 'callback') {
-              if (is_callable($value)) {
+              if (\is_callable($value)) {
                 $valid = TRUE;
               }
             } else {
@@ -283,7 +352,15 @@ class TableCell {
     }
   }
 
-  private function getOptionTypes($option, $validOptions) {
+  /**
+   * @param $option
+   * @param $validOptions
+   *
+   * @return array
+   *
+   * @throws \InvalidArgumentException
+   */
+  private function getOptionTypes($option, $validOptions) : array {
     if (!isset($validOptions[$option])) {
       throw new \InvalidArgumentException('Not a valid option "'.$option.'".');
     }
@@ -292,14 +369,14 @@ class TableCell {
 
     if (strpos($types, '|') !== FALSE) {
       $types = explode('|', $types);
-    } elseif (!is_array($types)) {
+    } elseif (!\is_array($types)) {
       $types = [$types];
     }
 
     return $types;
   }
 
-  private function getHtmlAttrString($attributes) {
+  private function getHtmlAttrString($attributes) : string {
     $parts = array();
     foreach ($attributes as $key => $value) {
       $parts[] = $key . '="' . $value . '"';
@@ -308,14 +385,14 @@ class TableCell {
     return implode(' ', $parts);
   }
 
-  public function isSortable() {
+  public function isSortable() : bool {
     return $this->hasOption('sort_key');
   }
 
   public function getSortKeys() {
     $sortKey = $this->getOption('sort_key');
 
-    if (!is_array($sortKey)) {
+    if (!\is_array($sortKey)) {
       $sortKey = array($sortKey => $this->getLabel());
     }
 

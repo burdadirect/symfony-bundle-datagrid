@@ -13,7 +13,7 @@ class Route {
   /**
    * @var array
    */
-  protected $defaults = array();
+  protected $defaults;
 
   /**
    * @var string
@@ -27,7 +27,7 @@ class Route {
    * @param array $defaults
    * @param string $hash
    */
-  public function __construct($name = NULL, $defaults = array(), $hash = NULL) {
+  public function __construct($name = NULL, array $defaults = [], $hash = NULL) {
     $this->name = $name;
     $this->defaults = $defaults;
     $this->hash = $hash;
@@ -35,27 +35,27 @@ class Route {
 
   /* GETTER/SETTER **********************************************************/
 
-  public function setName($name) {
+  public function setName($name) : void {
     $this->name = $name;
   }
 
-  public function getName() {
+  public function getName() : ?string {
     return $this->name;
   }
 
-  public function setDefaults($defaults) {
+  public function setDefaults($defaults) : void {
     $this->defaults = $defaults;
   }
 
-  public function getDefaults() {
+  public function getDefaults() : array {
     return $this->defaults;
   }
 
-  public function setHash($hash) {
+  public function setHash($hash) : void {
     $this->hash = $hash;
   }
 
-  public function getHash($prefix = '') {
+  public function getHash($prefix = '') : ?string {
     if ($this->hash) {
       return $prefix.$this->hash;
     }
@@ -65,7 +65,7 @@ class Route {
 
   /* CUSTOM *****************************************************************/
 
-  public function getMerged() {
+  public function getMerged() : array {
     return $this->getDefaults();
   }
 

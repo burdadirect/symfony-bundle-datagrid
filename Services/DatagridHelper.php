@@ -369,7 +369,7 @@ class DatagridHelper {
    */
   public function setResults($results) {
     $this->results = $results;
-    $this->resultsNumber = count($results);
+    $this->resultsNumber = \count($results);
   }
 
   /**
@@ -429,7 +429,7 @@ class DatagridHelper {
 
       // Load from session
       if ($params[$key] === NULL) {
-        if ($this->session && in_array($key, $use_for)) {
+        if ($this->session && \in_array($key, $use_for, TRUE)) {
           $params[$key] = $this->session->get($prefix.$key, $default);
         }
       }
@@ -606,7 +606,7 @@ class DatagridHelper {
     // Query results
     $results = $this->getResults();
 
-    $pagination->setNumber(count($results));
+    $pagination->setNumber(\count($results));
     $datagrid->setResults($results);
 
     $this->logger->debug($datagrid);
