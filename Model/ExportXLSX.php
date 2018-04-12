@@ -2,12 +2,14 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportXLSX extends Export {
 
-  /** @var \PHPExcel */
-  protected $excel;
+  /** @var Spreadsheet */
+  protected $spreadsheet;
 
   /** @var \PHPExcel_Worksheet */
   protected $sheet;
@@ -15,15 +17,18 @@ class ExportXLSX extends Export {
   /** @var int */
   protected $row = 1;
 
-  public function init() {
-    $this->excel = new \PHPExcel();
-    $this->excel->getProperties()->setTitle('Datagrid-Export');
+  /**
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   */
+  public function init() : void {
+    $this->spreadsheet = new Spreadsheet();
+    $this->spreadsheet->getProperties()->setTitle('Datagrid-Export');
 
-    $this->sheet = $this->excel->setActiveSheetIndex(0);
+    $this->sheet = $this->spreadsheet->setActiveSheetIndex(0);
     $this->sheet->setTitle('Export');
   }
 
-  public function addHeader() {
+  public function addHeader() : void {
     /** @var TableCell $cell */
     $column = 0;
     foreach ($this->getCells() as $cell) {
@@ -36,7 +41,12 @@ class ExportXLSX extends Export {
     $this->row++;
   }
 
-  public function addRow($obj) {
+  /**
+   * @param $obj
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function addRow($obj) : void {
     /** @var TableCell $cell */
     $column = 0;
     foreach ($this->getCells() as $cell) {
@@ -54,18 +64,21 @@ class ExportXLSX extends Export {
   }
 
   private function prepareValue($value) {
-    if (is_array($value)) {
+    if (\is_array($value)) {
       return implode("\n", $value);
-    } else {
-      return strip_tags($value);
     }
+
+    return strip_tags($value);
   }
 
-  public function output() {
-    $excelWriter = \PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+  /**
+   * @return StreamedResponse
+   */
+  public function output() : StreamedResponse {
+    $writer = new Xlsx($this->spreadsheet);
 
-    $callable = function() use ($excelWriter) {
-      $excelWriter->save('php://output');
+    $callable = function() use ($writer) {
+      $writer->save('php://output');
     };
 
     return new StreamedResponse($callable, 200, [

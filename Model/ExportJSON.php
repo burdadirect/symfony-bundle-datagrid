@@ -12,10 +12,10 @@ class ExportJSON extends Export {
   /** @var array */
   protected $labels;
 
-  public function init() {
+  public function init() : void {
   }
 
-  public function addHeader() {
+  public function addHeader() : void {
     $this->labels = [];
 
     /** @var TableCell $cell */
@@ -26,10 +26,15 @@ class ExportJSON extends Export {
     }
   }
 
-  public function addRow($obj) {
+  /**
+   * @param $obj
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function addRow($obj) : void {
     $line = [];
 
-    $row = count($this->lines);
+    $row = \count($this->lines);
 
     /** @var TableCell $cell */
     $column = 0;
@@ -48,14 +53,18 @@ class ExportJSON extends Export {
   }
 
   private function prepareValue($value) {
-    if (is_array($value)) {
+    if (\is_array($value)) {
       return $value;
-    } else {
-      return strip_tags($value);
     }
+    return strip_tags($value);
   }
 
-  public function output() {
+  /**
+   * @return Response
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function output() : Response {
     $content = json_encode($this->lines);
 
     return new Response($content, 200, [
@@ -64,7 +73,7 @@ class ExportJSON extends Export {
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/json',
       'Content-Disposition' => 'attachment; filename="'.$this->name.'.json"',
-      'Content-Length' => strlen($content),
+      'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);
   }

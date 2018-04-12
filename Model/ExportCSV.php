@@ -9,10 +9,10 @@ class ExportCSV extends Export {
   /** @var array */
   protected $lines;
 
-  public function init() {
+  public function init() : void {
   }
 
-  public function addHeader() {
+  public function addHeader() : void {
     $line = [];
 
     /** @var TableCell $cell */
@@ -25,10 +25,15 @@ class ExportCSV extends Export {
     $this->lines[] = implode(';', $line);
   }
 
-  public function addRow($obj) {
+  /**
+   * @param $obj
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function addRow($obj) : void {
     $line = [];
 
-    $row = count($this->lines) - 1;
+    $row = \count($this->lines) - 1;
 
     /** @var TableCell $cell */
     $column = 0;
@@ -47,18 +52,22 @@ class ExportCSV extends Export {
   }
 
   private function prepareValue($value) {
-    if (is_array($value)) {
+    if (\is_array($value)) {
       return implode(',', $value);
-    } else {
-      return strip_tags($value);
     }
+    return strip_tags($value);
   }
 
-  private function encloseValue($value) {
+  private function encloseValue($value) : string {
     return '"'.str_replace('"', '""', $value).'"';
   }
 
-  public function output() {
+  /**
+   * @return Response
+   *
+   * @throws \InvalidArgumentException
+   */
+  public function output() : Response {
     $content = utf8_decode(implode("\n", $this->lines));
 
     return new Response($content, 200, [
@@ -67,7 +76,7 @@ class ExportCSV extends Export {
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/csv',
       'Content-Disposition' => 'attachment; filename="'.$this->name.'.csv"',
-      'Content-Length' => strlen($content),
+      'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);
   }
