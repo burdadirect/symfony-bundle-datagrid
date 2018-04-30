@@ -3,6 +3,7 @@
 namespace HBM\DatagridBundle\Model;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -11,7 +12,7 @@ class ExportXLSX extends Export {
   /** @var Spreadsheet */
   protected $spreadsheet;
 
-  /** @var \PHPExcel_Worksheet */
+  /** @var Worksheet */
   protected $sheet;
 
   /** @var int */
@@ -30,7 +31,7 @@ class ExportXLSX extends Export {
 
   public function addHeader() : void {
     /** @var TableCell $cell */
-    $column = 0;
+    $column = 1;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
         $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabel()));
@@ -48,7 +49,7 @@ class ExportXLSX extends Export {
    */
   public function addRow($obj) : void {
     /** @var TableCell $cell */
-    $column = 0;
+    $column = 1;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
         $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareValue($cell->parseValue($obj, $column, $this->row - 2)));
