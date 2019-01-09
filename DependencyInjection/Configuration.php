@@ -18,7 +18,12 @@ class Configuration implements ConfigurationInterface
   public function getConfigTreeBuilder()
   {
     $treeBuilder = new TreeBuilder('hbm_datagrid');
-    $rootNode = $treeBuilder->getRootNode();
+
+    if (method_exists($treeBuilder, 'getRootNode')) {
+      $rootNode = $treeBuilder->getRootNode();
+    } else {
+      $rootNode = $treeBuilder->root('hbm_datagrid');
+    }
 
     $rootNode
       ->children()
