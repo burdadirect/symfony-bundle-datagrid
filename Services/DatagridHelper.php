@@ -277,10 +277,10 @@ class DatagridHelper {
     $this->qb = $qb;
   }
 
-  public function handleSearch(Request $request, $searchFields) {
+  public function handleSearch(Request $request, $searchFields, $defaults = []) {
     if ($request->isMethod('post') && !$request->request->has('export-type')) {
       $params = $this->handleSearchParams($request, $searchFields);
-      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $params);
+      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), array_merge($defaults, $params));
       return new RedirectResponse($url);
     }
 
