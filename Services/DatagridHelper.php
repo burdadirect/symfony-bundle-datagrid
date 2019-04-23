@@ -33,7 +33,9 @@ class DatagridHelper {
    */
   private $config;
 
-  /** @var Router */
+  /**
+   * @var Router
+   */
   protected $router;
 
   /**
@@ -66,9 +68,18 @@ class DatagridHelper {
    */
   private $resultsNumber;
 
-  /** @var array */
+  /**
+   * @var array
+   */
   private $exports = [];
 
+  /**
+   * DatagridHelper constructor.
+   *
+   * @param $config
+   * @param Router $router
+   * @param LoggerInterface $logger
+   */
   public function __construct($config, Router $router, LoggerInterface $logger) {
     $this->config = $config;
     $this->router = $router;
@@ -77,6 +88,14 @@ class DatagridHelper {
     $this->setExport('csv', new ExportCSV());
     $this->setExport('xlsx', new ExportXLSX());
     $this->setExport('json', new ExportJSON());
+  }
+
+  public function reset() {
+    $this->session = NULL;
+    $this->datagrid = NULL;
+    $this->qb = NULL;
+    $this->results = NULL;
+    $this->resultsNumber = NULL;
   }
 
   public function getConfigValue($scope, $key) {
@@ -128,6 +147,8 @@ class DatagridHelper {
    * @param integer $extended
    */
   public function initDatagrid($route, $defaults = array(), $page = NULL, $maxEntries = NULL, $sortations = NULL, $searchValues = NULL, $extended = NULL) {
+    $this->reset();
+    
     $paramNamePage = $this->getDatagrid()->getParamNameCurrentPage();
     $paramNameMaxEntries = $this->getDatagrid()->getParamNameMaxEntries();
     $paramNameSortation = $this->getDatagrid()->getParamNameSortation();
