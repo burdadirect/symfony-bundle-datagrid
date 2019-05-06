@@ -1,9 +1,9 @@
 {
-  "name": "burdanews/datagrid-bundle",
+  "name": "burdanews/symfony-bundle-datagrid",
   "description": "HBM Datagrid Bundle - List, filter, sort and paginate (query builder) results.",
   "authors" : [{
     "name" : "Christian Puchinger",
-    "email" : "puchinger@burda.com"
+    "email" : "christian.puchinger@burda.com"
   }],
   "license": "MIT",
   "type": "symfony-bundle",

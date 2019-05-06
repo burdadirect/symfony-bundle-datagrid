@@ -1,15 +1,9 @@
 # HBM Datagrid Bundle
 
-## Status
-
-### Dependencies
-
-[![Dependency Status](https://gemnasium.com/badges/github.com/burdanews/datagrid-bundle.svg)](https://gemnasium.com/github.com/burdanews/datagrid-bundle)
-
 ## Team
 
 ### Developers
-Christian Puchinger - puchinger@playboy.de
+Christian Puchinger - christian.puchinger@burda.com
 
 ## Installation
 
@@ -19,7 +13,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```bash
-$ composer require burdanews/datagrid-bundle
+$ composer require burdanews/symfony-bundle-datagrid
 ```
 
 This command requires you to have Composer installed globally, as explained
@@ -28,33 +22,10 @@ of the Composer documentation.
 
 ### Step 2: Enable the Bundle
 
-Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
+With Symfony 4 the bundle is enabled automatically for all environments (see `config/bundles.php`). 
 
-```php
 
-// app/AppKernel.php
-
-// ...
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-
-            new HBM\DatagridBundle\HBMDatagridBundle(),
-        );
-
-        // ...
-    }
-
-    // ...
-}
-
-```
-
-### Configuration
+### Step 3: Configuration
 
 ```yml
 hbm_datagrid:
