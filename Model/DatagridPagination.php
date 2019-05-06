@@ -58,7 +58,7 @@ class DatagridPagination {
   /**
    * @var array;
    */
-  private $links = array();
+  private $links = [];
 
   /**
    * @var RouteLink

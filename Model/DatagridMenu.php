@@ -108,7 +108,7 @@ class DatagridMenu {
   /**
    * @var array;
    */
-  private $links = array();
+  private $links = [];
 
   /* CONSTRUCTOR ************************************************************/
 

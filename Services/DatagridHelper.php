@@ -146,9 +146,9 @@ class DatagridHelper {
    * @param string $searchValues
    * @param integer $extended
    */
-  public function initDatagrid($route, $defaults = array(), $page = NULL, $maxEntries = NULL, $sortations = NULL, $searchValues = NULL, $extended = NULL) {
+  public function initDatagrid($route, array $defaults = [], $page = NULL, $maxEntries = NULL, $sortations = NULL, $searchValues = NULL, $extended = NULL) {
     $this->reset();
-    
+
     $paramNamePage = $this->getDatagrid()->getParamNameCurrentPage();
     $paramNameMaxEntries = $this->getDatagrid()->getParamNameMaxEntries();
     $paramNameSortation = $this->getDatagrid()->getParamNameSortation();
@@ -474,7 +474,7 @@ class DatagridHelper {
     if ($this->getDatagrid()->getQueryEncode() === 'json') {
       $queryParams = json_decode($var, TRUE);
       if ($queryParams === NULL) {
-        $queryParams = array();
+        $queryParams = [];
       } else {
         foreach ($queryParams as $key => $value) {
           $queryParams[$key] = urldecode($value);
@@ -570,44 +570,44 @@ class DatagridHelper {
     // Calculate basics
     $pagination->setNumberTotal($number);
     $pagination->setPageMax(ceil($pagination->getNumberTotal() / $max_entries));
-    $pagination->setPageCurrent(max(array(
+    $pagination->setPageCurrent(max([
       1,
       min(array($pagination->getPageCurrent(), $pagination->getPageMax()))
-    )));
+    ]));
 
-    $pagination->setOffset(max(array(
+    $pagination->setOffset(max([
       0,
       ($pagination->getPageCurrent() - 1) * $max_entries
-    )));
+    ]));
 
     // Calculate numbers
     $pagination->setNumberFrom(0);
     $pagination->setNumberThru(0);
     if ($pagination->getNumberTotal() > 0) {
-      $pagination->setNumberFrom(max(array(
+      $pagination->setNumberFrom(max([
         1,
         ($pagination->getPageCurrent() - 1) * $max_entries + 1
-      )));
-      $pagination->setNumberThru(min(array(
+      ]));
+      $pagination->setNumberThru(min([
         $pagination->getNumberTotal(),
         $pagination->getNumberFrom() + $max_entries - 1
-      )));
+      ]));
     }
 
     // Calculate pages
-    $pagination->setPageFrom(max(array(
+    $pagination->setPageFrom(max([
       1,
       $pagination->getPageCurrent() - floor(($max_links - 1) / 2)
-    )));
-    $pagination->setPageThru(min(array(
+    ]));
+    $pagination->setPageThru(min([
       $pagination->getPageMax(),
       $pagination->getPageFrom() + $max_links - 1
-    )));
+    ]));
     if ($pagination->getPageThru() === $pagination->getPageMax()) {
-      $pagination->setPageFrom(max(array(
+      $pagination->setPageFrom(max([
         1,
         $pagination->getPageThru() - $max_links
-      )));
+      ]));
     }
 
     // Calculate links (pagination)

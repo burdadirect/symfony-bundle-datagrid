@@ -195,7 +195,7 @@ class TableCell {
       throw new \InvalidArgumentException('How come?');
     }
 
-    return array();
+    return [];
   }
 
   /**
@@ -270,7 +270,7 @@ class TableCell {
   }
 
   public function getAttr($scope) : string {
-    return $this->getHtmlAttrString($this->getOption($scope . '_attr', array()));
+    return $this->getHtmlAttrString($this->getOption($scope . '_attr', []));
   }
 
   /**
@@ -377,7 +377,7 @@ class TableCell {
   }
 
   private function getHtmlAttrString($attributes) : string {
-    $parts = array();
+    $parts = [];
     foreach ($attributes as $key => $value) {
       $parts[] = $key . '="' . $value . '"';
     }

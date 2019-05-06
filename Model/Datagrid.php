@@ -115,7 +115,7 @@ class Datagrid {
   /**
    * @var array
    */
-  private $sortations = array();
+  private $sortations = [];
 
   /**
    * @var array
