@@ -4,10 +4,12 @@
 
 <thead class="datagrid-table-head">
   <tr>
-    {% for column, cell in datagrid.cells if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
-      <th {{ cell.attr('th')|raw }}>
-        {% include '@HBMDatagrid/Datagrid/table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column, 'transDomain': transDomain } only %}
-      </th>
+    {% for column, cell in datagrid.cells %}
+      {% if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
+        <th {{ cell.attr('th')|raw }}>
+          {% include '@HBMDatagrid/Datagrid/table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column, 'transDomain': transDomain } only %}
+        </th>
+      {% endif %}
     {% endfor %}
   </tr>
 </thead>
