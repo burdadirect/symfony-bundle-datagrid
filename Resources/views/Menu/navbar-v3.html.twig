@@ -77,16 +77,18 @@
         {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
           <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
-            {% for searchKey, searchField in datagrid.menu.searchFields if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
-              <div class="form-group">
-                {% if searchField['type'] == 'number' %}
-                  {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-                {% elseif searchField['type'] == 'select' %}
-                  {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-                {% else %}
-                  {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-                {% endif %}
-              </div>
+            {% for searchKey, searchField in datagrid.menu.searchFields %}
+              {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+                <div class="form-group">
+                  {% if searchField['type'] == 'number' %}
+                    {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                  {% elseif searchField['type'] == 'select' %}
+                    {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                  {% else %}
+                    {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+                  {% endif %}
+                </div>
+              {% endif %}
             {% endfor %}
 
             <button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"></span> {{ 'Suchen'|trans }}</button>
