@@ -12,6 +12,10 @@ class TableCell {
   public const VISIBLE_EXPORT      = 0b000100;
   public const VISIBLE_ALL         = 0b000111;
 
+  public const LABEL_POS_BEFORE = 'before';
+  public const LABEL_POS_AFTER  = 'after';
+  public const LABEL_POS_NONE   = FALSE;
+
   /**
    * @var string
    */
@@ -21,6 +25,11 @@ class TableCell {
    * @var string
    */
   protected $label;
+
+  /**
+   * @var string
+   */
+  protected $labelText;
 
   /**
    * @var Route
@@ -52,7 +61,7 @@ class TableCell {
     'a_attr' => 'string|array',
     'sort_key' => 'string|array',
     'sort_key_sep' => 'string',
-    'label_pos' => 'string',
+    'label_pos' => 'string|bool',
     'params' => 'array|callback',
     'template' => 'string|callback',
     'template_params' => 'array|callback',
@@ -73,6 +82,7 @@ class TableCell {
   public function __construct($key, $label, $route, $visibility, array $options = []) {
     $this->key = $key;
     $this->label = $label;
+    $this->labelText = $label;
     $this->route = $route;
     $this->visibility = $visibility;
 
@@ -100,6 +110,14 @@ class TableCell {
 
   public function getLabel() : ?string {
     return $this->label;
+  }
+
+  public function setLabelText($labelText) : void {
+    $this->labelText = $labelText;
+  }
+
+  public function getLabelText() : ?string {
+    return $this->labelText;
   }
 
   public function setRoute(Route $route) : void {
@@ -329,6 +347,10 @@ class TableCell {
           if (\is_string($value)) {
             $valid = TRUE;
           }
+        } elseif (($type === 'bool') || ($type === 'boolean')) {
+          if (\is_bool($value)) {
+            $valid = TRUE;
+          }
         } else {
           if ($type === 'array') {
             if (\is_array($value)) {
@@ -393,7 +415,7 @@ class TableCell {
     $sortKey = $this->getOption('sort_key');
 
     if (!\is_array($sortKey)) {
-      $sortKey = array($sortKey => $this->getLabel());
+      $sortKey = array($sortKey => ['label' => $this->getLabel(), 'text' => $this->getLabelText()]);
     }
 
     return $sortKey;
@@ -403,10 +425,28 @@ class TableCell {
     $sortKeys = $this->getSortKeys();
 
     if (isset($sortKeys[$sortKey])) {
+      $sortKeyData = $sortKeys[$sortKey];
+      if (is_array($sortKeyData) && isset($sortKeyData['label'])) {
+        return $sortKeys[$sortKey]['label'];
+      }
       return $sortKeys[$sortKey];
     }
 
     return $this->getLabel();
+  }
+
+  public function getSortKeyText($sortKey) {
+    $sortKeys = $this->getSortKeys();
+
+    if (isset($sortKeys[$sortKey])) {
+      $sortKeyData = $sortKeys[$sortKey];
+      if (is_array($sortKeyData) && isset($sortKeyData['text'])) {
+        return $sortKeys[$sortKey]['text'];
+      }
+      return $sortKeys[$sortKey];
+    }
+
+    return $this->getLabelText();
   }
 
   public function getSortKeySep() {
@@ -422,7 +462,7 @@ class TableCell {
       return $this->getOption('label_pos');
     }
 
-    return 'before';
+    return self::LABEL_POS_BEFORE;
   }
 
 }
