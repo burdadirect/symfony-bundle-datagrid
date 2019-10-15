@@ -312,22 +312,23 @@ class TableCell {
       throw new \InvalidArgumentException('How come?');
     }
 
+    $value = NULL;
     if (method_exists($obj, 'get' . ucfirst($this->getKey()))) {
       $value = $obj->{'get' . ucfirst($this->getKey())}();
-
-      if ($value instanceof \DateTime) {
-        $format = 'Y-m-d H:i:s';
-        if (isset($this->options['format'])) {
-          $format = $this->options['format'];
-        }
-
-        return $value->format($format);
-      }
-
-      return $value;
+    } elseif (is_callable([$obj, $this->getKey()], TRUE)) {
+      $value = $obj->{$this->getKey()}();
     }
 
-    return NULL;
+    if ($value instanceof \DateTime) {
+      $format = 'Y-m-d H:i:s';
+      if (isset($this->options['format'])) {
+        $format = $this->options['format'];
+      }
+
+      return $value->format($format);
+    }
+
+    return $value;
   }
 
   /**
