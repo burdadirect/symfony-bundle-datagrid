@@ -19,16 +19,15 @@
     {% set keys = datagrid.menu.searchValue(searchKey) %}
     {% if searchField['values'] is defined %}
       {% for key, value in searchField['values'] %}
-        <option value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}>{{ value }}</option>
-      {% endfor %}
-    {% endif %}
-    {% if searchField['optgroups'] is defined %}
-      {% for optgroupLabel, optgroupValues in searchField['optgroups'] %}
-        <optgroup label="{{ optgroupLabel }}">
-          {% for key, value in optgroupValues %}
-            <option value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}>{{ value }}</option>
-          {% endfor %}
-        </optgroup>
+        {% if value is iterable %}
+          <optgroup label="{{ key }}">
+            {% for optgroupKey, optgroupValue in value %}
+              {% include '@HBMDatagrid/Menu/search-fields/select-option.html.twig' with { 'key': optgroupKey, 'value': optgroupValue, 'keys': keys, 'transDomain': transDomain } only %}
+            {% endfor %}
+          </optgroup>
+        {% else %}
+          {% include '@HBMDatagrid/Menu/search-fields/select-option.html.twig' with { 'key': key, 'value': value, 'keys': keys, 'transDomain': transDomain } only %}
+        {% endif %}
       {% endfor %}
     {% endif %}
   </select>

@@ -1,0 +1,3 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+<option {% if key is not same as('') %}value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}{% else %}disabled{% endif %}>{{ value }}</option>
