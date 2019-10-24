@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('pagination')->defaultValue('pagination justify-content-center')->end()
                 ->scalarNode('page_item')->defaultValue('page-item')->end()
                 ->scalarNode('page_link')->defaultValue('page-link')->end()
+                ->scalarNode('search_info')->defaultValue('text-muted')->end()
               ->end()
             ->end()
             ->arrayNode('icons')->addDefaultsIfNotSet()
@@ -62,6 +63,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('reset')->defaultValue('fa fa-bolt')->end()
                 ->scalarNode('expand')->defaultValue('fa fa-expand')->end()
                 ->scalarNode('compress')->defaultValue('fa fa-compress')->end()
+                ->scalarNode('search_info')->defaultValue('fa fa-info-circle')->end()
                 // Pagination
                 ->scalarNode('page_first')->defaultValue('fa fa-fast-backward')->end()
                 ->scalarNode('page_prev')->defaultValue('fa fa-step-backward')->end()

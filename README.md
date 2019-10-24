@@ -46,6 +46,7 @@ hbm_datagrid:
             pagination: 'pagination justify-content-center'
             page_item: 'page-item'
             page_link: 'page-link'
+            search_info: 'text-muted'
         icons:
             # Sortation
             sort_asc: 'fa fa-sort-amount-asc'
@@ -55,6 +56,7 @@ hbm_datagrid:
             reset: 'fa fa-bolt'
             expand: 'fa fa-expand'
             compress: 'fa fa-compress'
+            search_info: 'fa fa-info'
             # Pagination
             page_first: 'fa fa-fast-backward'
             page_prev: 'fa fa-step-backward'
