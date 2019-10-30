@@ -123,6 +123,11 @@ class Datagrid {
   private $cells;
 
   /**
+   * @var callable|string|array
+   */
+  private $rowAttr = NULL;
+
+  /**
    * @var \Doctrine\Common\Collections\Collection
    */
   private $results;
@@ -345,6 +350,14 @@ class Datagrid {
     return $this->cells;
   }
 
+  public function setRowAttr($rowAttr) {
+    $this->rowAttr = $rowAttr;
+  }
+
+  public function getRowAttr() {
+    return $this->rowAttr;
+  }
+
   /**
    * Set pagination
    *
@@ -407,6 +420,31 @@ class Datagrid {
     }
 
     return NULL;
+  }
+
+  public function parseRowAttr($obj, $row) {
+    $rowAttr = $this->getRowAttr();
+    if (is_callable($this->getRowAttr())) {
+      $rowAttr = $this->getRowAttr()($obj, $row);
+    }
+
+    if (is_string($rowAttr)) {
+      return $rowAttr;
+    }
+    if (is_array($rowAttr)) {
+      return $this->getHtmlAttrString($rowAttr);
+    }
+
+    return NULL;
+  }
+
+  private function getHtmlAttrString($attributes) : string {
+    $parts = [];
+    foreach ($attributes as $key => $value) {
+      $parts[] = $key . '="' . $value . '"';
+    }
+
+    return implode(' ', $parts);
   }
 
   public function __toString() {
