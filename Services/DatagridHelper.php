@@ -327,10 +327,21 @@ class DatagridHelper {
 
   public function handleExport(Request $request, $name, ObjectManager $om, FlashBagInterface $flashBag = NULL) {
     if ($request->isMethod('post') && $request->request->has('export-type')) {
+      // Not allowed.
+      if (!$this->getDatagrid()->getMenu()->getShowExport()) {
+        if ($flashBag) {
+          $flashBag->add('error', 'Der Export ist deaktiviert!');
+        }
+        $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
+        return new RedirectResponse($url);
+      }
+
+      // Set resources.
       foreach ($this->getDatagrid()->getMenu()->getExportsResources() as $key => $value) {
         ini_set($key, $value);
       }
 
+      // Do export.
       if ($export = $this->getExport($request->request->get('export-type'))) {
         $export->init();
         $export->setName($name);
@@ -338,7 +349,7 @@ class DatagridHelper {
         return $export->output();
       }
 
-
+      // Export failed.
       if ($flashBag) {
         $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
       }
