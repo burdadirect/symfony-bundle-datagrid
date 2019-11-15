@@ -201,7 +201,8 @@ With search fields, extended mode and export.
     $searchFields = [
       'value1'  => ['type' => 'text',   'label' => 'Value 1'],
       'value2'  => ['type' => 'number', 'label' => 'Value 2'],
-      'value3'  => ['type' => 'select', 'label' => 'Value 3', 'extended' => 1, 'values' => ['yes' => 'with something', 'no' => 'without something']],
+      'value3'  => ['type' => 'text', 'label' => 'Value 3', 'placeholder' => 'Search for ...'],
+      'value4'  => ['type' => 'select', 'label' => 'Value 4', 'extended' => 1, 'values' => ['yes' => 'with something', 'no' => 'without something']],
     ];
 
     // DATAGRID

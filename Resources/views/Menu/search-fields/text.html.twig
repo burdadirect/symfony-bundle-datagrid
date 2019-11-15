@@ -14,8 +14,14 @@
 {% endif %}
 
 {% set desc = searchField['desc']|default(null) %}
+{% set label = searchField['label']|default(null) %}
+{% set placeholder = searchField['placeholder']|default(null) %}
+{% if 'placeholder' not in searchField|keys %}
+  {% set placeholder = label %}
+  {% set label = 'abc' %}
+{% endif %}
 
 <div class="{{ classesGroup }}">
-  <span class="{{ classesAddon }}"><span class="input-group-text">abc{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ desc }}"></i>{% endif %}</span></span>
-  <input type="text" class="form-control" placeholder="{{ dg.trans(searchField['label'], transDomain) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
+  <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, transDomain) }}"></i>{% endif %}</span></span>
+  <input type="text" class="form-control" placeholder="{{ dg.trans(placeholder, transDomain) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
 </div>

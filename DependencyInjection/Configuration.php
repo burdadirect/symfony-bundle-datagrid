@@ -132,6 +132,7 @@ class Configuration implements ConfigurationInterface
                 ->children()
                   ->scalarNode('type')->defaultValue('text')->end()
                   ->scalarNode('label')->defaultValue('Suche')->end()
+                  ->scalarNode('placeholder')->defaultValue('')->end()
                 ->end()
               ->end()
             ->end()
