@@ -34,6 +34,8 @@
             {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
               {% if searchField['type'] == 'number' %}
                 {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+              {% elseif (searchField['type'] == 'date') or (searchField['type'] == 'datetime') %}
+                  {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
               {% elseif searchField['type'] == 'select' %}
                 {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
               {% else %}
