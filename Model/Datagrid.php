@@ -450,8 +450,8 @@ class Datagrid {
   public function __toString() {
     $string = '';
     $string .= 'DATAGRID-COLLECTIONS:' . "\n";
-    $string .= \count($this->cells) . ' Cells' . "\n";
-    $string .= \count($this->results) . ' Results' . "\n";
+    $string .= is_countable($this->cells) ? \count($this->cells) : 'No' . ' Cells' . "\n";
+    $string .= is_countable($this->results) ? \count($this->results) : 'No' . ' Results' . "\n";
     $string .= "\n";
     $string .= 'DATAGRID-VARS:' . "\n";
     $string .= 'maxEntriesPerPage: ' . $this->getMaxEntriesPerPage() . "\n";
