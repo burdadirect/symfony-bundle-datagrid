@@ -56,8 +56,8 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('icons')->addDefaultsIfNotSet()
               ->children()
                 // Sortation
-                ->scalarNode('sort_asc')->defaultValue('fa fa-sort-amount-asc')->end()
-                ->scalarNode('sort_desc')->defaultValue('fa fa-sort-amount-desc')->end()
+                ->scalarNode('sort_asc')->defaultValue('fa fa-sort-amount-up')->end()
+                ->scalarNode('sort_desc')->defaultValue('fa fa-sort-amount-down')->end()
                 // Navigation
                 ->scalarNode('search')->defaultValue('fa fa-search')->end()
                 ->scalarNode('reset')->defaultValue('fa fa-bolt')->end()
