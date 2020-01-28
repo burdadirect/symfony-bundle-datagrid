@@ -2,23 +2,26 @@
 namespace HBM\DatagridBundle\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
+use HBM\DatagridBundle\Model\Datagrid;
+use HBM\DatagridBundle\Model\DatagridMenu;
+use HBM\DatagridBundle\Model\DatagridPagination;
 use HBM\DatagridBundle\Model\Export;
 use HBM\DatagridBundle\Model\ExportCSV;
 use HBM\DatagridBundle\Model\ExportJSON;
 use HBM\DatagridBundle\Model\ExportXLSX;
+use HBM\DatagridBundle\Model\Route;
+use HBM\DatagridBundle\Model\RouteLink;
 use HBM\DatagridBundle\Model\TableCell;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use HBM\DatagridBundle\Model\Datagrid;
-use HBM\DatagridBundle\Model\DatagridMenu;
-use HBM\DatagridBundle\Model\DatagridPagination;
-use HBM\DatagridBundle\Model\RouteLink;
-use HBM\DatagridBundle\Model\Route;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -123,7 +126,7 @@ class DatagridHelper {
   }
 
   /**
-   * @return \HBM\DatagridBundle\Model\Datagrid
+   * @return Datagrid
    */
   public function getDatagrid() {
     if ($this->datagrid === NULL) {
@@ -236,6 +239,12 @@ class DatagridHelper {
     }
   }
 
+  /**
+   * @param Route $route
+   * @param $params
+   *
+   * @return Datagrid
+   */
   public function createSimpleDatagrid(Route $route, $params) {
     // DEFAULTS
     $num = $this->getDatagrid()->getMaxEntriesPerPage();
@@ -261,6 +270,11 @@ class DatagridHelper {
     return $this->getDatagrid();
   }
 
+  /**
+   * @param $sort_string
+   *
+   * @return array|mixed|null
+   */
   public function setSortations($sort_string) {
     $sortations = $this->getQueryParams($sort_string);
 
@@ -269,10 +283,18 @@ class DatagridHelper {
     return $sortations;
   }
 
+  /**
+   * @return array
+   */
   public function getSortations() {
     return $this->getDatagrid()->getSortations();
   }
 
+  /**
+   * @param $search_string
+   *
+   * @return array|mixed|null
+   */
   public function setSearchValues($search_string) {
     $searchValues = $this->getQueryParams($search_string);
 
@@ -281,10 +303,16 @@ class DatagridHelper {
     return $searchValues;
   }
 
+  /**
+   * @return array
+   */
   public function getSearchValues() {
     return $this->getDatagrid()->getMenu()->getSearchValues();
   }
 
+  /**
+   * @param Route $route
+   */
   public function setDefaultRoute(Route $route) {
     $this->getDatagrid()->setRoute($route);
     $this->getDatagrid()->getMenu()->setRoute($route);
@@ -294,10 +322,20 @@ class DatagridHelper {
     $this->getDatagrid()->getPagination()->setRoute($route);
   }
 
+  /**
+   * @param QueryBuilder $qb
+   */
   public function setQueryBuilder(QueryBuilder $qb) {
     $this->qb = $qb;
   }
 
+  /**
+   * @param Request $request
+   * @param $searchFields
+   * @param array $defaults
+   *
+   * @return bool|RedirectResponse
+   */
   public function handleSearch(Request $request, $searchFields, $defaults = []) {
     if ($request->isMethod('post') && !$request->request->has('export-type')) {
       $params = $this->handleSearchParams($request, $searchFields);
@@ -308,6 +346,12 @@ class DatagridHelper {
     return FALSE;
   }
 
+  /**
+   * @param Request $request
+   * @param $searchFields
+   *
+   * @return array
+   */
   public function handleSearchParams(Request $request, $searchFields) {
     $searchParams = [];
     foreach ($searchFields as $key => $value) {
@@ -325,6 +369,14 @@ class DatagridHelper {
     ];
   }
 
+  /**
+   * @param Request $request
+   * @param $name
+   * @param ObjectManager $om
+   * @param FlashBagInterface|NULL $flashBag
+   *
+   * @return bool|RedirectResponse
+   */
   public function handleExport(Request $request, $name, ObjectManager $om, FlashBagInterface $flashBag = NULL) {
     if ($request->isMethod('post') && $request->request->has('export-type')) {
       // Not allowed.
@@ -360,6 +412,12 @@ class DatagridHelper {
     return FALSE;
   }
 
+  /**
+   * @param Export $export
+   * @param ObjectManager $om
+   *
+   * @return Export
+   */
   public function runExport(Export $export, ObjectManager $om) {
     $export->setCells($this->getDatagrid()->getCells());
     $export->addHeader();
@@ -401,7 +459,7 @@ class DatagridHelper {
    */
   public function setResults($results) {
     $this->results = $results;
-    $this->resultsNumber = \count($results);
+    $this->resultsNumber = count($results);
   }
 
   /**
@@ -413,6 +471,10 @@ class DatagridHelper {
     $this->resultsNumber = $resultsNumber;
   }
 
+  /**
+   * @param Session $session
+   * @param null $additionalPrefix
+   */
   public function setSession(Session $session, $additionalPrefix = NULL) {
     $this->session = $session;
     if ($additionalPrefix !== NULL) {
@@ -420,6 +482,11 @@ class DatagridHelper {
     }
   }
 
+  /**
+   * @param $params
+   *
+   * @return mixed
+   */
   public function handleParams($params) {
     // Sortation
     $key = $this->getDatagrid()->getParamNameCurrentPage();
@@ -461,7 +528,7 @@ class DatagridHelper {
 
       // Load from session
       if ($params[$key] === NULL) {
-        if ($this->session && \in_array($key, $use_for, TRUE)) {
+        if ($this->session && in_array($key, $use_for, TRUE)) {
           $params[$key] = $this->session->get($prefix.$key, $default);
         }
       }
@@ -481,6 +548,11 @@ class DatagridHelper {
     return $default;
   }
 
+  /**
+   * @param $var
+   *
+   * @return array|mixed|null
+   */
   public function getQueryParams($var) {
     if ($this->getDatagrid()->getQueryEncode() === 'json') {
       $queryParams = json_decode($var, TRUE);
@@ -492,12 +564,17 @@ class DatagridHelper {
         }
       }
     } else {
-      throw new \InvalidArgumentException('No other query encoding implemented yet!');
+      throw new InvalidArgumentException('No other query encoding implemented yet!');
     }
 
     return $queryParams;
   }
 
+  /**
+   * @param $vars
+   *
+   * @return false|string
+   */
   public function getQueryString($vars) {
     if ($this->getDatagrid()->getQueryEncode() === 'json') {
       foreach ($vars as $key => $value) {
@@ -505,13 +582,18 @@ class DatagridHelper {
       }
       $queryString = json_encode($vars, JSON_FORCE_OBJECT);
     } else {
-      throw new \InvalidArgumentException('No other query decoding implemented yet!');
+      throw new InvalidArgumentException('No other query decoding implemented yet!');
     }
 
     return $queryString;
   }
 
-
+  /**
+   * @return int|mixed|null
+   *
+   * @throws NoResultException
+   * @throws NonUniqueResultException
+   */
   private function getNumber() {
     if ($this->resultsNumber !== NULL) {
       return $this->resultsNumber;
@@ -525,18 +607,21 @@ class DatagridHelper {
       $qbNum->resetDQLPart('orderBy');
 
       $query = $qbNum->getQuery();
-      $query->useResultCache(
-        $this->getDatagrid()->getCacheEnabled(),
-        $this->getDatagrid()->getCacheSeconds(),
-        $this->getDatagrid()->getCachePrefix().'_scalar'
-      );
-
+      if ($this->getDatagrid()->getCacheEnabled()) {
+        $query->enableResultCache(
+          $this->getDatagrid()->getCacheSeconds(),
+          $this->getDatagrid()->getCachePrefix().'_scalar'
+        );
+      }
       return $query->getSingleScalarResult();
     }
 
     return NULL;
   }
 
+  /**
+   * @return array|ArrayCollection|mixed
+   */
   private function getResults() {
     if ($this->results !== NULL) {
       return $this->results;
@@ -547,12 +632,13 @@ class DatagridHelper {
       $qbRes->setFirstResult($this->getDatagrid()->getPagination()->getOffset());
       $qbRes->setMaxResults($this->getDatagrid()->getMaxEntriesPerPage());
 
-      $query = $qbRes->getQuery()->useResultCache(
-        $this->getDatagrid()->getCacheEnabled(),
-        $this->getDatagrid()->getCacheSeconds(),
-        $this->getDatagrid()->getCachePrefix().'_result'
-      );
-
+      $query = $qbRes->getQuery();
+      if ($this->getDatagrid()->getCacheEnabled()) {
+        $query->enableResultCache(
+          $this->getDatagrid()->getCacheSeconds(),
+          $this->getDatagrid()->getCachePrefix().'_scalar'
+        );
+      }
       return $query->getResult();
     }
 
@@ -562,7 +648,10 @@ class DatagridHelper {
   /**
    * Returns the calculated paginated datagrid.
    *
-   * @return \HBM\DatagridBundle\Model\Datagrid
+   * @return Datagrid
+   *
+   * @throws NoResultException
+   * @throws NonUniqueResultException
    */
   public function paginate() {
     $datagrid = $this->getDatagrid();
@@ -638,7 +727,7 @@ class DatagridHelper {
     // Query results
     $results = $this->getResults();
 
-    $pagination->setNumber(\count($results));
+    $pagination->setNumber(count($results));
     $datagrid->setResults($results);
 
     $this->logger->debug($datagrid);

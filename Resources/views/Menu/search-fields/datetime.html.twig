@@ -21,7 +21,14 @@
   {% set label = 'abc' %}
 {% endif %}
 
+{% set attributes = attributes(searchField['attr']|default([])).add({
+  'type': 'date',
+  'placeholder': dg.trans(placeholder, transDomain),
+  'name': searchKey,
+  'value': datagrid.menu.searchValue(searchKey)
+}).addClasses('form-control') %}
+
 <div class="{{ classesGroup }}">
   <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, transDomain) }}"></i>{% endif %}</span></span>
-  <input type="date" class="form-control" placeholder="{{ dg.trans(placeholder, transDomain) }}" name="{{ searchKey }}" value="{{ datagrid.menu.searchValue(searchKey) }}">
+  <input {{ attributes|raw }}>
 </div>

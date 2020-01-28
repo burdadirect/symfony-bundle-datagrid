@@ -12,9 +12,16 @@
       "HBM\\DatagridBundle": ""
     }
   },
+  "repositories" : [
+    {
+      "type": "vcs",
+      "url": "git@github.com:burdanews/symfony-bundle-twig-attributes.git"
+    }
+  ],
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.3",
     "ext-json": "*",
+    "burdanews/symfony-bundle-twig-attributes": "dev-master",
     "symfony/config": "^3.4|^4.2",
     "symfony/routing": "^3.4|^4.2",
     "symfony/http-foundation": "^3.4|^4.2",

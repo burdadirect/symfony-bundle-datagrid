@@ -15,9 +15,14 @@
 
 {% set desc = searchField['desc']|default(null) %}
 
+{% set attributes = attributes(searchField['attr']|default([])).add({
+  'title': dg.trans(searchField['label'], transDomain),
+  'name': searchKey
+}).addClasses('form-control') %}
+
 <div class="{{ classesGroup }}">
   <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(searchField['label'], transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ desc }}"></i>{% endif %}</span></span>
-  <select class="form-control" name="{{ searchKey }}" title="{{ dg.trans(searchField['label'], transDomain) }}">
+  <select {{ attributes|raw }}>
     <option></option>
     {% set keys = datagrid.menu.searchValue(searchKey) %}
     {% if searchField['values'] is defined %}
