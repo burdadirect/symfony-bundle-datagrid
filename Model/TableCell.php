@@ -4,6 +4,7 @@ namespace HBM\DatagridBundle\Model;
 
 class TableCell {
 
+  public const VISIBLE_NONE        = 0b000000;
   public const VISIBLE_NORMAL      = 0b000001;
   public const VISIBLE_NORMAL_EX   = 0b000101;
   public const VISIBLE_EXTENDED    = 0b000010;
