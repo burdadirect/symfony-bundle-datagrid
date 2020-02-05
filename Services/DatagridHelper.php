@@ -323,9 +323,9 @@ class DatagridHelper {
   }
 
   /**
-   * @param QueryBuilder $qb
+   * @param QueryBuilder|NULL $qb
    */
-  public function setQueryBuilder(QueryBuilder $qb) {
+  public function setQueryBuilder(?QueryBuilder $qb) {
     $this->qb = $qb;
   }
 
