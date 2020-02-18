@@ -9,6 +9,7 @@
 
   {% set optionsMode = options['mode']|default('radio') %}
   {% set optionsValues = options['values']|default([]) %}
+  {% set optionsChecked = datagrid.menu.searchValue(searchKey ~ '-options') %}
 
   {% if options and (optionsValues is iterable) and (optionsValues|length > 0) %}
     {% if options|length > 0 %}
@@ -21,7 +22,11 @@
             'value': optionData['value']|default(optionKey),
             'autocomplete': 'off'
           }) %}
-          {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
+          {% if optionsChecked is null %}
+            {% set optionAttributes = optionAttributes.set('checked', optionData['default']|default(false)) %}
+          {% else %}
+            {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
+          {% endif %}
           <label class="btn btn-input-group-addon">
             <input {{ optionAttributes|raw }}>
             {%- if optionData['icon']|default(null) -%}<i class="{{ optionData['icon'] }}" title="{{ optionData['title']|default(null) }}"></i>{%- endif -%}
