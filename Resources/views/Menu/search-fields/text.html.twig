@@ -4,7 +4,7 @@
 
 
 {% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input-group') %}
+  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input_group') %}
   {% set classesAddon = 'input-group-prepend' %}
   {% set classesInfo = dg.icon(datagrid, 'search_info') ~ ' ' ~ dg.classes(datagrid, 'search_info') %}
 {% else %}
@@ -30,5 +30,6 @@
 
 <div class="{{ classesGroup }}">
   <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, transDomain) }}"></i>{% endif %}</span></span>
+  {% include '@HBMDatagrid/Menu/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
   <input {{ attributes|raw }}>
 </div>

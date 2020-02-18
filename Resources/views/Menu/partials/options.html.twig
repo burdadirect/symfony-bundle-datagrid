@@ -1,0 +1,35 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
+
+  {% set options = searchField['options']|default(null) %}
+
+  {% set optionsMode = options['mode']|default('radio') %}
+  {% set optionsValues = options['values']|default([]) %}
+
+  {% if options and (optionsValues is iterable) and (optionsValues|length > 0) %}
+    {% if options|length > 0 %}
+      <div class="btn-group btn-group-sm btn-group-toggle input-group-prepend" data-toggle="buttons">
+        {% for optionKey, optionData in optionsValues %}
+          {% set optionAttributes = attributes(optionData['attr']|default([])).add({
+            'type': optionsMode,
+            'name': (optionsMode == 'radio') ? searchKey ~ '-options[]' : searchKey ~ '-options[' ~ optionKey ~ ']',
+            'id': searchKey ~ '-option-' ~ optionKey,
+            'value': optionData['value']|default(optionKey),
+            'autocomplete': 'off'
+          }) %}
+          {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
+          <label class="btn btn-input-group-addon">
+            <input {{ optionAttributes|raw }}>
+            {%- if optionData['icon']|default(null) -%}<i class="{{ optionData['icon'] }}" title="{{ optionData['title']|default(null) }}"></i>{%- endif -%}
+            {{- optionData['content']|default(null)|raw -}}
+          </label>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+{% endif %}

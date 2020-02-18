@@ -356,6 +356,9 @@ class DatagridHelper {
     $searchParams = [];
     foreach ($searchFields as $key => $value) {
       $searchParams[$key] = $request->request->get($key, '');
+      if (isset($value['options'])) {
+        $searchParams[$key.'-options'] = $request->request->get($key.'-options', []);
+      }
     }
 
     $sortParams = $this->getDatagrid()->getSortations();
@@ -560,7 +563,14 @@ class DatagridHelper {
         $queryParams = [];
       } else {
         foreach ($queryParams as $key => $value) {
-          $queryParams[$key] = urldecode($value);
+          if (is_array($value)) {
+            $queryParams[$key] = [];
+            foreach ($value as $valueKey => $valueValue) {
+              $queryParams[$key][$valueKey] = urldecode($valueValue);
+            }
+          } else {
+            $queryParams[$key] = urldecode($value);
+          }
         }
       }
     } else {
@@ -578,7 +588,14 @@ class DatagridHelper {
   public function getQueryString($vars) {
     if ($this->getDatagrid()->getQueryEncode() === 'json') {
       foreach ($vars as $key => $value) {
-        $vars[$key] = urlencode($value);
+        if (is_array($value)) {
+          $vars[$key] = [];
+          foreach ($value as $valueKey => $valueValue) {
+            $vars[$key][$valueKey] = urlencode($valueValue);
+          }
+        } else {
+          $vars[$key] = urlencode($value);
+        }
       }
       $queryString = json_encode($vars, JSON_FORCE_OBJECT);
     } else {

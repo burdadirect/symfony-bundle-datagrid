@@ -1,0 +1,12 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+
+{% set attributes = attributes(searchField['attr']|default([])).add({
+  'type': 'hidden',
+  'name': searchKey,
+  'value': datagrid.menu.searchValue(searchKey)
+}).addClasses('form-control') %}
+
+<input {{ attributes|raw }}>
