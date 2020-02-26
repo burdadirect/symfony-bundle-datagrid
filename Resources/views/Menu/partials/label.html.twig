@@ -1,0 +1,13 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
+  {% set classesAddon = 'input-group-prepend' %}
+  {% set classesInfo = dg.icon(datagrid, 'search_info') ~ ' ' ~ dg.classes(datagrid, 'search_info') %}
+{% else %}
+  {% set classesAddon = 'input-group-addon' %}
+  {% set classesInfo = 'glyphicon glyphicon-info-sign' %}
+{% endif %}
+
+<span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, transDomain) }}"></i>{% endif %}</span></span>

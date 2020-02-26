@@ -11,9 +11,13 @@
   {% set optionsValues = options['values']|default([]) %}
   {% set optionsChecked = datagrid.menu.searchValue(searchKey ~ '-options') %}
 
+  {% set attributes = attributes(options['attr']|default([])).add({
+    'data-toggle': 'buttons',
+  }).addClasses('btn-group btn-group-toggle input-group-prepend') %}
+
   {% if options and (optionsValues is iterable) and (optionsValues|length > 0) %}
     {% if options|length > 0 %}
-      <div class="btn-group btn-group-sm btn-group-toggle input-group-prepend" data-toggle="buttons">
+      <div {{ attributes|raw}}>
         {% for optionKey, optionData in optionsValues %}
           {% set optionAttributes = attributes(optionData['attr']|default([])).add({
             'type': optionsMode,

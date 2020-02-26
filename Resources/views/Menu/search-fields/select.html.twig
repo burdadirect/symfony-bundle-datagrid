@@ -1,43 +1,27 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% embed '@HBMDatagrid/Menu/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+  {% block form_element %}
+    {% set attributes = attributes(searchField['attr']|default([])).add({
+      'name': searchKey
+    }).addClasses('form-control') %}
 
-
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input_group') %}
-  {% set classesAddon = 'input-group-prepend' %}
-  {% set classesInfo = dg.icon(datagrid, 'search_info') ~ ' ' ~ dg.classes(datagrid, 'search_info') %}
-{% else %}
-  {% set classesGroup = 'input-group input-group-sm' %}
-  {% set classesAddon = 'input-group-addon' %}
-  {% set classesInfo = 'glyphicon glyphicon-info-sign' %}
-{% endif %}
-
-{% set desc = searchField['desc']|default(null) %}
-
-{% set attributes = attributes(searchField['attr']|default([])).add({
-  'title': dg.trans(searchField['label'], transDomain),
-  'name': searchKey
-}).addClasses('form-control') %}
-
-<div class="{{ classesGroup }}">
-  <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(searchField['label'], transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ desc }}"></i>{% endif %}</span></span>
-  {% include '@HBMDatagrid/Menu/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-  <select {{ attributes|raw }}>
-    <option></option>
-    {% set keys = datagrid.menu.searchValue(searchKey) %}
-    {% if searchField['values'] is defined %}
-      {% for key, value in searchField['values'] %}
-        {% if value is iterable %}
-          <optgroup label="{{ key }}">
-            {% for optgroupKey, optgroupValue in value %}
-              {% include '@HBMDatagrid/Menu/search-fields/select-option.html.twig' with { 'key': optgroupKey, 'value': optgroupValue, 'keys': keys, 'transDomain': transDomain } only %}
-            {% endfor %}
-          </optgroup>
-        {% else %}
-          {% include '@HBMDatagrid/Menu/search-fields/select-option.html.twig' with { 'key': key, 'value': value, 'keys': keys, 'transDomain': transDomain } only %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  </select>
-</div>
+    <select {{ attributes|raw }}>
+      <option></option>
+      {% set keys = datagrid.menu.searchValue(searchKey) %}
+      {% if searchField['values'] is defined %}
+        {% for key, value in searchField['values'] %}
+          {% if value is iterable %}
+            <optgroup label="{{ key }}">
+              {% for optgroupKey, optgroupValue in value %}
+                {% include '@HBMDatagrid/Menu/partials/select-option.html.twig' with { 'key': optgroupKey, 'value': optgroupValue, 'keys': keys, 'transDomain': transDomain } only %}
+              {% endfor %}
+            </optgroup>
+          {% else %}
+            {% include '@HBMDatagrid/Menu/partials/select-option.html.twig' with { 'key': key, 'value': value, 'keys': keys, 'transDomain': transDomain } only %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </select>
+  {% endblock form_element %}
+{% endembed %}

@@ -1,0 +1,18 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.bootstrap['version'] == 'v4' %}
+  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input_group') %}
+{% else %}
+  {% set classesGroup = 'input-group input-group-sm' %}
+{% endif %}
+
+{% set desc = searchField['desc']|default(null) %}
+{% set label = searchField['label']|default(null) %}
+
+<div class="{{ classesGroup }}">
+  {% include '@HBMDatagrid/Menu/partials/label.html.twig' with { 'datagrid': datagrid, 'label': label, 'desc': desc, 'transDomain': transDomain } only %}
+  {% include '@HBMDatagrid/Menu/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+ {% block form_element %}{% endblock form_element %}
+</div>

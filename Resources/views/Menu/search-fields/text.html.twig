@@ -1,35 +1,18 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% embed '@HBMDatagrid/Menu/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+  {% block form_element %}
+    {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
+    {% set placeholder = searchField['placeholder']|default('abc') %}
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input_group') %}
-  {% set classesAddon = 'input-group-prepend' %}
-  {% set classesInfo = dg.icon(datagrid, 'search_info') ~ ' ' ~ dg.classes(datagrid, 'search_info') %}
-{% else %}
-  {% set classesGroup = 'input-group input-group-sm' %}
-  {% set classesAddon = 'input-group-addon' %}
-  {% set classesInfo = 'glyphicon glyphicon-info-sign' %}
-{% endif %}
+    {% set attributes = attributes(searchField['attr']|default([])).add({
+      'type': 'text',
+      'placeholder': dg.trans(placeholder, transDomain),
+      'name': searchKey,
+      'value': datagrid.menu.searchValue(searchKey)
+    }).addClasses('form-control') %}
 
-{% set desc = searchField['desc']|default(null) %}
-{% set label = searchField['label']|default(null) %}
-{% set placeholder = searchField['placeholder']|default(null) %}
-{% if 'placeholder' not in searchField|keys %}
-  {% set placeholder = label %}
-  {% set label = 'abc' %}
-{% endif %}
-
-{% set attributes = attributes(searchField['attr']|default([])).add({
-  'type': 'text',
-  'placeholder': dg.trans(placeholder, transDomain),
-  'name': searchKey,
-  'value': datagrid.menu.searchValue(searchKey)
-}).addClasses('form-control') %}
-
-<div class="{{ classesGroup }}">
-  <span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, transDomain) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, transDomain) }}"></i>{% endif %}</span></span>
-  {% include '@HBMDatagrid/Menu/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-  <input {{ attributes|raw }}>
-</div>
+    <input {{ attributes|raw }}>
+  {% endblock form_element %}
+{% endembed %}
