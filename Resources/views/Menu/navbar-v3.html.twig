@@ -82,7 +82,7 @@
                 <div class="form-group">
                   {% if searchField['type'] == 'hidden' %}
                     {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
-                  {% if searchField['type'] == 'number' %}
+                  {% elseif searchField['type'] == 'number' %}
                     {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
                   {% elseif searchField['type'] == 'select' %}
                     {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
