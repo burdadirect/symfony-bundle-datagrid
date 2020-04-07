@@ -330,6 +330,13 @@ class DatagridHelper {
   }
 
   /**
+   * @return QueryBuilder
+   */
+  public function getQueryBuilder() : ?QueryBuilder {
+    return $this->qb;
+  }
+
+  /**
    * @param Request $request
    * @param $searchFields
    * @param array $defaults
