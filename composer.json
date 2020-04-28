@@ -9,7 +9,7 @@
   "type": "symfony-bundle",
   "autoload": {
     "psr-4": {
-      "HBM\\DatagridBundle\\": "HBM/DatagridBundle"
+      "HBM\\DatagridBundle\\": ""
     }
   },
   "repositories" : [
