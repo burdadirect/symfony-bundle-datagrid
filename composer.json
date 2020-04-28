@@ -9,7 +9,7 @@
   "type": "symfony-bundle",
   "autoload": {
     "psr-4": {
-      "HBM\\DatagridBundle": ""
+      "HBM\\DatagridBundle": "HBM/DatagridBundle"
     }
   },
   "repositories" : [
@@ -33,6 +33,5 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
-  },
-  "target-dir": "HBM/DatagridBundle"
+  }
 }
