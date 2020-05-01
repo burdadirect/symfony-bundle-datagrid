@@ -1,0 +1,6 @@
+{% if obj.creator %}
+  {{ obj.creator.name }}
+  <small class="{{ classes|default('d-block mini-70') }}">{{ obj.creator.email }}</small>
+{% else %}
+  n/a
+{% endif %}

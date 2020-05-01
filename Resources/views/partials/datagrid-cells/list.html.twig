@@ -1,0 +1,13 @@
+{% if values|length > 0 %}
+  <ul class="list-group list-group-flush list-group-narrow list-group-transparent">
+    {% for value in values %}
+      <li class="list-group-item">
+        {% if func is defined %}
+          {{ attribute(value, func) }}
+        {% else %}
+          {{ value }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
