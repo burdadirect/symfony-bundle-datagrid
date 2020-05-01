@@ -2,7 +2,7 @@
 
 namespace HBM\DatagridBundle\Service;
 
-class DatagridMenuHelper {
+class SearchMenuHelper {
 
   /**
    * @param string $minus

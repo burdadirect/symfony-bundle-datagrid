@@ -4,7 +4,7 @@ namespace HBM\DatagridBundle\Service;
 
 use HBM\DatagridBundle\Model\TableCell;
 
-class DatagridCellHelper {
+class TableCellHelper {
 
   /**
    * @param string $alias
