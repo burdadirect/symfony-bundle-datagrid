@@ -36,13 +36,16 @@ class SearchMenuHelper {
   /**
    * @param array $searchValues
    * @param string $key
+   * @param string|null $type
+   * @param string|null $prefix
    *
    * @return array
    */
-  public function words(array $searchValues, string $key) : array {
+  public function tokens(array $searchValues, string $key, string $type = NULL, string $prefix = NULL) : array {
     $values = [];
     if (isset($searchValues[$key])) {
       $values = array_diff(array_map('trim', explode(' ', $searchValues[$key])), ['']);
+      return $this->handleValues($values, $type, $prefix);
     }
     return $values;
   }
@@ -58,16 +61,7 @@ class SearchMenuHelper {
    */
   public function value(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, $default = NULL) {
     if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
-      $value = trim($searchValues[$key]);
-      if ($prefix) {
-        $value = str_replace($prefix, '', $value);
-      }
-      if (in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string', 'array', 'object'], TRUE)) {
-        settype($value, $type);
-      } elseif ($type === 'json') {
-        return json_decode($value, TRUE) ?: $default;
-      }
-      return $value;
+      return $this->handleValues([$searchValues[$key]], $type, $prefix)[0];
     }
 
     return $default;
@@ -84,22 +78,38 @@ class SearchMenuHelper {
    */
   public function values(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, $default = NULL) {
     if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
-      $value = $searchValues[$key];
-      if ($prefix) {
-        $value = array_map(function($item) use ($prefix) {
-          return str_replace($prefix, '', $item);
-        }, $value);
-      }
-      if (in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string', 'array', 'object'], TRUE)) {
-        $value = array_map(function($item) use ($type) {
-          settype($item, $type);
-          return $item;
-        }, $value);
-      }
-      return $value;
+      return $this->handleValues($searchValues[$key], $type, $prefix);
     }
 
     return $default;
+  }
+
+  /**
+   * @param array $values
+   * @param string|null $type
+   * @param string|null $prefix
+   *
+   * @return array
+   */
+  private function handleValues(array $values, string $type = NULL, string $prefix = NULL) : array {
+    if ($prefix) {
+      $values = array_map(function($item) use ($prefix) {
+        return str_replace($prefix, '', $item);
+      }, $values);
+    }
+
+    if (in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string', 'array', 'object'], TRUE)) {
+      $values = array_map(function($item) use ($type) {
+        settype($item, $type);
+        return $item;
+      }, $values);
+    } elseif ($type === 'json') {
+      $values = array_map(function($item) use ($type) {
+        return json_decode($item, TRUE);
+      }, $values);
+    }
+
+    return $values;
   }
 
 }
