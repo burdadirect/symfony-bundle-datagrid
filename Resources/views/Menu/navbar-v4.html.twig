@@ -3,42 +3,26 @@
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% set datagrid_id = 'datagrid-'~random() %}
+{% set datagrid_actions_classes = 'my-1 mx-1 ' %}
 
 {% if datagrid.menu.show %}
   <div class="datagrid-menu {{ dg.classes(datagrid, 'navbar') }}">
-    {% include '@HBMDatagrid/Menu/buttons/navbar-v4-stats.html.twig' %}
+    {% block datagrid_menu_stats %}
+      {% include '@HBMDatagrid/Menu/elements/navbar-v4-stats.html.twig' %}
+    {% endblock datagrid_menu_stats %}
 
-    <div class="datagrid-menu-header navbar-brand">
-      {% if datagrid.menu.showHeader %}
-        <div class="datagrid-menu-num highlightable">
-          <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
-        </div>
-      {% endif %}
-      {% if datagrid.menu.showRange %}
-        <div class="datagrid-menu-range highlightable text-nowrap small">
-          {{ 'Einträge'|trans }}
-          <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
-          {{ 'bis'|trans }}
-          <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
-        </div>
-      {% endif %}
-    </div>
-
-    {% include '@HBMDatagrid/Menu/buttons/navbar-v4-toggler.html.twig' %}
+    {% block datagrid_menu_toggler %}
+      {% include '@HBMDatagrid/Menu/elements/navbar-v4-toggler.html.twig' %}
+    {% endblock datagrid_menu_toggler %}
 
     <div class="collapse navbar-collapse justify-content-end" id="{{ datagrid_id~'-navbar' }}">
-      {% include '@HBMDatagrid/Menu/navbar-v4-search-form.html.twig' %}
+      {% block datagrid_menu_search_form %}
+        {% include '@HBMDatagrid/Menu/elements/navbar-v4-search-form.html.twig' %}
+      {% endblock datagrid_menu_search_form %}
 
-      {% set datagrid_actions_classes = 'my-1 mx-1 ' %}
-      <div class="datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center ml-sm-3 mt-3 mt-sm-0">
-        {% include '@HBMDatagrid/Menu/buttons/navbar-v4-extended.html.twig' %}
-
-        {% include '@HBMDatagrid/Menu/buttons/navbar-v4-reset.html.twig' %}
-
-        {% include '@HBMDatagrid/Menu/buttons/navbar-v4-exports.html.twig' %}
-
-        {% include '@HBMDatagrid/Menu/buttons/navbar-v4-max-entries.html.twig' %}
-      </div>
+      {% block datagrid_menu_actions %}
+        {% include '@HBMDatagrid/Menu/elements/navbar-v4-actions.html.twig' %}
+      {% endblock datagrid_menu_actions %}
     </div>
   </div>
 {% endif %}

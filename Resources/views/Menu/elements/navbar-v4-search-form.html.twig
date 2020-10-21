@@ -3,7 +3,7 @@
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-  <form class="datagrid-menu-search form-inline justify-content-center" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+  <form class="{{ classes|default('datagrid-menu-search form-inline justify-content-center') }}" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
     {% for searchKey, searchField in datagrid.menu.searchFields %}
       {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}

@@ -1,0 +1,19 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+<div class="{{ classes|default('datagrid-menu-actions d-flex flex-wrap justify-content-center align-items-center ml-sm-3 mt-3 mt-sm-0') }}">
+  {% block datagrid_menu_action_extended %}
+    {% include '@HBMDatagrid/Menu/actions/navbar-v4-extended.html.twig' %}
+  {% endblock datagrid_menu_action_extended %}
+
+  {% block datagrid_menu_action_reset %}
+    {% include '@HBMDatagrid/Menu/actions/navbar-v4-reset.html.twig' %}
+  {% endblock datagrid_menu_action_reset %}
+
+  {% block datagrid_menu_action_exports %}
+    {% include '@HBMDatagrid/Menu/actions/navbar-v4-exports.html.twig' %}
+  {% endblock datagrid_menu_action_exports %}
+
+  {% block datagrid_menu_action_entries %}
+    {% include '@HBMDatagrid/Menu/actions/navbar-v4-entries.html.twig' %}
+  {% endblock datagrid_menu_action_entries %}
+</div>

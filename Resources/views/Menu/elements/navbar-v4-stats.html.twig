@@ -1,0 +1,17 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+<div class="datagrid-menu-header navbar-brand">
+  {% if datagrid.menu.showHeader %}
+    <div class="datagrid-menu-num highlightable">
+      <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
+    </div>
+  {% endif %}
+  {% if datagrid.menu.showRange %}
+    <div class="datagrid-menu-range highlightable text-nowrap small">
+      {{ 'Einträge'|trans }}
+      <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
+      {{ 'bis'|trans }}
+      <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+    </div>
+  {% endif %}
+</div>
