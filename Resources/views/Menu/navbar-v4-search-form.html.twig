@@ -1,0 +1,28 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
+  <form class="datagrid-menu-search form-inline justify-content-center" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+
+    {% for searchKey, searchField in datagrid.menu.searchFields %}
+      {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+        {% if searchField['type'] == 'hidden' %}
+          {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% elseif searchField['type'] == 'none' %}
+          {% include '@HBMDatagrid/Menu/search-fields/none.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% elseif searchField['type'] == 'number' %}
+          {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% elseif (searchField['type'] == 'date') or (searchField['type'] == 'datetime') %}
+            {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% elseif searchField['type'] == 'select' %}
+          {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% else %}
+          {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    <button type="submit" class="{{ dg.classesAndSize(datagrid, 'btn') }}"> <span class="{{ dg.icon(datagrid, 'search') }}"></span> {{ 'Suchen'|trans }}</button>
+  </form>
+{% endif %}
