@@ -3,7 +3,7 @@
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% if datagrid.menu.showMaxEntriesSelection %}
-  <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') }}">
+  <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ classes|default('') }}">
     <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-maxentries' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {{ datagrid.maxEntriesPerPage }} {{ 'Einträge'|trans }}
     </button>
