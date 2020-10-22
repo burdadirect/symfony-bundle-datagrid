@@ -1,0 +1,21 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.menu.showExport %}
+  <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
+    <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {{ 'Export'|trans }}
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="{{ datagrid_id~'-export' }}">
+      {% for export in datagrid.menu.exportsSelection %}
+        <li>
+          <a class="dropdown-item" href="#" onclick="document.getElementById('{{ datagrid_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
+          <form id="{{ datagrid_id~'-export-'~export }}" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+            <input type="hidden" name="export-type" value="{{ export }}" />
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

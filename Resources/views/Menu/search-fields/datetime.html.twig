@@ -1,6 +1,6 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-{% embed '@HBMDatagrid/Menu/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
   {% block form_element %}
     {% import '@HBMDatagrid/macros.html.twig' as dg %}
 

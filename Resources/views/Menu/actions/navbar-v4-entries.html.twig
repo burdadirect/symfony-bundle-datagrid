@@ -1,0 +1,16 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.menu.showMaxEntriesSelection %}
+  <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ ' ' ~ classes|default('') }}">
+    <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-maxentries' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {{ datagrid.maxEntriesPerPage }} {{ 'Einträge'|trans }}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ datagrid_id~'-maxentries' }}">
+      {% for link in datagrid.menu.links -%}
+        <li><a class="dropdown-item" href="{{ dg.path(link) }}" title="{{ link.value }} {{ 'Einträge anzeigen'|trans }}">{{ link.value }} {{ 'Einträge'|trans }}</a></li>
+      {%- endfor %}
+    </ul>
+  </div>
+{% endif %}

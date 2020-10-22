@@ -1,0 +1,9 @@
+{% trans_default_domain 'HBMDatagridBundle' %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dg %}
+
+{% if datagrid.menu.showReset and datagrid.menu.routeReset %}
+  <a class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}">
+    <span class="{{ dg.icon(datagrid, 'reset') }}"></span> {{ 'Reset'|trans }}
+  </a>
+{% endif %}
