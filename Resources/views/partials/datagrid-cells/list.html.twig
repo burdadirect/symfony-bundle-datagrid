@@ -3,9 +3,9 @@
     {% for value in values %}
       <li class="list-group-item">
         {% if func is defined %}
-          {{ attribute(value, func) }}
+          {{ attribute(value, func)|raw }}
         {% else %}
-          {{ value }}
+          {{ value|raw }}
         {% endif %}
       </li>
     {% endfor %}
