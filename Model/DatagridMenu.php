@@ -314,6 +314,27 @@ class DatagridMenu {
     return NULL;
   }
 
+  /**
+   * @return array
+   */
+  public function getSearchFieldsSorted() : array {
+    $searchFieldsSorted = $this->getSearchFields();
+
+    // Fill missing weights.
+    $weight = 1;
+    foreach ($searchFieldsSorted as &$searchField) {
+      $searchField['weight'] = $searchField['weight'] ?? $weight++;
+    }
+
+    // Get weights as array.
+    $weights = array_column($searchFieldsSorted, 'weight');
+
+    // Sort search fields ascending according to weight.
+    array_multisort($weights, SORT_ASC, $searchFieldsSorted);
+
+    return $searchFieldsSorted;
+  }
+
   public function __toString() {
     $string = '';
     $string .= 'MENU-VARS:' . "\n";

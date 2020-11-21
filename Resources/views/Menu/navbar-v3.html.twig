@@ -77,7 +77,7 @@
         {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
           <form class="datagrid-search navbar-form navbar-left" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
-            {% for searchKey, searchField in datagrid.menu.searchFields %}
+            {% for searchKey, searchField in datagrid.menu.searchFieldsSorted %}
               {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
                 <div class="form-group">
                   {% if searchField['type'] == 'hidden' %}

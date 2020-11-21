@@ -5,7 +5,7 @@
 {% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
   <form class="{{ classes|default('datagrid-menu-search form-inline justify-content-center') }}" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
 
-    {% for searchKey, searchField in datagrid.menu.searchFields %}
+    {% for searchKey, searchField in datagrid.menu.searchFieldsSorted %}
       {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
         {% if searchField['type'] == 'hidden' %}
           {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
