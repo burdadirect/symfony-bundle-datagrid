@@ -18,7 +18,7 @@ class TableCell {
   public const LABEL_POS_NONE   = FALSE;
 
   /**
-   * @var string
+   * @var string|array|null
    */
   protected $key;
 
@@ -101,7 +101,10 @@ class TableCell {
     $this->key = $key;
   }
 
-  public function getKey() : ?string {
+  /**
+   * @return array|string
+   */
+  public function getKey() {
     return $this->key;
   }
 
@@ -313,13 +316,7 @@ class TableCell {
       throw new \InvalidArgumentException('How come?');
     }
 
-    $value = NULL;
-    if (method_exists($obj, 'get' . ucfirst($this->getKey()))) {
-      $value = $obj->{'get' . ucfirst($this->getKey())}();
-    } elseif (is_callable([$obj, $this->getKey()], TRUE)) {
-      $value = $obj->{$this->getKey()}();
-    }
-
+    $value = $this->getValueFromObject($obj, $this->getKey());
     if ($value instanceof \DateTime) {
       $format = 'Y-m-d H:i:s';
       if (isset($this->options['format'])) {
@@ -327,6 +324,28 @@ class TableCell {
       }
 
       return $value->format($format);
+    }
+
+    return $value;
+  }
+
+  private function getValueFromObject($obj, $key) {
+    $callable = [$obj];
+    $callableParams = [];
+    if (is_string($key)) {
+      if (is_callable([$obj, 'get'.ucfirst($key)])) {
+        array_push($callable, 'get'.ucfirst($key));
+      } else {
+        array_push($callable, $key);
+      }
+    } elseif (is_array($key)) {
+      array_push($callable, $key[0] ?? FALSE);
+      $callableParams = $key[1] ?? [];
+    }
+
+    $value = NULL;
+    if (is_callable($callable)) {
+      $value = call_user_func_array($callable, $callableParams);
     }
 
     return $value;
