@@ -40,13 +40,13 @@ class TableCellHelper {
    * @param string $alias
    * @param string $template
    * @param string $headline
-   * @param string $field
-   * @param string $thClass
+   * @param string|null $field
+   * @param string|null $thClass
    * @param int $visibility
    *
    * @return TableCell
    */
-  public function icon(string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', string $field = NULL, string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH) : TableCell {
+  public function icon(string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', ?string $field = NULL, ?string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH) : TableCell {
     $options = [
       'th_attr' => ['class' => $thClass],
       'td_attr' => ['class' => 'text-center'],
@@ -140,16 +140,17 @@ class TableCellHelper {
    * @param string $key
    * @param string $label
    * @param array|callable $params
-   * @param string $thClass
+   * @param string|null $tdClass
+   * @param string|null $thClass
    *
    * @return TableCell
    */
-  public function list(string $key, string $label, $params = [], $thClass = 'fixed-10-center list-group-cell-narrow') : TableCell {
+  public function list(string $key, string $label, $params = [], ?string $tdClass = 'list-group-cell-narrow', ?string $thClass = NULL) : TableCell {
     return new TableCell($key, $label, NULL, TableCell::VISIBLE_BOTH, [
       'template' => '@HBMDatagrid/partials/datagrid-cells/list.html.twig',
       'template_params' => $params,
       'th_attr' => ['class' => $thClass],
-      'td_attr' => ['class' => $thClass],
+      'td_attr' => ['class' => $tdClass],
     ]);
   }
 
