@@ -18,7 +18,7 @@ class ExportCSV extends Export {
     /** @var TableCell $cell */
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $line[] = $this->encloseValue($this->prepareLabel($cell->getLabel()));
+        $line[] = $this->encloseValue($this->prepareLabel($cell->getLabelText()));
       }
     }
 

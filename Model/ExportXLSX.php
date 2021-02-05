@@ -34,7 +34,7 @@ class ExportXLSX extends Export {
     $column = 1;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabel()));
+        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabelText()));
         $column++;
       }
     }

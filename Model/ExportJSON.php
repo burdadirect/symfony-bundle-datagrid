@@ -21,7 +21,7 @@ class ExportJSON extends Export {
     /** @var TableCell $cell */
     foreach ($this->getCells() as $index => $cell) {
       if ($cell->isVisibleExport()) {
-        $this->labels[$index] = $this->prepareLabel($cell->getLabel());
+        $this->labels[$index] = $this->prepareLabel($cell->getLabelText());
       }
     }
   }
