@@ -7,9 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 class ExportCSV extends Export {
 
   /** @var array */
-  protected $lines;
+  protected $lines = [];
 
   public function init() : void {
+  }
+
+  public function finish() : void {
   }
 
   public function addHeader() : void {
@@ -39,7 +42,12 @@ class ExportCSV extends Export {
     $column = 0;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $line[] = $this->encloseValue($this->prepareValue($cell->parseValue($obj, $column, $row)));
+        $value = $cell->parseValue($obj, $column, $row);
+        if ($value instanceof \SplFileInfo) {
+          $line[] = $this->encloseValue($this->prepareValue($value->getBasename()));
+        } else {
+          $line[] = $this->encloseValue($this->prepareValue($value));
+        }
         $column++;
       }
     }

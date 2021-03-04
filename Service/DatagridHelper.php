@@ -408,6 +408,7 @@ class DatagridHelper {
         $export->init();
         $export->setName($name);
         $export = $this->runExport($export, $om);
+        $export->finish();
         return $export->output();
       }
 

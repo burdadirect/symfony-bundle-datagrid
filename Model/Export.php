@@ -28,6 +28,8 @@ abstract class Export {
 
   abstract public function init();
 
+  abstract public function finish();
+
   abstract public function addHeader();
 
   abstract public function addRow($obj);

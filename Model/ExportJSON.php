@@ -7,12 +7,15 @@ use Symfony\Component\HttpFoundation\Response;
 class ExportJSON extends Export {
 
   /** @var array */
-  protected $lines;
+  protected $lines = [];
 
   /** @var array */
-  protected $labels;
+  protected $labels = [];
 
   public function init() : void {
+  }
+
+  public function finish() : void {
   }
 
   public function addHeader() : void {
@@ -40,7 +43,12 @@ class ExportJSON extends Export {
     $column = 0;
     foreach ($this->getCells() as $index => $cell) {
       if ($cell->isVisibleExport()) {
-        $line[$this->labels[$index]] = $this->prepareValue($cell->parseValue($obj, $column, $row));
+        $value = $cell->parseValue($obj, $column, $row);
+        if ($value instanceof \SplFileInfo) {
+          $line[$this->labels[$index]] = $this->prepareValue($value->getBasename());
+        } else {
+          $line[$this->labels[$index]] = $this->prepareValue($value);
+        }
         $column++;
       }
     }
