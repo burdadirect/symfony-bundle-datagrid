@@ -2,6 +2,8 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use Symfony\Component\Form\DataTransformerInterface;
+
 class TableCell {
 
   public const VISIBLE_NONE        = 0b000000;
@@ -67,6 +69,7 @@ class TableCell {
     'template' => 'string|callback',
     'template_params' => 'array|callback',
     'format' => 'string',
+    'transformer' => 'object',
   ];
 
   /**
@@ -238,10 +241,10 @@ class TableCell {
       }
 
       if (\is_callable($template)) {
-        return $template($obj, $column, $row);
+        return call_user_func_array($template, [$obj, $column, $row]);
       }
 
-      throw new \InvalidArgumentException('How come?');
+      throw new \InvalidArgumentException('Datagrid: Invalid "template" option.');
     }
 
     return $default;
@@ -266,29 +269,21 @@ class TableCell {
       }
 
       if (\is_callable($templateParams)) {
-        return $templateParams($obj, $column, $row);
+        return call_user_func_array($templateParams, [$obj, $column, $row]);
       }
 
-      throw new \InvalidArgumentException('How come?');
+      throw new \InvalidArgumentException('Datagrid: Invalid "template_params" option.');
     }
 
     return $default;
   }
 
   public function getOption($key, $default = NULL) {
-    if (isset($this->options[$key])) {
-      return $this->options[$key];
-    }
-
-    return $default;
+    return $this->options[$key] ?? $default;
   }
 
   public function hasOption($key) : bool {
-    if (isset($this->options[$key])) {
-      return TRUE;
-    }
-
-    return FALSE;
+    return isset($this->options[$key]);
   }
 
   public function getAttr($scope) : string {
@@ -311,9 +306,10 @@ class TableCell {
         return $value;
       }
       if (\is_callable($value)) {
-        return $value($obj, $column, $row);
+        return call_user_func_array($value, [$obj, $column, $row]);
       }
-      throw new \InvalidArgumentException('How come?');
+
+      throw new \InvalidArgumentException('Datagrid: Invalid "value" option.');
     }
 
     $value = $this->getValueFromObject($obj, $this->getKey());
@@ -324,6 +320,15 @@ class TableCell {
       }
 
       return $value->format($format);
+    }
+
+    if ($this->hasOption('transformer')) {
+      $transformer = $this->getOption('transformer');
+      if ($transformer instanceof DataTransformerInterface) {
+        return call_user_func_array([$transformer, 'transform'], [$value]);
+      }
+
+      throw new \InvalidArgumentException('Datagrid: Invalid "transform" option.');
     }
 
     return $value;
@@ -372,6 +377,10 @@ class TableCell {
           if (\is_bool($value)) {
             $valid = TRUE;
           }
+        } elseif ($type === 'object') {
+          if (\is_object($value)) {
+            $valid = TRUE;
+          }
         } else {
           if ($type === 'array') {
             if (\is_array($value)) {
@@ -383,14 +392,14 @@ class TableCell {
                 $valid = TRUE;
               }
             } else {
-              throw new \InvalidArgumentException('Unknown type for option "'.$option.'".');
+              throw new \InvalidArgumentException('Datagrid: Unknown type for option "'.$option.'".');
             }
           }
         }
       }
 
       if (!$valid) {
-        throw new \InvalidArgumentException('Option "'.$option.'" is not valid.');
+        throw new \InvalidArgumentException('Datagrid: Option "'.$option.'" is not valid.');
       }
     }
   }
@@ -405,7 +414,7 @@ class TableCell {
    */
   private function getOptionTypes($option, $validOptions) : array {
     if (!isset($validOptions[$option])) {
-      throw new \InvalidArgumentException('Not a valid option "'.$option.'".');
+      throw new \InvalidArgumentException('Datagrid: Not a valid option "'.$option.'".');
     }
 
     $types = $validOptions[$option];
