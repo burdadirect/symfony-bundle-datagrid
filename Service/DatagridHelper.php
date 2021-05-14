@@ -2,10 +2,9 @@
 namespace HBM\DatagridBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectManager;
 use HBM\DatagridBundle\Model\Datagrid;
 use HBM\DatagridBundle\Model\DatagridMenu;
 use HBM\DatagridBundle\Model\DatagridPagination;
@@ -16,6 +15,9 @@ use HBM\DatagridBundle\Model\ExportXLSX;
 use HBM\DatagridBundle\Model\Route;
 use HBM\DatagridBundle\Model\RouteLink;
 use HBM\DatagridBundle\Model\TableCell;
+use HBM\DatagridBundle\Service\QueryBuilderStrategy\Common\QueryBuilderStrategyInterface;
+use HBM\DatagridBundle\Service\QueryBuilderStrategy\EntityQueryBuilder;
+use HBM\DatagridBundle\Service\QueryBuilderStrategy\MongoDBDocumentQueryBuilder;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,9 +59,9 @@ class DatagridHelper {
   private $datagrid;
 
   /**
-   * @var QueryBuilder
+   * @var QueryBuilderStrategyInterface
    */
-  private $qb;
+  private $queryBuilderStrategy;
 
   /**
    * @var array
@@ -79,11 +81,11 @@ class DatagridHelper {
   /**
    * DatagridHelper constructor.
    *
-   * @param $config
+   * @param array $config
    * @param Router $router
    * @param LoggerInterface $logger
    */
-  public function __construct($config, Router $router, LoggerInterface $logger) {
+  public function __construct(array $config, Router $router, LoggerInterface $logger) {
     $this->config = $config;
     $this->router = $router;
     $this->logger = $logger;
@@ -323,18 +325,29 @@ class DatagridHelper {
   }
 
   /**
-   * @param QueryBuilder|NULL $qb
+   * @param QueryBuilder|null $qb
+   * @param string $distinctFieldName
    */
-  public function setQueryBuilder(?QueryBuilder $qb) {
-    $this->qb = $qb;
+  public function setQueryBuilderEntity(?QueryBuilder $qb, string $distinctFieldName = 'id') : void {
+    $this->queryBuilderStrategy = new EntityQueryBuilder();
+    $this->queryBuilderStrategy->setDistinctFieldName($distinctFieldName);
+    $this->queryBuilderStrategy->setDatagrid($this->getDatagrid());
+    $this->queryBuilderStrategy->setQueryBuilder($qb);
   }
 
   /**
-   * @return QueryBuilder
+   * @param Builder|null $qb
+   * @param DocumentManager $dm
+   * @param string $distinctFieldName
    */
-  public function getQueryBuilder() : ?QueryBuilder {
-    return $this->qb;
+  public function setQueryBuilderMongoDBDocument(?Builder $qb, DocumentManager $dm, string $distinctFieldName = 'id') : void {
+    $this->queryBuilderStrategy = new MongoDBDocumentQueryBuilder();
+    $this->queryBuilderStrategy->setDistinctFieldName($distinctFieldName);
+    $this->queryBuilderStrategy->setDatagrid($this->getDatagrid());
+    $this->queryBuilderStrategy->setQueryBuilder($qb);
+    $this->queryBuilderStrategy->setDocumentManager($dm);
   }
+
 
   /**
    * @param Request $request
@@ -382,12 +395,11 @@ class DatagridHelper {
   /**
    * @param Request $request
    * @param $name
-   * @param ObjectManager $om
    * @param FlashBagInterface|NULL $flashBag
    *
    * @return bool|RedirectResponse
    */
-  public function handleExport(Request $request, $name, ObjectManager $om, FlashBagInterface $flashBag = NULL) {
+  public function handleExport(Request $request, $name, FlashBagInterface $flashBag = NULL) {
     if ($request->isMethod('post') && $request->request->has('export-type')) {
       // Not allowed.
       if (!$this->getDatagrid()->getMenu()->getShowExport()) {
@@ -407,7 +419,7 @@ class DatagridHelper {
       if ($export = $this->getExport($request->request->get('export-type'))) {
         $export->init();
         $export->setName($name);
-        $export = $this->runExport($export, $om);
+        $export = $this->runExport($export);
         $export->finish();
         return $export->output();
       }
@@ -425,11 +437,10 @@ class DatagridHelper {
 
   /**
    * @param Export $export
-   * @param ObjectManager $om
    *
    * @return Export
    */
-  public function runExport(Export $export, ObjectManager $om) {
+  public function runExport(Export $export) : Export {
     $export->setCells($this->getDatagrid()->getCells());
     $export->addHeader();
 
@@ -437,27 +448,11 @@ class DatagridHelper {
       foreach ($this->results as $obj) {
         $export->addRow($obj);
       }
-    } elseif ($this->qb) {
-      $offset = 0;
-      $batchSize = 100;
+      return $export;
+    }
 
-      $exporting = TRUE;
-      while ($exporting) {
-        $exporting = FALSE;
-
-        $qbExport = clone $this->qb;
-        $qbExport->setFirstResult($offset);
-        $qbExport->setMaxResults($batchSize);
-
-        $iterableResult = $qbExport->getQuery()->iterate();
-        while ($next = $iterableResult->next()) {
-          $exporting = TRUE;
-          $export->addRow($next[0]);
-          $offset++;
-        }
-
-        $om->clear();
-      }
+    if ($this->queryBuilderStrategy) {
+      return $this->queryBuilderStrategy->doExport($export);
     }
 
     return $export;
@@ -592,6 +587,8 @@ class DatagridHelper {
    * @param $vars
    *
    * @return false|string
+   *
+   * @throws \JsonException
    */
   public function getQueryString($vars) {
     if ($this->getDatagrid()->getQueryEncode() === 'json') {
@@ -605,7 +602,7 @@ class DatagridHelper {
           $vars[$key] = urlencode($value);
         }
       }
-      $queryString = json_encode($vars, JSON_FORCE_OBJECT);
+      $queryString = json_encode($vars, JSON_THROW_ON_ERROR);
     } else {
       throw new InvalidArgumentException('No other query decoding implemented yet!');
     }
@@ -614,31 +611,15 @@ class DatagridHelper {
   }
 
   /**
-   * @return int|mixed|null
-   *
-   * @throws NoResultException
-   * @throws NonUniqueResultException
+   * @return int|null
    */
-  private function getNumber() {
+  private function getNumber() : ?int {
     if ($this->resultsNumber !== NULL) {
       return $this->resultsNumber;
     }
 
-    if ($this->qb) {
-      $qbNum = clone $this->qb;
-      $rootAliases = $qbNum->getRootAliases();
-      $rootAlias = reset($rootAliases);
-      $qbNum->select($qbNum->expr()->countDistinct($rootAlias.'.id'));
-      $qbNum->resetDQLPart('orderBy');
-
-      $query = $qbNum->getQuery();
-      if ($this->getDatagrid()->getCacheEnabled()) {
-        $query->enableResultCache(
-          $this->getDatagrid()->getCacheSeconds(),
-          $this->getDatagrid()->getCachePrefix().'_scalar'
-        );
-      }
-      return $query->getSingleScalarResult();
+    if ($this->queryBuilderStrategy) {
+      return $this->queryBuilderStrategy->count();
     }
 
     return NULL;
@@ -652,19 +633,8 @@ class DatagridHelper {
       return $this->results;
     }
 
-    if ($this->qb) {
-      $qbRes = clone $this->qb;
-      $qbRes->setFirstResult($this->getDatagrid()->getPagination()->getOffset());
-      $qbRes->setMaxResults($this->getDatagrid()->getMaxEntriesPerPage());
-
-      $query = $qbRes->getQuery();
-      if ($this->getDatagrid()->getCacheEnabled()) {
-        $query->enableResultCache(
-          $this->getDatagrid()->getCacheSeconds(),
-          $this->getDatagrid()->getCachePrefix().'_scalar'
-        );
-      }
-      return $query->getResult();
+    if ($this->queryBuilderStrategy) {
+      return $this->queryBuilderStrategy->getResults();
     }
 
     return new ArrayCollection();
@@ -674,9 +644,6 @@ class DatagridHelper {
    * Returns the calculated paginated datagrid.
    *
    * @return Datagrid
-   *
-   * @throws NoResultException
-   * @throws NonUniqueResultException
    */
   public function paginate() {
     $datagrid = $this->getDatagrid();

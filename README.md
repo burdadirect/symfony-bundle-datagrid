@@ -68,11 +68,11 @@ hbm_datagrid:
     query:
         encode: 'json'
         param_names:
-            current_page: "page"
-            max_entries:  "num"
-            sortation:    "sort"
-            search:       "search"
-            extended:     "extended"
+            current_page: 'page'
+            max_entries:  'num'
+            sortation:    'sort'
+            search:       'search'
+            extended:     'extended'
     datagrid:
         sort: true
         multi_sort: true
@@ -80,7 +80,7 @@ hbm_datagrid:
     cache:
         enabled: false
         seconds: 300
-        prefix: "datagrid"
+        prefix: 'datagrid'
     pagination:
         max_links_per_page: 10
         show_first: true

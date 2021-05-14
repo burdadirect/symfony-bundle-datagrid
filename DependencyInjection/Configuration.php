@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
     $rootNode
       ->children()
         ->scalarNode('translation_domain')->defaultValue(false)->end()
+
         ->arrayNode('bootstrap')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('version')->defaultValue('v4')->end()
@@ -73,6 +74,7 @@ class Configuration implements ConfigurationInterface
             ->end()
           ->end()
         ->end()
+
         ->arrayNode('session')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('prefix')->defaultValue('hbm_datagrid:')->end()
@@ -82,6 +84,7 @@ class Configuration implements ConfigurationInterface
             ->end()
           ->end()
         ->end()
+
         ->arrayNode('query')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('encode')->defaultValue('json')->end()
@@ -96,6 +99,7 @@ class Configuration implements ConfigurationInterface
             ->end()
           ->end()
         ->end()
+
         ->arrayNode('datagrid')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('sort')->defaultTrue()->end()
@@ -104,6 +108,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('max_entries_per_page')->defaultValue(20)->end()
           ->end()
         ->end()
+
         ->arrayNode('cache')->addDefaultsIfNotSet()
           ->children()
             ->booleanNode('enabled')->defaultValue(FALSE)->end()
@@ -111,6 +116,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('prefix')->defaultValue('datagrid')->end()
           ->end()
         ->end()
+
         ->arrayNode('pagination')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('template')->defaultValue('@HBMDatagrid/Pagination/pagination.html.twig')->end()
@@ -122,6 +128,7 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('show_sep')->defaultTrue()->end()
           ->end()
         ->end()
+
         ->arrayNode('menu')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('template')->defaultValue('@HBMDatagrid/Menu/navbar.html.twig')->end()
@@ -159,6 +166,7 @@ class Configuration implements ConfigurationInterface
             ->end()
           ->end()
         ->end()
+
       ->end()
     ->end();
 
