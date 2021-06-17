@@ -111,11 +111,20 @@ class EntityQueryBuilder extends AbstractQueryBuilderStrategy {
       $qbExport->setFirstResult($offset);
       $qbExport->setMaxResults($batchSize);
 
-      $entities = $qbExport->getQuery()->toIterable();
-      foreach ($entities as $entity) {
-        $exporting = TRUE;
-        $export->addRow($entity);
-        $offset++;
+      $query = $qbExport->getQuery();
+      if (method_exists($query, 'toIterable')) {
+        foreach ($query->toIterable() as $entity) {
+          $exporting = TRUE;
+          $export->addRow($entity);
+          $offset++;
+        }
+      } else {
+        $iterableResult = $query->iterate();
+        while ($next = $iterableResult->next()) {
+          $exporting = TRUE;
+          $export->addRow($next[0]);
+          $offset++;
+        }
       }
 
       $this->getQueryBuilder()->getEntityManager()->clear();

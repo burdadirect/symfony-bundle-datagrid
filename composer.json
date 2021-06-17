@@ -29,11 +29,12 @@
     "symfony/http-kernel": "^4.4|^5.2",
     "symfony/dependency-injection": "^4.4|^5.2",
     "psr/log": "^1.0",
-    "phpoffice/phpspreadsheet": "^1.2"
-  },
-  "require-dev": {
-    "roave/security-advisories": "dev-latest",
+    "phpoffice/phpspreadsheet": "^1.2",
     "doctrine/orm": "^2.8",
     "doctrine/mongodb-odm-bundle": "^4.3"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+
   }
 }
