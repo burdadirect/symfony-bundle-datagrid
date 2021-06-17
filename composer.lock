@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ce340e8aa0a189bea3a5cab0d914642",
+    "content-hash": "44b6b5e3582a03e62ff28a286c80098c",
     "packages": [
         {
             "name": "burdadirect/symfony-bundle-twig-attributes",
