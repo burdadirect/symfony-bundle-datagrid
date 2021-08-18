@@ -613,7 +613,7 @@ class DatagridHelper {
   /**
    * @return int|null
    */
-  private function getNumber() : ?int {
+  public function getNumber() : ?int {
     if ($this->resultsNumber !== NULL) {
       return $this->resultsNumber;
     }
@@ -628,7 +628,7 @@ class DatagridHelper {
   /**
    * @return array|ArrayCollection|mixed
    */
-  private function getResults() {
+  public function getResults() {
     if ($this->results !== NULL) {
       return $this->results;
     }
