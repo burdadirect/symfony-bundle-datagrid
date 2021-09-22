@@ -6,14 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExportCSV extends Export {
 
-  /** @var array */
-  protected $lines = [];
-
-  public function init() : void {
-  }
-
-  public function finish() : void {
-  }
+  protected array $lines = [];
 
   public function addHeader() : void {
     $line = [];
@@ -42,12 +35,10 @@ class ExportCSV extends Export {
     $column = 0;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $value = $cell->parseValue($obj, $column, $row);
-        if ($value instanceof \SplFileInfo) {
-          $line[] = $this->encloseValue($this->prepareValue($value->getBasename()));
-        } else {
-          $line[] = $this->encloseValue($this->prepareValue($value));
-        }
+        $value = $cell->setFormatter($this)->getValue($obj, $column, $row);;
+
+        $line[] = $this->encloseValue($value);
+
         $column++;
       }
     }
@@ -55,17 +46,11 @@ class ExportCSV extends Export {
     $this->lines[] = implode(';', $line);
   }
 
-  private function prepareLabel($label) {
-    return html_entity_decode(strip_tags($label));
-  }
-
-  private function prepareValue($value) {
-    if (\is_array($value)) {
-      return implode(',', $value);
-    }
-    return strip_tags($value);
-  }
-
+  /**
+   * @param $value
+   *
+   * @return string
+   */
   private function encloseValue($value) : string {
     return '"'.str_replace('"', '""', $value).'"';
   }

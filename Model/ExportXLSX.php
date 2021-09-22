@@ -12,17 +12,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportXLSX extends Export {
 
-  /** @var Spreadsheet */
-  protected $spreadsheet;
+  protected ?Spreadsheet $spreadsheet = null;
 
-  /** @var Worksheet */
-  protected $sheet;
+  protected ?Worksheet $sheet = null;
 
-  /** @var int */
-  protected $row = 1;
+  protected int $row = 1;
 
-  /** @var array */
-  protected $columnsWidths = [];
+  protected array $columnsWidths = [];
 
   /**
    * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -35,6 +31,9 @@ class ExportXLSX extends Export {
     $this->sheet->setTitle('Export');
   }
 
+  /**
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   */
   public function finish() : void {
     foreach ($this->columnsWidths as $columnName => $columnWidth) {
       $columnWidthCalculated = $columnWidth;
@@ -61,7 +60,7 @@ class ExportXLSX extends Export {
   /**
    * @param $obj
    *
-   * @throws \InvalidArgumentException
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
    */
   public function addRow($obj) : void {
     $column = 1;
@@ -70,14 +69,17 @@ class ExportXLSX extends Export {
     /** @var TableCell $cell */
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $value = $cell->parseValue($obj, $column, $this->row - 2);
+        $value = $cell->setFormatter($this)->getValue($obj, $column, $this->row - 2);
+
         if ($value instanceof \SplFileInfo) {
           if (!$this->setCellImageByColumnAndRow($cell, $column, $this->row, $value, $columnWidth)) {
-            $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareValue($value->getBasename()));
+            $value = $value->getBasename();
+          } else {
+            $value = null;
           }
-        } else {
-          $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareValue($value));
         }
+
+        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $value);
 
         $column++;
       }
@@ -86,6 +88,17 @@ class ExportXLSX extends Export {
     $this->row++;
   }
 
+  protected function formatCellValueArray(TableCell $cell, array $value, ?string $separator = "\n") {
+    return parent::formatCellValueArray($cell, $value, $separator);
+  }
+
+  protected function formatCellValueSplFileInfo(TableCell $cell, \SplFileInfo $value) {
+    return $value;
+  }
+
+  /**
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   */
   private function setCellImageByColumnAndRow(TableCell $cell, $column, $row, \SplFileInfo $file, &$columnWidth) : bool {
     $imageInfo = getimagesize($file->getPathname());
     if ($imageInfo === FALSE) {
@@ -113,18 +126,6 @@ class ExportXLSX extends Export {
     $this->sheet->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($imageInfo[1] + 2*$columnOffset));
 
     return TRUE;
-  }
-
-  private function prepareLabel($label) {
-    return html_entity_decode(strip_tags($label));
-  }
-
-  private function prepareValue($value) {
-    if (\is_array($value)) {
-      return implode("\n", $value);
-    }
-
-    return strip_tags($value);
   }
 
   /**

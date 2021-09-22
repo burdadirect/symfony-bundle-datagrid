@@ -6,17 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExportJSON extends Export {
 
-  /** @var array */
-  protected $lines = [];
+  protected array $lines = [];
 
-  /** @var array */
-  protected $labels = [];
-
-  public function init() : void {
-  }
-
-  public function finish() : void {
-  }
+  protected array $labels = [];
 
   public function addHeader() : void {
     $this->labels = [];
@@ -43,12 +35,10 @@ class ExportJSON extends Export {
     $column = 0;
     foreach ($this->getCells() as $index => $cell) {
       if ($cell->isVisibleExport()) {
-        $value = $cell->parseValue($obj, $column, $row);
-        if ($value instanceof \SplFileInfo) {
-          $line[$this->labels[$index]] = $this->prepareValue($value->getBasename());
-        } else {
-          $line[$this->labels[$index]] = $this->prepareValue($value);
-        }
+        $value = $cell->setFormatter($this)->getValue($obj, $column, $row);
+
+        $line[$this->labels[$index]] = $value;
+
         $column++;
       }
     }
@@ -56,15 +46,15 @@ class ExportJSON extends Export {
     $this->lines[] = $line;
   }
 
-  private function prepareLabel($label) {
-    return html_entity_decode(strip_tags($label));
-  }
-
-  private function prepareValue($value) {
-    if (\is_array($value)) {
-      return $value;
-    }
-    return strip_tags($value);
+  /**
+   * @param TableCell $cell
+   * @param array $value
+   * @param string|null $separator
+   *
+   * @return array
+   */
+  protected function formatCellValueArray(TableCell $cell, array $value, ?string $separator = ',') : array {
+    return $value;
   }
 
   /**

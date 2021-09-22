@@ -19,9 +19,9 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
+    "php": "^7.4.0",
     "ext-json": "*",
-    "burdadirect/symfony-bundle-twig-attributes": "dev-master",
+    "burdadirect/symfony-bundle-twig-attributes": "dev-main",
     "symfony/config": "^4.4|^5.2",
     "symfony/form": "^4.4|^5.2",
     "symfony/routing": "^4.4|^5.2",

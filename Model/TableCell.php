@@ -24,35 +24,19 @@ class TableCell {
    */
   protected $key;
 
-  /**
-   * @var string
-   */
-  protected $label;
+  protected ?string $label = null;
 
-  /**
-   * @var string
-   */
-  protected $labelText;
+  protected ?string $labelText = null;
 
-  /**
-   * @var Route
-   */
-  private $route;
+  private ?Route $route;
 
-  /**
-   * @var integer
-   */
-  protected $visibility;
+  protected ?int $visibility = null;
 
-  /**
-   * @var array
-   */
-  protected $options;
+  protected ?array $options = null;
 
-  /**
-   * @var array
-   */
-  protected $theadLinks = [];
+  protected array $theadLinks = [];
+
+  protected Formatter $formatter;
 
   /**
    * @var array
@@ -68,7 +52,9 @@ class TableCell {
     'params' => 'array|callback',
     'template' => 'string|callback',
     'template_params' => 'array|callback',
+    'strip_tags' => 'bool',
     'format' => 'string',
+    'separator' => 'string',
     'transformer' => 'object',
   ];
 
@@ -97,6 +83,8 @@ class TableCell {
     }
 
     $this->setOptions($options);
+
+    $this->setFormatter(new Formatter());
   }
   /* GETTER/SETTER ************************************************************/
 
@@ -149,6 +137,28 @@ class TableCell {
 
   public function getTheadLinks() : array {
     return $this->theadLinks;
+  }
+
+  /**
+   * Set formatter.
+   *
+   * @param Formatter $formatter
+   *
+   * @return self
+   */
+  public function setFormatter(Formatter $formatter) : self {
+    $this->formatter = $formatter;
+
+    return $this;
+  }
+
+  /**
+   * Get formatter.
+   *
+   * @return Formatter
+   */
+  public function getFormatter() : Formatter {
+    return $this->formatter;
   }
 
   /**
@@ -209,11 +219,11 @@ class TableCell {
   public function getParams($obj, $column, $row) {
     if ($this->hasOption('params')) {
       $params = $this->getOption('params');
-      if (\is_string($params)) {
+      if (is_string($params)) {
         return $params;
       }
 
-      if (\is_callable($params)) {
+      if (is_callable($params)) {
         return $params($obj, $column, $row);
       }
 
@@ -236,12 +246,12 @@ class TableCell {
   public function getTemplate($obj, $column, $row, $default = '@HBMDatagrid/Datagrid/table-cell.html.twig') {
     if ($this->hasOption('template')) {
       $template = $this->getOption('template');
-      if (\is_string($template)) {
+      if (is_string($template)) {
         return $template;
       }
 
-      if (\is_callable($template)) {
-        return call_user_func_array($template, [$obj, $column, $row]);
+      if (is_callable($template)) {
+        return $template($obj, $column, $row);
       }
 
       throw new \InvalidArgumentException('Datagrid: Invalid "template" option.');
@@ -264,12 +274,12 @@ class TableCell {
     if ($this->hasOption('template_params')) {
       $templateParams = $this->getOption('template_params');
 
-      if (\is_array($templateParams)) {
+      if (is_array($templateParams)) {
         return $templateParams;
       }
 
-      if (\is_callable($templateParams)) {
-        return call_user_func_array($templateParams, [$obj, $column, $row]);
+      if (is_callable($templateParams)) {
+        return $templateParams($obj, $column, $row);
       }
 
       throw new \InvalidArgumentException('Datagrid: Invalid "template_params" option.');
@@ -290,6 +300,12 @@ class TableCell {
     return $this->getHtmlAttrString($this->getOption($scope . '_attr', []));
   }
 
+  public function getValue($obj, $column, $row) {
+    $value = $this->parseValue($obj, $column, $row);
+
+    return $this->getFormatter()->formatCellValue($this, $value);
+  }
+
   /**
    * @param $obj
    * @param $column
@@ -297,35 +313,26 @@ class TableCell {
    *
    * @return mixed|null|string
    *
-   * @throws \InvalidArgumentException
    */
   public function parseValue($obj, $column, $row) {
     if ($this->hasOption('value')) {
       $value = $this->getOption('value');
-      if (\is_string($value)) {
+      if (is_string($value)) {
         return $value;
       }
-      if (\is_callable($value)) {
-        return call_user_func_array($value, [$obj, $column, $row]);
+      if (is_callable($value)) {
+        return $value($obj, $column, $row);
       }
 
       throw new \InvalidArgumentException('Datagrid: Invalid "value" option.');
     }
 
     $value = $this->getValueFromObject($obj, $this->getKey());
-    if ($value instanceof \DateTime) {
-      $format = 'Y-m-d H:i:s';
-      if (isset($this->options['format'])) {
-        $format = $this->options['format'];
-      }
-
-      return $value->format($format);
-    }
 
     if ($this->hasOption('transformer')) {
       $transformer = $this->getOption('transformer');
       if ($transformer instanceof DataTransformerInterface) {
-        return call_user_func_array([$transformer, 'transform'], [$value]);
+        return $transformer->transform($value);
       }
 
       throw new \InvalidArgumentException('Datagrid: Invalid "transform" option.');
@@ -339,12 +346,12 @@ class TableCell {
     $callableParams = [];
     if (is_string($key)) {
       if (is_callable([$obj, 'get'.ucfirst($key)])) {
-        array_push($callable, 'get'.ucfirst($key));
+        $callable[] = 'get'.ucfirst($key);
       } else {
-        array_push($callable, $key);
+        $callable[] = $key;
       }
     } elseif (is_array($key)) {
-      array_push($callable, $key[0] ?? FALSE);
+      $callable[] = $key[0] ?? FALSE;
       $callableParams = $key[1] ?? [];
     }
 
@@ -370,25 +377,25 @@ class TableCell {
 
       foreach ($types as $type) {
         if ($type === 'string') {
-          if (\is_string($value)) {
+          if (is_string($value)) {
             $valid = TRUE;
           }
         } elseif (($type === 'bool') || ($type === 'boolean')) {
-          if (\is_bool($value)) {
+          if (is_bool($value)) {
             $valid = TRUE;
           }
         } elseif ($type === 'object') {
-          if (\is_object($value)) {
+          if (is_object($value)) {
             $valid = TRUE;
           }
         } else {
           if ($type === 'array') {
-            if (\is_array($value)) {
+            if (is_array($value)) {
               $valid = TRUE;
             }
           } else {
             if ($type === 'callback') {
-              if (\is_callable($value)) {
+              if (is_callable($value)) {
                 $valid = TRUE;
               }
             } else {
@@ -421,7 +428,7 @@ class TableCell {
 
     if (strpos($types, '|') !== FALSE) {
       $types = explode('|', $types);
-    } elseif (!\is_array($types)) {
+    } elseif (!is_array($types)) {
       $types = [$types];
     }
 
@@ -444,7 +451,7 @@ class TableCell {
   public function getSortKeys() {
     $sortKey = $this->getOption('sort_key');
 
-    if (!\is_array($sortKey)) {
+    if (!is_array($sortKey)) {
       $sortKey = array($sortKey => ['label' => $this->getLabel(), 'text' => $this->getLabelText()]);
     }
 
