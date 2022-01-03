@@ -36,5 +36,10 @@
     "doctrine/orm": "^2.7",
     "doctrine/mongodb-odm-bundle": "^4.3"
 
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true
+    }
   }
 }
