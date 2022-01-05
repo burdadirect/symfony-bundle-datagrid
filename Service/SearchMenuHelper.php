@@ -2,16 +2,18 @@
 
 namespace HBM\DatagridBundle\Service;
 
+use Doctrine\ORM\EntityRepository;
+
 class SearchMenuHelper {
 
   /**
-   * @param string $minus
-   * @param string $plus
-   * @param null $zero
+   * @param string|null $minus
+   * @param string|null $plus
+   * @param string|null $zero
    *
    * @return array
    */
-  public function flags($minus = 'nein' , $plus = 'ja', $zero = NULL) : array {
+  public function flags(?string $minus = 'nein' , ?string $plus = 'ja', ?string $zero = NULL) : array {
     $flags = [];
     if ($minus !== NULL) {
       $flags['flag_-1'] = $minus;
@@ -53,8 +55,8 @@ class SearchMenuHelper {
   /**
    * @param array $searchValues
    * @param string $key
-   * @param string $type
-   * @param string $prefix
+   * @param string|null $type
+   * @param string|null $prefix
    * @param mixed $default
    *
    * @return mixed
@@ -70,8 +72,8 @@ class SearchMenuHelper {
   /**
    * @param array $searchValues
    * @param string $key
-   * @param string $type
-   * @param string $prefix
+   * @param string|null $type
+   * @param string|null $prefix
    * @param mixed $default
    *
    * @return mixed
@@ -110,6 +112,41 @@ class SearchMenuHelper {
     }
 
     return $values;
+  }
+
+  /**
+   * @param array $searchValues
+   * @param string $key
+   * @param EntityRepository $repo
+   *
+   * @return object|null
+   */
+  public function entity(array $searchValues, string $key, EntityRepository $repo): ?object {
+    return $this->entities($searchValues, $key, $repo)[0] ?? null;
+  }
+
+  /**
+   * @param array $searchValues
+   * @param string $key
+   * @param EntityRepository $repo
+   *
+   * @return array
+   */
+  public function entities(array $searchValues, string $key, EntityRepository $repo): array {
+    $ids = $searchValues[$key] ?? [];
+    if (!is_array($ids)) {
+      $ids = [$ids];
+    }
+    $ids = array_diff($ids, ['', null]);
+
+    $entities = [];
+    foreach ($ids as $id) {
+      if ($entity = $repo->find($id)) {
+        $entities[] = $entity;
+      }
+    }
+
+    return $entities;
   }
 
 }
