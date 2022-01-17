@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('classes')->addDefaultsIfNotSet()
               ->children()
                 ->scalarNode('btn')->defaultValue('btn btn-secondary')->end()
+                ->scalarNode('btn_search')->defaultValue('btn btn-primary')->end()
                 ->scalarNode('btn_group')->defaultValue('btn-group')->end()
                 ->scalarNode('input_group')->defaultValue('input-group')->end()
                 ->scalarNode('navbar')->defaultValue('navbar navbar-light bg-light navbar-expand-sm mb-3')->end()
