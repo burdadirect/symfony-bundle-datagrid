@@ -3,7 +3,7 @@
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% if cell.route %}
-  <a href="{{ dg.path(cell.link(obj, column, row)) }}" {{ cell.attr('a')|raw }}>{{ cell.value(obj, column, row)|raw }}</a>
+  <a href="{{ dg.path(cell.link(obj, column, row)) }}" {{ cell.attr('a')|raw }}>{{ cell.value(obj, column, row)|hbmRaw(cell.option('raw', false)) }}</a>
 {% else %}
-  {{ cell.value(obj, column, row)|raw }}
+  {{ cell.value(obj, column, row)|hbmRaw(cell.option('raw', false)) }}
 {% endif %}

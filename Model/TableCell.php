@@ -2,6 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class TableCell {
@@ -53,6 +54,7 @@ class TableCell {
     'template' => 'string|callback',
     'template_params' => 'array|callback',
     'strip_tags' => 'bool',
+    'raw' => 'bool',
     'format' => 'string',
     'separator' => 'string',
     'transformer' => 'object',
@@ -296,8 +298,8 @@ class TableCell {
     return isset($this->options[$key]);
   }
 
-  public function getAttr($scope) : string {
-    return $this->getHtmlAttrString($this->getOption($scope . '_attr', []));
+  public function getAttr($scope) : HtmlAttributes {
+    return new HtmlAttributes($this->getOption($scope.'_attr', []));
   }
 
   public function getValue($obj, $column, $row) {
@@ -433,15 +435,6 @@ class TableCell {
     }
 
     return $types;
-  }
-
-  private function getHtmlAttrString($attributes) : string {
-    $parts = [];
-    foreach ($attributes as $key => $value) {
-      $parts[] = $key . '="' . $value . '"';
-    }
-
-    return implode(' ', $parts);
   }
 
   public function isSortable() : bool {

@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -49,7 +49,7 @@ class DatagridHelper {
   private $logger;
 
   /**
-   * @var Session
+   * @var SessionInterface
    */
   private $session;
 
@@ -95,23 +95,18 @@ class DatagridHelper {
     $this->setExport('json', new ExportJSON());
   }
 
-  public function reset() {
+  public function reset(): void {
     $this->session = NULL;
     $this->datagrid = NULL;
-    $this->qb = NULL;
     $this->results = NULL;
     $this->resultsNumber = NULL;
   }
 
   public function getConfigValue($scope, $key) {
-    if (isset($this->config[$scope][$key])) {
-      return $this->config[$scope][$key];
-    }
-
-    return NULL;
+    return $this->config[$scope][$key] ?? NULL;
   }
 
-  public function setExport($identifier, Export $export) {
+  public function setExport($identifier, Export $export): void {
     $this->exports[$identifier] = $export;
   }
 
@@ -119,18 +114,14 @@ class DatagridHelper {
    * @param $identifier
    * @return Export|null
    */
-  public function getExport($identifier) {
-    if (isset($this->exports[$identifier])) {
-      return $this->exports[$identifier];
-    }
-
-    return NULL;
+  public function getExport($identifier): ?Export {
+    return $this->exports[$identifier] ?? NULL;
   }
 
   /**
    * @return Datagrid
    */
-  public function getDatagrid() {
+  public function getDatagrid(): Datagrid {
     if ($this->datagrid === NULL) {
       $this->datagrid = new Datagrid($this->config);
       $this->datagrid->setMenu(new DatagridMenu($this->config));
@@ -478,10 +469,10 @@ class DatagridHelper {
   }
 
   /**
-   * @param Session $session
+   * @param SessionInterface $session
    * @param null $additionalPrefix
    */
-  public function setSession(Session $session, $additionalPrefix = NULL) {
+  public function setSession(SessionInterface $session, $additionalPrefix = NULL) {
     $this->session = $session;
     if ($additionalPrefix !== NULL) {
       $this->getDatagrid()->setSessionPrefix($this->getDatagrid()->getSessionPrefix().$additionalPrefix);
