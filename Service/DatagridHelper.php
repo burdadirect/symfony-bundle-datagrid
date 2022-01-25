@@ -22,6 +22,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
@@ -33,50 +34,23 @@ use Symfony\Component\Routing\Router;
  */
 class DatagridHelper {
 
-  /**
-   * @var array
-   */
-  private $config;
+  private array $config;
 
-  /**
-   * @var Router
-   */
-  protected $router;
+  protected Router $router;
 
-  /**
-   * @var LoggerInterface
-   */
-  private $logger;
+  private LoggerInterface $logger;
 
-  /**
-   * @var SessionInterface
-   */
-  private $session;
+  private ?SessionInterface $session;
 
-  /**
-   * @var Datagrid
-   */
-  private $datagrid;
+  private ?Datagrid $datagrid = null;
 
-  /**
-   * @var QueryBuilderStrategyInterface
-   */
-  private $queryBuilderStrategy;
+  private ?QueryBuilderStrategyInterface $queryBuilderStrategy = null;
 
-  /**
-   * @var array
-   */
-  private $results;
+  private ?array $results;
 
-  /**
-   * @var integer
-   */
-  private $resultsNumber;
+  private ?int $resultsNumber;
 
-  /**
-   * @var array
-   */
-  private $exports = [];
+  private array $exports = [];
 
   /**
    * DatagridHelper constructor.
@@ -132,24 +106,31 @@ class DatagridHelper {
   }
 
   /**
+   * @return Datagrid
+   */
+  private function dg(): Datagrid {
+    return $this->getDatagrid();
+  }
+
+  /**
    * Inits a datagrid.
    *
    * @param string $route
    * @param array $defaults
-   * @param integer $page
-   * @param integer $maxEntries
-   * @param string $sortations
-   * @param string $searchValues
-   * @param integer $extended
+   * @param int|null $page
+   * @param int|null $maxEntries
+   * @param string|null $sortations
+   * @param string|null $searchValues
+   * @param bool|null $extended
    */
-  public function initDatagrid($route, array $defaults = [], $page = NULL, $maxEntries = NULL, $sortations = NULL, $searchValues = NULL, $extended = NULL) {
+  public function initDatagrid(string $route, array $defaults = [], ?int $page = NULL, ?int $maxEntries = NULL, ?string $sortations = NULL, ?string $searchValues = NULL, ?bool $extended = NULL): void {
     $this->reset();
 
-    $paramNamePage = $this->getDatagrid()->getParamNameCurrentPage();
-    $paramNameMaxEntries = $this->getDatagrid()->getParamNameMaxEntries();
-    $paramNameSortation = $this->getDatagrid()->getParamNameSortation();
-    $paramNameSearch = $this->getDatagrid()->getParamNameSearch();
-    $paramNameExtended = $this->getDatagrid()->getParamNameExtended();
+    $paramNamePage = $this->dg()->getParamNameCurrentPage();
+    $paramNameMaxEntries = $this->dg()->getParamNameMaxEntries();
+    $paramNameSortation = $this->dg()->getParamNameSortation();
+    $paramNameSearch = $this->dg()->getParamNameSearch();
+    $paramNameExtended = $this->dg()->getParamNameExtended();
 
     // Set params
     $paramsOrig = [
@@ -164,37 +145,37 @@ class DatagridHelper {
 
     $key = $paramNamePage;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?:'1';
+      $fallback = $defaults[$key] ?: '1';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
-      $this->getDatagrid()->getPagination()->setPageCurrent($paramsHandled[$key]);
+      $this->dg()->getPagination()->setPageCurrent($paramsHandled[$key]);
     }
 
     $key = $paramNameMaxEntries;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?:$this->getDatagrid()->getMaxEntriesPerPage();
+      $fallback = $defaults[$key] ?: $this->dg()->getMaxEntriesPerPage();
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
-      $this->getDatagrid()->setMaxEntriesPerPage($paramsHandled[$key]);
+      $this->dg()->setMaxEntriesPerPage($paramsHandled[$key]);
     }
 
     $key = $paramNameSortation;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?:'{}';
+      $fallback = $defaults[$key] ?: '{}';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
-      $this->getDatagrid()->setSortations($this->getQueryParams($paramsHandled[$key]));
+      $this->dg()->setSortations($this->getQueryParams($paramsHandled[$key]));
     }
 
     $key = $paramNameSearch;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?:'{}';
+      $fallback = $defaults[$key] ?: '{}';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
-      $this->getDatagrid()->getMenu()->setSearchValues($this->getQueryParams($paramsHandled[$key]));
+      $this->dg()->getMenu()->setSearchValues($this->getQueryParams($paramsHandled[$key]));
     }
 
     $key = $paramNameExtended;
     if (array_key_exists($key, $defaults)) {
-      $fallback = $defaults[$key]?:'0';
+      $fallback = $defaults[$key] ?: '0';
       $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
-      $this->getDatagrid()->setExtended($paramsHandled[$key]);
+      $this->dg()->setExtended($paramsHandled[$key]);
     }
 
     // Make sure to include route specific params.
@@ -203,18 +184,18 @@ class DatagridHelper {
     // Set routes
     $routeObj = new Route($route, $paramsHandled);
 
-    $this->getDatagrid()->setRoute($routeObj);
-    $this->getDatagrid()->getMenu()->setRoute($routeObj);
-    $this->getDatagrid()->getPagination()->setRoute($routeObj);
+    $this->dg()->setRoute($routeObj);
+    $this->dg()->getMenu()->setRoute($routeObj);
+    $this->dg()->getPagination()->setRoute($routeObj);
 
     // Set route search
     if (array_key_exists($paramNameSearch, $defaults)) {
-      $this->getDatagrid()->getMenu()->setRouteSearch($routeObj);
+      $this->dg()->getMenu()->setRouteSearch($routeObj);
     }
 
     // Set route reset
     $paramsToUse = $paramsHandled;
-    foreach ($this->getDatagrid()->getSessionUseFor() as $key) {
+    foreach ($this->dg()->getSessionUseFor() as $key) {
       if (array_key_exists($key, $paramsToUse)) {
         $paramsToUse[$key] = '-1';
       }
@@ -222,13 +203,13 @@ class DatagridHelper {
     if (array_key_exists($paramNameSearch, $paramsToUse)) {
       $paramsToUse[$paramNameSearch] = '{}';
     }
-    $this->getDatagrid()->getMenu()->setRouteReset(new Route($route, $paramsToUse));
+    $this->dg()->getMenu()->setRouteReset(new Route($route, $paramsToUse));
 
     // Set route extended
     if (array_key_exists($paramNameExtended, $defaults)) {
       $paramsToUse = $paramsHandled;
-      $paramsToUse[$paramNameExtended] = $paramsToUse[$paramNameExtended]=='1'?'0':'1';
-      $this->getDatagrid()->getMenu()->setRouteExtended(new Route($route, $paramsToUse));
+      $paramsToUse[$paramNameExtended] = !(bool)$paramsToUse[$paramNameExtended];
+      $this->dg()->getMenu()->setRouteExtended(new Route($route, $paramsToUse));
     }
   }
 
@@ -238,40 +219,35 @@ class DatagridHelper {
    *
    * @return Datagrid
    */
-  public function createSimpleDatagrid(Route $route, $params) {
+  public function createSimpleDatagrid(Route $route, $params): Datagrid {
     // DEFAULTS
-    $num = $this->getDatagrid()->getMaxEntriesPerPage();
-    if (isset($params[$this->getDatagrid()->getParamNameMaxEntries()])) {
-      $num = $params[$this->getDatagrid()->getParamNameMaxEntries()];
-    }
-    $page = $this->getDatagrid()->getPagination()->getPageCurrent();
-    if (isset($params[$this->getDatagrid()->getParamNameCurrentPage()])) {
-      $page = $params[$this->getDatagrid()->getParamNameCurrentPage()];
-    }
-    $this->getDatagrid()->setRoute($route);
-    $this->getDatagrid()->setMaxEntriesPerPage($num);
+    $num = $params[$this->dg()->getParamNameMaxEntries()] ?? $this->dg()->getMaxEntriesPerPage();
+    $page = $params[$this->dg()->getParamNameCurrentPage()] ?? $this->dg()->getPagination()->getPageCurrent();
+
+    $this->dg()->setRoute($route);
+    $this->dg()->setMaxEntriesPerPage($num);
 
     // MENU
-    $this->getDatagrid()->setSort(FALSE);
-    $this->getDatagrid()->setExtended(FALSE);
-    $this->getDatagrid()->getMenu()->setShow(FALSE);
+    $this->dg()->setSort(FALSE);
+    $this->dg()->setExtended(FALSE);
+    $this->dg()->getMenu()->setShow(FALSE);
 
     // PAGINATON
-    $this->getDatagrid()->getPagination()->setRoute($route);
-    $this->getDatagrid()->getPagination()->setPageCurrent($page);
+    $this->dg()->getPagination()->setRoute($route);
+    $this->dg()->getPagination()->setPageCurrent($page);
 
-    return $this->getDatagrid();
+    return $this->dg();
   }
 
   /**
-   * @param $sort_string
+   * @param string|null $sortString
    *
    * @return array|mixed|null
    */
-  public function setSortations($sort_string) {
-    $sortations = $this->getQueryParams($sort_string);
+  public function setSortations(?string $sortString) {
+    $sortations = $this->getQueryParams($sortString);
 
-    $this->getDatagrid()->setSortations($sortations);
+    $this->dg()->setSortations($sortations);
 
     return $sortations;
   }
@@ -279,19 +255,19 @@ class DatagridHelper {
   /**
    * @return array
    */
-  public function getSortations() {
-    return $this->getDatagrid()->getSortations();
+  public function getSortations(): array {
+    return $this->dg()->getSortations();
   }
 
   /**
-   * @param $search_string
+   * @param string|null $searchString
    *
    * @return array|mixed|null
    */
-  public function setSearchValues($search_string) {
-    $searchValues = $this->getQueryParams($search_string);
+  public function setSearchValues(?string $searchString) {
+    $searchValues = $this->getQueryParams($searchString);
 
-    $this->getDatagrid()->getMenu()->setSearchValues($searchValues);
+    $this->dg()->getMenu()->setSearchValues($searchValues);
 
     return $searchValues;
   }
@@ -299,30 +275,30 @@ class DatagridHelper {
   /**
    * @return array
    */
-  public function getSearchValues() {
-    return $this->getDatagrid()->getMenu()->getSearchValues();
+  public function getSearchValues(): array {
+    return $this->dg()->getMenu()->getSearchValues();
   }
 
   /**
    * @param Route $route
    */
-  public function setDefaultRoute(Route $route) {
-    $this->getDatagrid()->setRoute($route);
-    $this->getDatagrid()->getMenu()->setRoute($route);
-    $this->getDatagrid()->getMenu()->setRouteReset($route);
-    $this->getDatagrid()->getMenu()->setRouteExtended($route);
-    $this->getDatagrid()->getMenu()->setRouteSearch($route);
-    $this->getDatagrid()->getPagination()->setRoute($route);
+  public function setDefaultRoute(Route $route): void {
+    $this->dg()->setRoute($route);
+    $this->dg()->getMenu()->setRoute($route);
+    $this->dg()->getMenu()->setRouteReset($route);
+    $this->dg()->getMenu()->setRouteExtended($route);
+    $this->dg()->getMenu()->setRouteSearch($route);
+    $this->dg()->getPagination()->setRoute($route);
   }
 
   /**
    * @param QueryBuilder|null $qb
    * @param string $distinctFieldName
    */
-  public function setQueryBuilderEntity(?QueryBuilder $qb, string $distinctFieldName = 'id') : void {
+  public function setQueryBuilderEntity(?QueryBuilder $qb, string $distinctFieldName = 'id'): void {
     $this->queryBuilderStrategy = new EntityQueryBuilder();
     $this->queryBuilderStrategy->setDistinctFieldName($distinctFieldName);
-    $this->queryBuilderStrategy->setDatagrid($this->getDatagrid());
+    $this->queryBuilderStrategy->setDatagrid($this->dg());
     $this->queryBuilderStrategy->setQueryBuilder($qb);
   }
 
@@ -331,10 +307,10 @@ class DatagridHelper {
    * @param DocumentManager $dm
    * @param string $distinctFieldName
    */
-  public function setQueryBuilderMongoDBDocument(?Builder $qb, DocumentManager $dm, string $distinctFieldName = 'id') : void {
+  public function setQueryBuilderMongoDBDocument(?Builder $qb, DocumentManager $dm, string $distinctFieldName = 'id'): void {
     $this->queryBuilderStrategy = new MongoDBDocumentQueryBuilder();
     $this->queryBuilderStrategy->setDistinctFieldName($distinctFieldName);
-    $this->queryBuilderStrategy->setDatagrid($this->getDatagrid());
+    $this->queryBuilderStrategy->setDatagrid($this->dg());
     $this->queryBuilderStrategy->setQueryBuilder($qb);
     $this->queryBuilderStrategy->setDocumentManager($dm);
   }
@@ -342,28 +318,28 @@ class DatagridHelper {
 
   /**
    * @param Request $request
-   * @param $searchFields
+   * @param array $searchFields
    * @param array $defaults
    *
    * @return bool|RedirectResponse
    */
-  public function handleSearch(Request $request, $searchFields, $defaults = []) {
+  public function handleSearch(Request $request, array $searchFields, array $defaults = []): ?RedirectResponse {
     if ($request->isMethod('post') && !$request->request->has('export-type')) {
       $params = $this->handleSearchParams($request, $searchFields);
-      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), array_merge($defaults, $params));
+      $url = $this->router->generate($this->dg()->getRoute()->getName(), array_merge($defaults, $params));
       return new RedirectResponse($url);
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**
    * @param Request $request
-   * @param $searchFields
+   * @param array $searchFields
    *
    * @return array
    */
-  public function handleSearchParams(Request $request, $searchFields) {
+  public function handleSearchParams(Request $request, array $searchFields): array {
     $searchParams = [];
     foreach ($searchFields as $key => $value) {
       $searchParams[$key] = $request->request->get($key, '');
@@ -372,14 +348,14 @@ class DatagridHelper {
       }
     }
 
-    $sortParams = $this->getDatagrid()->getSortations();
+    $sortParams = $this->dg()->getSortations();
 
     return [
-      $this->getDatagrid()->getParamNameMaxEntries() => $this->getDatagrid()->getMaxEntriesPerPage(),
-      $this->getDatagrid()->getParamNameCurrentPage() => 1,
-      $this->getDatagrid()->getParamNameSortation() => $this->getQueryString($sortParams),
-      $this->getDatagrid()->getParamNameSearch() => $this->getQueryString($searchParams),
-      $this->getDatagrid()->getParamNameExtended() => $this->getDatagrid()->getExtended()
+      $this->dg()->getParamNameMaxEntries() => $this->dg()->getMaxEntriesPerPage(),
+      $this->dg()->getParamNameCurrentPage() => 1,
+      $this->dg()->getParamNameSortation() => $this->getQueryString($sortParams),
+      $this->dg()->getParamNameSearch() => $this->getQueryString($searchParams),
+      $this->dg()->getParamNameExtended() => $this->dg()->getExtended()
     ];
   }
 
@@ -388,21 +364,21 @@ class DatagridHelper {
    * @param $name
    * @param FlashBagInterface|NULL $flashBag
    *
-   * @return bool|RedirectResponse
+   * @return RedirectResponse|Response|null
    */
-  public function handleExport(Request $request, $name, FlashBagInterface $flashBag = NULL) {
+  public function handleExport(Request $request, $name, FlashBagInterface $flashBag = NULL): ?Response {
     if ($request->isMethod('post') && $request->request->has('export-type')) {
       // Not allowed.
-      if (!$this->getDatagrid()->getMenu()->getShowExport()) {
+      if (!$this->dg()->getMenu()->getShowExport()) {
         if ($flashBag) {
           $flashBag->add('error', 'Der Export ist deaktiviert!');
         }
-        $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
+        $url = $this->router->generate($this->dg()->getRoute()->getName(), $this->dg()->getRoute()->getDefaults());
         return new RedirectResponse($url);
       }
 
       // Set resources.
-      foreach ($this->getDatagrid()->getMenu()->getExportsResources() as $key => $value) {
+      foreach ($this->dg()->getMenu()->getExportsResources() as $key => $value) {
         ini_set($key, $value);
       }
 
@@ -419,11 +395,11 @@ class DatagridHelper {
       if ($flashBag) {
         $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
       }
-      $url = $this->router->generate($this->getDatagrid()->getRoute()->getName(), $this->getDatagrid()->getRoute()->getDefaults());
+      $url = $this->router->generate($this->dg()->getRoute()->getName(), $this->dg()->getRoute()->getDefaults());
       return new RedirectResponse($url);
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**
@@ -431,8 +407,8 @@ class DatagridHelper {
    *
    * @return Export
    */
-  public function runExport(Export $export) : Export {
-    $export->setCells($this->getDatagrid()->getCells());
+  public function runExport(Export $export): Export {
+    $export->setCells($this->dg()->getCells());
     $export->addHeader();
 
     if ($this->results) {
@@ -454,7 +430,7 @@ class DatagridHelper {
    *
    * @param $results
    */
-  public function setResults($results) {
+  public function setResults($results): void {
     $this->results = $results;
     $this->resultsNumber = count($results);
   }
@@ -462,20 +438,20 @@ class DatagridHelper {
   /**
    * Make sure to set this after setting the results.
    *
-   * @param $resultsNumber
+   * @param int|null $resultsNumber
    */
-  public function setResultsNumber($resultsNumber) {
+  public function setResultsNumber(?int $resultsNumber): void {
     $this->resultsNumber = $resultsNumber;
   }
 
   /**
    * @param SessionInterface $session
-   * @param null $additionalPrefix
+   * @param string|null $additionalPrefix
    */
-  public function setSession(SessionInterface $session, $additionalPrefix = NULL) {
+  public function setSession(SessionInterface $session, ?string $additionalPrefix = NULL): void {
     $this->session = $session;
     if ($additionalPrefix !== NULL) {
-      $this->getDatagrid()->setSessionPrefix($this->getDatagrid()->getSessionPrefix().$additionalPrefix);
+      $this->dg()->setSessionPrefix($this->dg()->getSessionPrefix().$additionalPrefix);
     }
   }
 
@@ -486,27 +462,27 @@ class DatagridHelper {
    */
   public function handleParams($params) {
     // Sortation
-    $key = $this->getDatagrid()->getParamNameCurrentPage();
+    $key = $this->dg()->getParamNameCurrentPage();
     $default = '1';
     $params[$key] = $this->handleParam($params, $key, $default);
 
     // Max entries
-    $key = $this->getDatagrid()->getParamNameMaxEntries();
-    $default = $this->getDatagrid()->getMaxEntriesPerPage();
+    $key = $this->dg()->getParamNameMaxEntries();
+    $default = $this->dg()->getMaxEntriesPerPage();
     $params[$key] = $this->handleParam($params, $key, $default);
 
     // Sortations
-    $key = $this->getDatagrid()->getParamNameSortation();
+    $key = $this->dg()->getParamNameSortation();
     $default = NULL;
     $params[$key] = $this->handleParam($params, $key, $default);
 
     // Search values
-    $key = $this->getDatagrid()->getParamNameSearch();
+    $key = $this->dg()->getParamNameSearch();
     $default = NULL;
     $params[$key] = $this->handleParam($params, $key, $default);
 
     // Extended
-    $key = $this->getDatagrid()->getParamNameExtended();
+    $key = $this->dg()->getParamNameExtended();
     $default = '0';
     $params[$key] = $this->handleParam($params, $key, $default);
 
@@ -514,8 +490,8 @@ class DatagridHelper {
   }
 
   private function handleParam($params, $key, $default = NULL) {
-    $prefix = $this->getDatagrid()->getSessionPrefix();
-    $use_for = $this->getDatagrid()->getSessionUseFor();
+    $prefix = $this->dg()->getSessionPrefix();
+    $use_for = $this->dg()->getSessionUseFor();
 
     if (array_key_exists($key, $params)) {
       // Set default value
@@ -535,7 +511,7 @@ class DatagridHelper {
       }
 
       // Save to session
-      if ($this->session && in_array($key, $use_for)) {
+      if ($this->session && in_array($key, $use_for, TRUE)) {
         $this->session->set($prefix.$key, $params[$key]);
       }
 
@@ -546,65 +522,121 @@ class DatagridHelper {
   }
 
   /**
-   * @param $var
+   * @param string|null $var
    *
    * @return array|mixed|null
    */
-  public function getQueryParams($var) {
-    if ($this->getDatagrid()->getQueryEncode() === 'json') {
-      $queryParams = json_decode($var, TRUE);
-      if ($queryParams === NULL) {
-        $queryParams = [];
-      } else {
-        foreach ($queryParams as $key => $value) {
-          if (is_array($value)) {
-            $queryParams[$key] = [];
-            foreach ($value as $valueKey => $valueValue) {
-              $queryParams[$key][$valueKey] = urldecode($valueValue);
-            }
-          } else {
-            $queryParams[$key] = urldecode($value);
-          }
+  public function getQueryParams(?string $var) {
+    $modes = explode('+', $this->dg()->getQueryEncode());
+    $modeQuery = $modes[0] ?? null;
+    $modeParams = $modes[1] ?? null;
+
+    $queryParams = [];
+
+    // DECODE QUERY
+    switch ($modeQuery) {
+      case 'json':
+        try {
+          $queryParams = json_decode($var, TRUE, 512, JSON_THROW_ON_ERROR) ?? [];
+        } catch (\JsonException $e) {
+          $queryParams = [];
         }
-      }
-    } else {
-      throw new InvalidArgumentException('No other query encoding implemented yet!');
+        break;
+
+      case 'query':
+        $url = parse_url('?'.$var);
+        $queryString = urldecode($url['query'] ?? '');
+        $queryString = ($queryString === '-') ? '' : $queryString;
+        parse_str($queryString, $queryParams);
+        break;
+
+      case 'base64':
+        $queryParams = base64_decode($var);
+        break;
     }
 
-    return $queryParams;
+    // DECODE PARAMS
+    switch ($modeParams) {
+      case 'base64':
+        array_walk_recursive($queryParams, static function(&$item) {
+          $item = base64_decode($item, true);
+        });
+        return $queryParams;
+
+      case 'urlencode':
+        array_walk_recursive($queryParams, static function(&$item) {
+          $item = rawurldecode(rawurldecode($item));
+        });
+        return $queryParams;
+
+      case 'json':
+        try {
+          return json_decode($queryParams, TRUE, 512, JSON_THROW_ON_ERROR) ?? [];
+        } catch (\JsonException $e) {
+          return [];
+        }
+
+      default:
+        return $queryParams;
+    }
   }
 
   /**
    * @param $vars
    *
    * @return false|string
-   *
-   * @throws \JsonException
    */
   public function getQueryString($vars) {
-    if ($this->getDatagrid()->getQueryEncode() === 'json') {
-      foreach ($vars as $key => $value) {
-        if (is_array($value)) {
-          $vars[$key] = [];
-          foreach ($value as $valueKey => $valueValue) {
-            $vars[$key][$valueKey] = urlencode($valueValue);
-          }
-        } else {
-          $vars[$key] = urlencode($value);
+    $modes = explode('+', $this->dg()->getQueryEncode());
+    $modeQuery = $modes[0] ?? null;
+    $modeParams = $modes[1] ?? null;
+
+    // ENCODE PARAMS
+    switch ($modeParams) {
+      case 'base64':
+        array_walk_recursive($vars, static function(&$item) {
+          $item = base64_encode($item);
+        });
+        break;
+
+      case 'urlencode':
+        array_walk_recursive($vars, static function(&$item) {
+          $item = rawurlencode(rawurlencode($item));
+        });
+        break;
+
+      case 'json':
+        try {
+          $vars = json_encode($vars, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+          $vars = '';
         }
-      }
-      $queryString = json_encode($vars, JSON_THROW_ON_ERROR);
-    } else {
-      throw new InvalidArgumentException('No other query decoding implemented yet!');
+        break;
     }
 
-    return $queryString;
+    // ENCODE QUERY
+    switch ($modeQuery) {
+      case 'json':
+        try {
+          return json_encode($vars, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+          return '';
+        }
+
+      case 'query':
+        return http_build_query($vars) ?: '-';
+
+      case 'base64':
+        return base64_encode($vars);
+    }
+
+    throw new InvalidArgumentException('No matching query encoder found for "'.$modeQuery.'".');
   }
 
   /**
    * @return int|null
    */
-  public function getNumber() : ?int {
+  public function getNumber(): ?int {
     if ($this->resultsNumber !== NULL) {
       return $this->resultsNumber;
     }
@@ -636,8 +668,8 @@ class DatagridHelper {
    *
    * @return Datagrid
    */
-  public function paginate() {
-    $datagrid = $this->getDatagrid();
+  public function paginate(): Datagrid {
+    $datagrid = $this->dg();
     $pagination = $datagrid->getPagination();
     $menu = $datagrid->getMenu();
 
@@ -648,7 +680,7 @@ class DatagridHelper {
     $number = $this->getNumber();
 
 
-    $pagination = $this->getDatagrid()->getPagination();
+    $pagination = $this->dg()->getPagination();
 
     // Calculate basics
     $pagination->setNumberTotal($number);
@@ -720,8 +752,8 @@ class DatagridHelper {
     return $datagrid;
   }
 
-  private function handlePaginationLinks() {
-    $pagination = $this->getDatagrid()->getPagination();
+  private function handlePaginationLinks(): void {
+    $pagination = $this->dg()->getPagination();
 
     if ($pagination->getPageCurrent() !== 1) {
       $pagination->setLinkFirst($pagination->createLink(1));
@@ -741,8 +773,8 @@ class DatagridHelper {
     }
   }
 
-  private function handleSortationLinks() {
-    $datagrid = $this->getDatagrid();
+  private function handleSortationLinks(): void {
+    $datagrid = $this->dg();
 
     if ($datagrid->getSort()) {
       $sortations = $datagrid->getSortations();

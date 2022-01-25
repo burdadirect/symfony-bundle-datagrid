@@ -82,7 +82,7 @@ class Configuration implements ConfigurationInterface
 
         ->arrayNode('query')->addDefaultsIfNotSet()
           ->children()
-            ->scalarNode('encode')->defaultValue('json')->end()
+            ->scalarNode('encode')->defaultValue('json+urlencode')->end()
             ->arrayNode('param_names')->addDefaultsIfNotSet()
               ->children()
                 ->scalarNode('current_page')->defaultValue('page')->end()
