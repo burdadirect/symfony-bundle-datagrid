@@ -1,7 +1,25 @@
 services:
     _defaults:
         public: true
+        autowire: true
+
+    # SERVICES
+    HBM\DatagridBundle\Service\DatagridHelper:
+        arguments:
+            $config: "%hbm.datagrid%"
 
     hbm.helper.datagrid:
-        class: HBM\DatagridBundle\Service\DatagridHelper
-        arguments: ["%hbm.datagrid%", "@router", "@logger"]
+        alias: HBM\DatagridBundle\Service\DatagridHelper
+
+    HBM\DatagridBundle\Service\QueryEncoder:
+        arguments:
+            $mode: "%hbm.datagrid.query_encode_mode%"
+
+    hbm.helper.datagrid.query_encoder:
+        alias: HBM\DatagridBundle\Service\QueryEncoder
+
+    # TWIG
+    HBM\DatagridBundle\Twig\:
+        resource: '../../Twig/*'
+        tags:
+            - { name: twig.extension }
