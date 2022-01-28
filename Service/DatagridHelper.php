@@ -321,7 +321,7 @@ class DatagridHelper {
    * @param array $searchFields
    * @param array $defaults
    *
-   * @return bool|RedirectResponse
+   * @return RedirectResponse|null
    */
   public function handleSearch(Request $request, array $searchFields, array $defaults = []): ?RedirectResponse {
     if ($request->isMethod('post') && !$request->request->has('export-type')) {
@@ -495,7 +495,7 @@ class DatagridHelper {
 
     if (array_key_exists($key, $params)) {
       // Set default value
-      if ($params[$key] === '-1') {
+      if (''.$params[$key] === '-1') {
         $params[$key] = $default;
       }
 
@@ -649,7 +649,7 @@ class DatagridHelper {
   }
 
   /**
-   * @return array|ArrayCollection|mixed
+   * @return array|ArrayCollection
    */
   public function getResults() {
     if ($this->results !== NULL) {
