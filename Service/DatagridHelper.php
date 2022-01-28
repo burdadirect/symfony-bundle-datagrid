@@ -121,9 +121,9 @@ class DatagridHelper {
    * @param int|null $maxEntries
    * @param string|null $sortations
    * @param string|null $searchValues
-   * @param bool|null $extended
+   * @param string|int|bool|null $extended
    */
-  public function initDatagrid(string $route, array $defaults = [], ?int $page = NULL, ?int $maxEntries = NULL, ?string $sortations = NULL, ?string $searchValues = NULL, ?bool $extended = NULL): void {
+  public function initDatagrid(string $route, array $defaults = [], ?int $page = NULL, ?int $maxEntries = NULL, ?string $sortations = NULL, ?string $searchValues = NULL, $extended = NULL): void {
     $this->reset();
 
     $paramNamePage = $this->dg()->getParamNameCurrentPage();
