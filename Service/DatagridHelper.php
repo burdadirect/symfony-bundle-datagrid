@@ -391,6 +391,7 @@ class DatagridHelper {
       // Do export.
       if ($export = $this->getExport($request->request->get('export-type'))) {
         $export = $this->runExport($export, $name);
+
         return $export->response();
       }
 
@@ -407,13 +408,15 @@ class DatagridHelper {
 
   /**
    * @param Export $export
-   * @param string $name
+   * @param string|null $name
    *
    * @return Export
    */
-  public function runExport(Export $export, string $name = ''): Export {
+  public function runExport(Export $export, ?string $name = null): Export {
     $export->init();
-    $export->setName($name);
+    if ($name !== null) {
+      $export->setName($name);
+    }
 
     $export->setCells($this->dg()->getCells());
     $export->addHeader();
