@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExportJSON extends Export {
 
+  public const CONTENT_TYPE = 'application/json';
+  public const EXTENSION = 'json';
+
   protected array $lines = [];
 
   protected array $labels = [];
@@ -69,8 +72,8 @@ class ExportJSON extends Export {
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
-      'Content-Type' => 'text/json',
-      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.json"',
+      'Content-Type' => $this->contenType(),
+      'Content-Disposition' => 'attachment; filename="'.$this->filename().'"',
       'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);

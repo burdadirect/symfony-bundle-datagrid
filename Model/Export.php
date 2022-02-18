@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class Export extends Formatter {
 
+  public const CONTENT_TYPE = '';
+  public const EXTENSION = '';
+
   protected string $name;
 
   protected array $cells = [];
@@ -61,6 +64,20 @@ abstract class Export extends Formatter {
     }
 
     return $value;
+  }
+
+  /**
+   * @return string
+   */
+  public function contenType(): string {
+    return static::CONTENT_TYPE;
+  }
+
+  /**
+   * @return string
+   */
+  public function filename(): string {
+    return $this->getName().(static::EXTENSION ? '.'.static::EXTENSION : '');
   }
 
   /****************************************************************************/

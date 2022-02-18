@@ -37,7 +37,6 @@ class DatagridHelper {
   public const EXPORT_JSON = 'json';
   public const EXPORT_XLSX = 'xlsx';
 
-
   private array $config;
 
   private QueryEncoder $queryEncoder;
@@ -412,7 +411,7 @@ class DatagridHelper {
    *
    * @return Export
    */
-  private function runExport(Export $export, string $name): Export {
+  public function runExport(Export $export, string $name = ''): Export {
     $export->init();
     $export->setName($name);
 

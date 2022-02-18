@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExportCSV extends Export {
 
+  public const CONTENT_TYPE = 'text/csv';
+  public const EXTENSION = 'csv';
+
   protected array $lines = [];
 
   public function addHeader() : void {
@@ -67,8 +70,8 @@ class ExportCSV extends Export {
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
-      'Content-Type' => 'text/csv',
-      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.csv"',
+      'Content-Type' => $this->contenType(),
+      'Content-Disposition' => 'attachment; filename="'.$this->filename().'"',
       'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);

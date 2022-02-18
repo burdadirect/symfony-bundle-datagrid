@@ -12,23 +12,61 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportXLSX extends Export {
 
-  protected ?Spreadsheet $spreadsheet = null;
+  public const CONTENT_TYPE = 'application/vnd.ms-excel';
+  public const EXTENSION = 'xlsx';
 
-  protected ?Worksheet $sheet = null;
+  protected Spreadsheet $spreadsheet;
+
+  protected Worksheet $worksheet;
 
   protected int $row = 1;
 
   protected array $columnsWidths = [];
 
+  protected ?string $password = null;
+
   /**
-   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   * Set password.
+   *
+   * @param string|null $password
+   *
+   * @return self
    */
+  public function setPassword(?string $password): self {
+    $this->password = $password;
+
+    return $this;
+  }
+
+  /**
+   * Get password.
+   *
+   * @return string|null
+   */
+  public function getPassword(): ?string {
+    return $this->password;
+  }
+
+  /**
+   * @return Spreadsheet
+   */
+  public function getSpreadsheet(): Spreadsheet {
+    return $this->spreadsheet;
+  }
+
+  /**
+   * @return Worksheet
+   */
+  public function getWorksheet(): Worksheet {
+    return $this->worksheet;
+  }
+
   public function init() : void {
     $this->spreadsheet = new Spreadsheet();
     $this->spreadsheet->getProperties()->setTitle('Datagrid-Export');
 
-    $this->sheet = $this->spreadsheet->setActiveSheetIndex(0);
-    $this->sheet->setTitle('Export');
+    $this->worksheet = $this->spreadsheet->setActiveSheetIndex(0);
+    $this->worksheet->setTitle('Export');
   }
 
   /**
@@ -38,9 +76,9 @@ class ExportXLSX extends Export {
     foreach ($this->columnsWidths as $columnName => $columnWidth) {
       $columnWidthCalculated = $columnWidth;
       if (substr($columnWidthCalculated, -2) === 'px') {
-        $columnWidthCalculated = SharedDrawing::pixelsToCellDimension((int)substr($columnWidthCalculated, 0, -2), $this->spreadsheet->getDefaultStyle()->getFont());
+        $columnWidthCalculated = SharedDrawing::pixelsToCellDimension((int)substr($columnWidthCalculated, 0, -2), $this->getSpreadsheet()->getDefaultStyle()->getFont());
       }
-      $this->sheet->getColumnDimension($columnName)->setWidth($columnWidthCalculated);
+      $this->getWorksheet()->getColumnDimension($columnName)->setWidth($columnWidthCalculated);
     }
   }
 
@@ -49,7 +87,7 @@ class ExportXLSX extends Export {
     $column = 1;
     foreach ($this->getCells() as $cell) {
       if ($cell->isVisibleExport()) {
-        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabelText()));
+        $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabelText()));
         $column++;
       }
     }
@@ -79,7 +117,7 @@ class ExportXLSX extends Export {
           }
         }
 
-        $this->sheet->setCellValueByColumnAndRow($column, $this->row, $value);
+        $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $value);
 
         $column++;
       }
@@ -121,18 +159,33 @@ class ExportXLSX extends Export {
     $drawing->setWidth($imageInfo[0]);
     $drawing->setHeight($imageInfo[1]);
 
-    $drawing->setWorksheet($this->sheet);
+    $drawing->setWorksheet($this->getWorksheet());
 
-    $this->sheet->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($imageInfo[1] + 2*$columnOffset));
+    $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($imageInfo[1] + 2*$columnOffset));
 
     return TRUE;
+  }
+
+  /**
+   * @return Xlsx
+   */
+  protected function prepareWriter(): Xlsx {
+    $spreadsheet = $this->getSpreadsheet();
+    if ($password = $this->getPassword()) {
+      $security = $spreadsheet->getSecurity();
+      $security->setLockWindows(true);
+      $security->setLockStructure(true);
+      $security->setWorkbookPassword($password);
+    }
+
+    return new Xlsx($spreadsheet);
   }
 
   /**
    * @return StreamedResponse
    */
   public function response(): StreamedResponse {
-    $writer = new Xlsx($this->spreadsheet);
+    $writer = $this->prepareWriter();
 
     $callable = function() use ($writer) {
       $writer->save('php://output');
@@ -142,8 +195,8 @@ class ExportXLSX extends Export {
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
-      'Content-Type' => 'application/vnd.ms-excel',
-      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.xlsx"',
+      'Content-Type' => $this->contenType(),
+      'Content-Disposition' => 'attachment; filename="'.$this->filename().'"',
       'Accept-Ranges' => 'bytes',
     ]);
   }
@@ -156,7 +209,7 @@ class ExportXLSX extends Export {
   public function stream() {
     $resource = fopen('php://temp', 'wb+');
 
-    $writer = new Xlsx($this->spreadsheet);
+    $writer = $this->prepareWriter();
     $writer->save($resource);
 
     return $resource;
@@ -172,9 +225,9 @@ class ExportXLSX extends Export {
    */
   public function dump(?string $folder = null, ?string $name = null): string {
     $folder = rtrim($folder, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-    $path = $folder.($name ?: $this->getName().'.xlsx');
+    $path = $folder.($name ?: $this->filename());
 
-    $writer = new Xlsx($this->spreadsheet);
+    $writer = $this->prepareWriter();
     $writer->save($path);
 
     return $path;
