@@ -33,6 +33,11 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class DatagridHelper {
 
+  public const EXPORT_CSV  = 'csv';
+  public const EXPORT_JSON = 'json';
+  public const EXPORT_XLSX = 'xlsx';
+
+
   private array $config;
 
   private QueryEncoder $queryEncoder;
@@ -67,9 +72,9 @@ class DatagridHelper {
     $this->router = $router;
     $this->logger = $logger;
 
-    $this->setExport('csv', new ExportCSV());
-    $this->setExport('xlsx', new ExportXLSX());
-    $this->setExport('json', new ExportJSON());
+    $this->setExport(self::EXPORT_CSV, new ExportCSV());
+    $this->setExport(self::EXPORT_JSON, new ExportJSON());
+    $this->setExport(self::EXPORT_XLSX, new ExportXLSX());
   }
 
   public function reset(): void {
@@ -318,7 +323,6 @@ class DatagridHelper {
     $this->queryBuilderStrategy->setDocumentManager($dm);
   }
 
-
   /**
    * @param Request $request
    * @param array $searchFields
@@ -387,11 +391,8 @@ class DatagridHelper {
 
       // Do export.
       if ($export = $this->getExport($request->request->get('export-type'))) {
-        $export->init();
-        $export->setName($name);
-        $export = $this->runExport($export);
-        $export->finish();
-        return $export->output();
+        $export = $this->runExport($export, $name);
+        return $export->response();
       }
 
       // Export failed.
@@ -407,10 +408,14 @@ class DatagridHelper {
 
   /**
    * @param Export $export
+   * @param string $name
    *
    * @return Export
    */
-  public function runExport(Export $export): Export {
+  private function runExport(Export $export, string $name): Export {
+    $export->init();
+    $export->setName($name);
+
     $export->setCells($this->dg()->getCells());
     $export->addHeader();
 
@@ -418,14 +423,43 @@ class DatagridHelper {
       foreach ($this->results as $obj) {
         $export->addRow($obj);
       }
-      return $export;
+    } elseif ($this->queryBuilderStrategy) {
+      $export = $this->queryBuilderStrategy->doExport($export);
     }
 
-    if ($this->queryBuilderStrategy) {
-      return $this->queryBuilderStrategy->doExport($export);
-    }
+    $export->finish();
 
     return $export;
+  }
+
+  /**
+   * @param string $exportType
+   * @param string|null $folder
+   * @param string|null $name
+   *
+   * @return string|null
+   */
+  public function dumpExport(string $exportType, ?string $folder = null, ?string $name = null): ?string {
+    if ($export = $this->getExport($exportType)) {
+      $export = $this->runExport($export, $name);
+      return $export->dump($folder, $name);
+    }
+
+    return null;
+  }
+
+  /**
+   * @param string $exportType
+   *
+   * @return null
+   */
+  public function streamExport(string $exportType) {
+    if ($export = $this->getExport($exportType)) {
+      $export = $this->runExport($export, '');
+      return $export->stream();
+    }
+
+    return null;
   }
 
   /**

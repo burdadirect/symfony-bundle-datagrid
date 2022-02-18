@@ -2,6 +2,8 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use Symfony\Component\HttpFoundation\Response;
+
 abstract class Export extends Formatter {
 
   protected string $name;
@@ -69,6 +71,12 @@ abstract class Export extends Formatter {
 
   abstract public function addRow($obj);
 
-  abstract public function output();
+  /****************************************************************************/
+
+  abstract public function response(): Response;
+
+  abstract public function stream();
+
+  abstract public function dump(?string $folder = null, ?string $name = null): string;
 
 }

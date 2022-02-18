@@ -60,20 +60,49 @@ class ExportJSON extends Export {
   /**
    * @return Response
    *
-   * @throws \InvalidArgumentException
+   * @throws \InvalidArgumentException|\JsonException
    */
-  public function output() : Response {
-    $content = json_encode($this->lines);
+  public function response() : Response {
+    $content = json_encode($this->lines, JSON_THROW_ON_ERROR);
 
     return new Response($content, 200, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/json',
-      'Content-Disposition' => 'attachment; filename="'.$this->name.'.json"',
+      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.json"',
       'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);
+  }
+
+  /**
+   * @return resource|string|null
+   *
+   * @throws \JsonException
+   */
+  public function stream() {
+    $resource = fopen('php://temp', 'wb+');
+    fwrite($resource, json_encode($this->lines, JSON_THROW_ON_ERROR));
+
+    return $resource ?: null;
+  }
+
+  /**
+   * @param string|null $folder
+   * @param string|null $name
+   *
+   * @return string
+   *
+   * @throws \JsonException
+   */
+  public function dump(?string $folder = null, ?string $name = null): string {
+    $folder = rtrim($folder, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    $path = $folder.($name ?: $this->getName().'.json');
+
+    file_put_contents($path, json_encode($this->lines, JSON_THROW_ON_ERROR));
+
+    return $path;
   }
 
 }

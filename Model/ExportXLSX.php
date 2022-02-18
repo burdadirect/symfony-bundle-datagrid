@@ -131,7 +131,7 @@ class ExportXLSX extends Export {
   /**
    * @return StreamedResponse
    */
-  public function output() : StreamedResponse {
+  public function response(): StreamedResponse {
     $writer = new Xlsx($this->spreadsheet);
 
     $callable = function() use ($writer) {
@@ -143,9 +143,41 @@ class ExportXLSX extends Export {
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'application/vnd.ms-excel',
-      'Content-Disposition' => 'attachment; filename="'.$this->name.'.xlsx"',
+      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.xlsx"',
       'Accept-Ranges' => 'bytes',
     ]);
+  }
+
+  /**
+   * @return resource|string|null
+   *
+   * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+   */
+  public function stream() {
+    $resource = fopen('php://temp', 'wb+');
+
+    $writer = new Xlsx($this->spreadsheet);
+    $writer->save($resource);
+
+    return $resource;
+  }
+
+  /**
+   * @param string|null $folder
+   * @param string|null $name
+   *
+   * @return string
+   *
+   * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+   */
+  public function dump(?string $folder = null, ?string $name = null): string {
+    $folder = rtrim($folder, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    $path = $folder.($name ?: $this->getName().'.xlsx');
+
+    $writer = new Xlsx($this->spreadsheet);
+    $writer->save($path);
+
+    return $path;
   }
 
 }

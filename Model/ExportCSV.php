@@ -60,7 +60,7 @@ class ExportCSV extends Export {
    *
    * @throws \InvalidArgumentException
    */
-  public function output() : Response {
+  public function response() : Response {
     $content = utf8_decode(implode("\n", $this->lines));
 
     return new Response($content, 200, [
@@ -68,10 +68,35 @@ class ExportCSV extends Export {
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
       'Content-Type' => 'text/csv',
-      'Content-Disposition' => 'attachment; filename="'.$this->name.'.csv"',
+      'Content-Disposition' => 'attachment; filename="'.$this->getName().'.csv"',
       'Content-Length' => \strlen($content),
       'Accept-Ranges' => 'bytes',
     ]);
+  }
+
+  /**
+   * @return resource|string|null
+   */
+  public function stream() {
+    $resource = fopen('php://temp', 'wb+');
+    fwrite($resource, utf8_decode(implode("\n", $this->lines)));
+
+    return $resource ?: null;
+  }
+
+  /**
+   * @param string|null $folder
+   * @param string|null $name
+   *
+   * @return string
+   */
+  public function dump(?string $folder = null, ?string $name = null): string {
+    $folder = rtrim($folder, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    $path = $folder.($name ?: $this->getName().'.csv');
+
+    file_put_contents($path, utf8_decode(implode("\n", $this->lines)));
+
+    return $path;
   }
 
 }
