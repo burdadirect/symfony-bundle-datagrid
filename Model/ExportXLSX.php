@@ -170,15 +170,7 @@ class ExportXLSX extends Export {
    * @return Xlsx
    */
   protected function prepareWriter(): Xlsx {
-    $spreadsheet = $this->getSpreadsheet();
-    if ($password = $this->getPassword()) {
-      $security = $spreadsheet->getSecurity();
-      $security->setLockWindows(true);
-      $security->setLockStructure(true);
-      $security->setWorkbookPassword($password);
-    }
-
-    return new Xlsx($spreadsheet);
+    return new Xlsx($this->getSpreadsheet());
   }
 
   /**
