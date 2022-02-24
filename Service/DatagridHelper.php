@@ -51,9 +51,9 @@ class DatagridHelper {
 
   private ?QueryBuilderStrategyInterface $queryBuilderStrategy = null;
 
-  private ?array $results;
+  private ?array $results = null;
 
-  private ?int $resultsNumber;
+  private ?int $resultsNumber = null;
 
   private array $exports = [];
 
