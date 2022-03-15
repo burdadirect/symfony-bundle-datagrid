@@ -19,7 +19,7 @@ services:
         alias: HBM\DatagridBundle\Service\QueryEncoder
 
     # TWIG
-    HBM\DatagridBundle\Twig\:
-        resource: '../../Twig/*'
+    HBM\DatagridBundle\Twig\Extension\:
+        resource: '../../Twig/Extension/*'
         tags:
             - { name: twig.extension }
