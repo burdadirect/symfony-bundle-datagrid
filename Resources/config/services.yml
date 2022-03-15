@@ -23,3 +23,8 @@ services:
         resource: '../../Twig/Extension/*'
         tags:
             - { name: twig.extension }
+
+    HBM\DatagridBundle\Twig\Runtime\:
+        resource: '../../Twig/Runtime/*'
+        tags:
+            - { name: twig.runtime }
