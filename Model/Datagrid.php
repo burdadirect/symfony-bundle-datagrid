@@ -3,6 +3,8 @@
 namespace HBM\DatagridBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
+use PhpOffice\PhpSpreadsheet\Helper\Html;
 
 class Datagrid {
 
@@ -123,9 +125,24 @@ class Datagrid {
   private $cells;
 
   /**
-   * @var callable|string|array
+   * @var callable|string|array|HtmlAttributes
    */
   private $rowAttr = NULL;
+
+  /**
+   * @var callable|string|array|HtmlAttributes
+   */
+  private $tableAttr = NULL;
+
+  /**
+   * @var callable|string|array|HtmlAttributes
+   */
+  private $tableHeadAttr = NULL;
+
+  /**
+   * @var callable|string|array|HtmlAttributes
+   */
+  private $tableBodyAttr = NULL;
 
   /**
    * @var \Doctrine\Common\Collections\Collection
@@ -350,6 +367,30 @@ class Datagrid {
     return $this->cells;
   }
 
+  public function setTableAttr($tableAttr) {
+    $this->tableAttr = $tableAttr;
+  }
+
+  public function getTableAttr() {
+    return $this->tableAttr;
+  }
+
+  public function setTableHeadAttr($tableHeadAttr) {
+    $this->tableHeadAttr = $tableHeadAttr;
+  }
+
+  public function getTableHeadAttr() {
+    return $this->tableHeadAttr;
+  }
+
+  public function setTableBodyAttr($tableBodyAttr) {
+    $this->tableBodyAttr = $tableBodyAttr;
+  }
+
+  public function getTableBodyAttr() {
+    return $this->tableBodyAttr;
+  }
+
   public function setRowAttr($rowAttr) {
     $this->rowAttr = $rowAttr;
   }
@@ -422,29 +463,48 @@ class Datagrid {
     return NULL;
   }
 
-  public function parseRowAttr($obj, $row) {
-    $rowAttr = $this->getRowAttr();
-    if (is_callable($this->getRowAttr())) {
-      $rowAttr = $this->getRowAttr()($obj, $row);
+  public function parseTableAttr(): HtmlAttributes {
+    $classes = ['datagrid-table'];
+    if ($this->getBootstrap()['version'] === 'v4'){
+      $classes[] = $this->getBootstrap()['classes']['table'] ?? null;
+      $classes[] = $this->getBootstrap()['sizes']['table'] ?? null;
+    } else {
+      $classes = ['table table-hover table-bordered table-condensed'];
     }
 
-    if (is_string($rowAttr)) {
-      return $rowAttr;
-    }
-    if (is_array($rowAttr)) {
-      return $this->getHtmlAttrString($rowAttr);
-    }
+    $attributes = new HtmlAttributes(['class' => $classes]);
 
-    return NULL;
+    return $this->parseAttr($attributes, $this->getTableAttr());
   }
 
-  private function getHtmlAttrString($attributes) : string {
-    $parts = [];
-    foreach ($attributes as $key => $value) {
-      $parts[] = $key . '="' . $value . '"';
+  public function parseTableHeadAttr(): HtmlAttributes {
+    $attributes = new HtmlAttributes(['class' => 'datagrid-table-head']);
+
+    return $this->parseAttr($attributes, $this->getTableHeadAttr());
+  }
+
+  public function parseTableBodyAttr(): HtmlAttributes {
+    $attributes = new HtmlAttributes(['class' => 'datagrid-table-body']);
+
+    return $this->parseAttr($attributes, $this->getTableBodyAttr());
+  }
+
+  public function parseRowAttr($obj, $row): HtmlAttributes {
+    $attributes = new HtmlAttributes();
+
+    return $this->parseAttr($attributes, $this->getTableBodyAttr(), [$obj, $row]);
+  }
+
+  private function parseAttr(HtmlAttributes $htmlAttributes, $attributes, array $callbackParams = []): HtmlAttributes {
+    if (is_callable($attributes)) {
+      $htmlAttributes->add($attributes(...$callbackParams));
     }
 
-    return implode(' ', $parts);
+    if (is_string($attributes) || is_array($attributes) || ($attributes instanceof HtmlAttributes)) {
+      $htmlAttributes->add($attributes);
+    }
+
+    return $htmlAttributes;
   }
 
   public function __toString() {

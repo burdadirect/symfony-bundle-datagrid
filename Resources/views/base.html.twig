@@ -4,21 +4,13 @@
 
 {% set transDomain = datagrid.translationDomain %}
 
-
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesTable = 'datagrid-table ' ~ dg.classesAndSize(datagrid, 'table') %}
-{% else %}
-  {% set classesTable = 'datagrid-table table table-hover table-bordered table-condensed' %}
-{% endif %}
-
-
 {% include datagrid.menu.template with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
 {% if datagrid.results|length == 0 %}
   <p>{{ 'Keine Einträge gefunden.'|trans }}</p>
 {% else %}
   <div class="datagrid-table-wrapper">
-    <table class="{{ classesTable }}">
+    <table {{ datagrid.parseTableAttr()|raw }}>
       {% include '@HBMDatagrid/Datagrid/table-head.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}
 
       {% include '@HBMDatagrid/Datagrid/table-body.html.twig' with { 'datagrid': datagrid, 'transDomain': transDomain } only %}

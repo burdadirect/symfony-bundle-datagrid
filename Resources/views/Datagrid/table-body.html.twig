@@ -1,6 +1,6 @@
 {% trans_default_domain 'HBMDatagridBundle' %}
 
-<tbody class="datagrid-table-body">
+<tbody {{ datagrid.parseTableBodyAttr()|raw }}>
 {% for row, obj in datagrid.results %}
   <tr {{ datagrid.parseRowAttr(obj, row)|raw }}>
     {% for column, cell in datagrid.cells %}

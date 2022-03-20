@@ -2,7 +2,7 @@
 
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
-<thead class="datagrid-table-head">
+<thead {{ datagrid.parseTableHeadAttr()|raw }}>
   <tr>
     {% for column, cell in datagrid.cells %}
       {% if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
