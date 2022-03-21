@@ -492,7 +492,7 @@ class Datagrid {
   public function parseRowAttr($obj, $row): HtmlAttributes {
     $attributes = new HtmlAttributes();
 
-    return $this->parseAttr($attributes, $this->getTableBodyAttr(), [$obj, $row]);
+    return $this->parseAttr($attributes, $this->getRowAttr(), [$obj, $row]);
   }
 
   private function parseAttr(HtmlAttributes $htmlAttributes, $attributes, array $callbackParams = []): HtmlAttributes {
