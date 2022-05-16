@@ -45,7 +45,9 @@ class DatagridHelper {
 
   private LoggerInterface $logger;
 
-  private ?SessionInterface $session;
+  private ?SessionInterface $session = null;
+
+  private ?string $sessionPrefixAdditional = null;
 
   private ?Datagrid $datagrid = null;
 
@@ -77,7 +79,7 @@ class DatagridHelper {
   }
 
   public function reset(): void {
-    $this->session = NULL;
+//    $this->session = NULL;
     $this->datagrid = NULL;
     $this->results = NULL;
     $this->resultsNumber = NULL;
@@ -489,9 +491,7 @@ class DatagridHelper {
    */
   public function setSession(SessionInterface $session, ?string $additionalPrefix = NULL): void {
     $this->session = $session;
-    if ($additionalPrefix !== NULL) {
-      $this->dg()->setSessionPrefix($this->dg()->getSessionPrefix().$additionalPrefix);
-    }
+    $this->sessionPrefixAdditional = $additionalPrefix;
   }
 
   /**
@@ -529,7 +529,7 @@ class DatagridHelper {
   }
 
   private function handleParam($params, $key, $default = NULL) {
-    $prefix = $this->dg()->getSessionPrefix();
+    $prefix = $this->dg()->getSessionPrefix().$this->sessionPrefixAdditional;
     $use_for = $this->dg()->getSessionUseFor();
 
     if (array_key_exists($key, $params)) {
