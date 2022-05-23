@@ -5,8 +5,8 @@
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% include '@HBMDatagrid/Menu/navbar-v4.html.twig' %}
+{% if datagrid.bootstrap['version'] == 'v5' %}
+{#  {% include '@HBMDatagrid/Menu/navbar-v5.html.twig' %}#}
 {% else %}
-  {% include '@HBMDatagrid/Menu/navbar-v3.html.twig' %}
+  {% include '@HBMDatagrid/Menu/navbar-v4.html.twig' %}
 {% endif %}

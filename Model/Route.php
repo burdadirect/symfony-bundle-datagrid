@@ -5,29 +5,20 @@ namespace HBM\DatagridBundle\Model;
 
 class Route {
 
-  /**
-   * @var string
-   */
-  protected $name;
+  protected ?string $name;
 
-  /**
-   * @var array
-   */
-  protected $defaults;
+  protected array $defaults;
 
-  /**
-   * @var string
-   */
-  protected $hash;
+  protected ?string $hash;
 
   /**
    * Route constructor.
    *
-   * @param $name
+   * @param string|null $name
    * @param array $defaults
-   * @param string $hash
+   * @param string|null $hash
    */
-  public function __construct($name = NULL, array $defaults = [], $hash = NULL) {
+  public function __construct(string $name = NULL, array $defaults = [], string $hash = NULL) {
     $this->name = $name;
     $this->defaults = $defaults;
     $this->hash = $hash;

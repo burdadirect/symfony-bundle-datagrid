@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
       ->children()
         ->scalarNode('translation_domain')->defaultValue(false)->end()
 
+        // BOOTSTRAP
         ->arrayNode('bootstrap')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('version')->defaultValue('v4')->end()
@@ -49,27 +50,30 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('search_info')->defaultValue('text-muted')->end()
               ->end()
             ->end()
-            ->arrayNode('icons')->addDefaultsIfNotSet()
-              ->children()
-                // Sortation
-                ->scalarNode('sort_asc')->defaultValue('fa fa-sort-amount-up')->end()
-                ->scalarNode('sort_desc')->defaultValue('fa fa-sort-amount-down')->end()
-                // Navigation
-                ->scalarNode('search')->defaultValue('fa fa-search')->end()
-                ->scalarNode('reset')->defaultValue('fa fa-bolt')->end()
-                ->scalarNode('expand')->defaultValue('fa fa-expand')->end()
-                ->scalarNode('compress')->defaultValue('fa fa-compress')->end()
-                ->scalarNode('search_info')->defaultValue('fa fa-info-circle')->end()
-                // Pagination
-                ->scalarNode('page_first')->defaultValue('fa fa-fast-backward')->end()
-                ->scalarNode('page_prev')->defaultValue('fa fa-step-backward')->end()
-                ->scalarNode('page_next')->defaultValue('fa fa-step-forward')->end()
-                ->scalarNode('page_last')->defaultValue('fa fa-fast-forward')->end()
-              ->end()
-            ->end()
           ->end()
         ->end()
 
+        // ICONS
+        ->arrayNode('icons')->addDefaultsIfNotSet()
+          ->children()
+            // Sortation
+            ->scalarNode('sort_asc')->defaultValue('fa fa-sort-amount-up')->end()
+            ->scalarNode('sort_desc')->defaultValue('fa fa-sort-amount-down')->end()
+            // Navigation
+            ->scalarNode('search')->defaultValue('fa fa-search')->end()
+            ->scalarNode('reset')->defaultValue('fa fa-bolt')->end()
+            ->scalarNode('expand')->defaultValue('fa fa-expand')->end()
+            ->scalarNode('compress')->defaultValue('fa fa-compress')->end()
+            ->scalarNode('search_info')->defaultValue('fa fa-info-circle')->end()
+            // Pagination
+            ->scalarNode('page_first')->defaultValue('fa fa-fast-backward')->end()
+            ->scalarNode('page_prev')->defaultValue('fa fa-step-backward')->end()
+            ->scalarNode('page_next')->defaultValue('fa fa-step-forward')->end()
+            ->scalarNode('page_last')->defaultValue('fa fa-fast-forward')->end()
+          ->end()
+        ->end()
+
+        // SESSION
         ->arrayNode('session')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('prefix')->defaultValue('hbm_datagrid:')->end()
@@ -80,6 +84,7 @@ class Configuration implements ConfigurationInterface
           ->end()
         ->end()
 
+        // QUERY
         ->arrayNode('query')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('encode')->defaultValue('json+urlencode')->end()
@@ -95,6 +100,7 @@ class Configuration implements ConfigurationInterface
           ->end()
         ->end()
 
+        // DATAGRID
         ->arrayNode('datagrid')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('sort')->defaultTrue()->end()
@@ -104,6 +110,7 @@ class Configuration implements ConfigurationInterface
           ->end()
         ->end()
 
+        // CACHE
         ->arrayNode('cache')->addDefaultsIfNotSet()
           ->children()
             ->booleanNode('enabled')->defaultValue(FALSE)->end()
@@ -112,6 +119,7 @@ class Configuration implements ConfigurationInterface
           ->end()
         ->end()
 
+        // PAGINATION
         ->arrayNode('pagination')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('template')->defaultValue('@HBMDatagrid/Pagination/pagination.html.twig')->end()
@@ -124,6 +132,7 @@ class Configuration implements ConfigurationInterface
           ->end()
         ->end()
 
+        // MENU
         ->arrayNode('menu')->addDefaultsIfNotSet()
           ->children()
             ->scalarNode('template')->defaultValue('@HBMDatagrid/Menu/navbar.html.twig')->end()

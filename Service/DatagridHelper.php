@@ -204,20 +204,17 @@ class DatagridHelper {
 
     // Set route reset
     $paramsToUse = $paramsHandled;
-    foreach ($this->dg()->getSessionUseFor() as $key) {
+    foreach (array_keys($paramsOrig) as $key) {
       if (array_key_exists($key, $paramsToUse)) {
         $paramsToUse[$key] = '-1';
       }
-    }
-    if (array_key_exists($paramNameSearch, $paramsToUse)) {
-      $paramsToUse[$paramNameSearch] = '{}';
     }
     $this->dg()->getMenu()->setRouteReset(new Route($route, $paramsToUse));
 
     // Set route extended
     if (array_key_exists($paramNameExtended, $defaults)) {
       $paramsToUse = $paramsHandled;
-      $paramsToUse[$paramNameExtended] = !(bool)$paramsToUse[$paramNameExtended];
+      $paramsToUse[$paramNameExtended] = ($paramsToUse[$paramNameExtended] === '1') ? '0' : '1';
       $this->dg()->getMenu()->setRouteExtended(new Route($route, $paramsToUse));
     }
   }
