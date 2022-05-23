@@ -23,7 +23,7 @@
 
 {%- macro icon(datagrid, icon) -%}
   {%- set key = icon|replace({'-': '_'}) -%}
-  {%- if datagrid.bootstrap['icons'][key] is defined -%}
-    {{- datagrid.bootstrap['icons'][key] -}}
+  {%- if datagrid.icons[key] is defined -%}
+    {{- datagrid.icons[key] -}}
   {%- endif -%}
 {%- endmacro -%}

@@ -47,21 +47,21 @@ hbm_datagrid:
             page_item: 'page-item'
             page_link: 'page-link'
             search_info: 'text-muted'
-        icons:
-            # Sortation
-            sort_asc: 'fa fa-sort-amount-asc'
-            sort_desc: 'fa fa-sort-amount-desc'
-            # Navigation
-            search: 'fa fa-search'
-            reset: 'fa fa-bolt'
-            expand: 'fa fa-expand'
-            compress: 'fa fa-compress'
-            search_info: 'fa fa-info'
-            # Pagination
-            page_first: 'fa fa-fast-backward'
-            page_prev: 'fa fa-step-backward'
-            page_next: 'fa fa-step-forward'
-            page_last: 'fa fa-fast-forward'
+    icons:
+        # Sortation
+        sort_asc: 'fa fa-sort-amount-asc'
+        sort_desc: 'fa fa-sort-amount-desc'
+        # Navigation
+        search: 'fa fa-search'
+        reset: 'fa fa-bolt'
+        expand: 'fa fa-expand'
+        compress: 'fa fa-compress'
+        search_info: 'fa fa-info'
+        # Pagination
+        page_first: 'fa fa-fast-backward'
+        page_prev: 'fa fa-step-backward'
+        page_next: 'fa fa-step-forward'
+        page_last: 'fa fa-fast-forward'
     session:
         prefix:  'hbm_datagrid:'
         use_for: ['num', 'sort', 'extended']

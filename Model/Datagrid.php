@@ -18,6 +18,11 @@ class Datagrid {
    */
   private $bootstrap;
 
+  /**
+   * @var array
+   */
+  private $icons;
+
   /* SESSION ******************************************************************/
 
   /**
@@ -168,6 +173,7 @@ class Datagrid {
 
     $this->setTranslationDomain($config['translation_domain']);
     $this->setBootstrap($config['bootstrap']);
+    $this->setIcons($config['icons']);
 
     $this->setSort($config['datagrid']['sort']);
     $this->setMultiSort($config['datagrid']['multi_sort']);
@@ -207,6 +213,13 @@ class Datagrid {
     return $this->bootstrap;
   }
 
+  public function setIcons($icons) {
+    $this->icons = $icons;
+  }
+
+  public function getIcons() {
+    return $this->icons;
+  }
 
   public function setSessionPrefix($sessionPrefix) {
     $this->sessionPrefix = $sessionPrefix;
