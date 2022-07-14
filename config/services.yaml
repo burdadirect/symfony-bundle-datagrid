@@ -20,11 +20,11 @@ services:
 
     # TWIG
     HBM\DatagridBundle\Twig\Extension\:
-        resource: '../Twig/Extension/*'
+        resource: '../src/Twig/Extension/*'
         tags:
             - { name: twig.extension }
 
     HBM\DatagridBundle\Twig\Runtime\:
-        resource: '../Twig/Runtime/*'
+        resource: '../src/Twig/Runtime/*'
         tags:
             - { name: twig.runtime }
