@@ -24,7 +24,7 @@ class HBMDatagridExtension extends Extension {
     $container->setParameter('hbm.datagrid', $config);
     $container->setParameter('hbm.datagrid.query_encode_mode', $config['query']['encode']);
 
-    $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-    $loader->load('services.yml');
+    $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+    $loader->load('services.yaml');
   }
 }
