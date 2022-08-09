@@ -39,7 +39,7 @@ class TableCellHelper {
   }
 
   /**
-   * @param string $alias
+   * @param string|null $alias
    * @param string $template
    * @param string $headline
    * @param string|null $field
@@ -49,13 +49,13 @@ class TableCellHelper {
    *
    * @return TableCell
    */
-  public function icon(string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', ?string $field = NULL, ?string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH, array $options = []) : TableCell {
+  public function icon(?string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', ?string $field = NULL, ?string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH, array $options = []) : TableCell {
     $defaultOptions = [
       'th_attr' => ['class' => $thClass],
       'td_attr' => ['class' => 'text-center'],
       'template' => $template,
     ];
-    if ($field) {
+    if ($alias && $field) {
       $defaultOptions['sort_key'] = $alias.'.'.$field;
     }
 
