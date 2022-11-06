@@ -118,6 +118,27 @@ class TableCellHelper {
    * @param int $visibility
    * @param array $options
    *
+   * @return array
+   */
+  public function datetimeCells(string $alias, int $visibility = TableCell::VISIBLE_EXTENDED_EX, array $options = [], array $templateParams = []) : array {
+    return [
+      'createdAndModified' => new TableCell('createdAndModified', '<span class="text-normal font-weight-bold">Zeitpunkte</span><br />', NULL, $visibility, array_merge([
+        'th_attr' => ['class' => 'text-center small'],
+        'template' => '@HBMDatagrid/partials/datagrid-cells/datetimes.html.twig',
+        'template_params' => $templateParams,
+        'sort_key' => [$alias.'.created' => 'Erstellt', $alias.'.modified' => 'Geändert'],
+        'sort_key_sep' => '&nbsp;|&nbsp;'
+      ], $options)),
+      'createdExport' => $this->datetime($alias, 'created', 'Erstellt', TableCell::VISIBLE_EXPORT),
+      'modifiedExport' => $this->datetime($alias, 'modified', 'Geändert', TableCell::VISIBLE_EXPORT),
+    ];
+  }
+
+  /**
+   * @param string $alias
+   * @param int $visibility
+   * @param array $options
+   *
    * @return TableCell
    */
   public function creator(string $alias, int $visibility = TableCell::VISIBLE_EXTENDED, array $options = []) : TableCell {
@@ -149,6 +170,7 @@ class TableCellHelper {
    * @param array|callable $params
    * @param string|null $tdClass
    * @param string|null $thClass
+   * @param array $options
    *
    * @return TableCell
    */
