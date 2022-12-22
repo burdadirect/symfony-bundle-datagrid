@@ -3,19 +3,19 @@
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
 {% if datagrid.menu.showExport %}
-  <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
-    <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      {{ 'Export'|trans }}
-    </button>
-    <ul class="dropdown-menu datagrid-exports" aria-labelledby="{{ datagrid_id~'-export' }}">
-      {% for export in datagrid.menu.exportsSelection %}
-        <li class="datagrid-export">
-          <a class="dropdown-item" href="#" onclick="document.getElementById('{{ datagrid_id~'-export-'~export }}').submit(); return false;" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}">{{ ':ext-Export'|trans({':ext': export|upper}) }}</a>
-          <form id="{{ datagrid_id~'-export-'~export }}" class="datagrid-export-form" action="{{ dg.path(datagrid.menu.route) }}" method="post">
-            <input type="hidden" name="export-type" value="{{ export }}" />
-          </form>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  <form id="{{ datagrid_id~'-export' }}" class="datagrid-export-form" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+    <input id="{{ datagrid_id~'-export-type' }}" type="hidden" name="export-type" value="" />
+    <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
+      <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ 'Export'|trans }}
+      </button>
+      <ul class="dropdown-menu datagrid-exports" aria-labelledby="{{ datagrid_id~'-export' }}">
+        {% for export in datagrid.menu.exportsSelection %}
+          <li class="datagrid-export">
+            <button class="dropdown-item" type="submit" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}" onclick="document.getElementById('{{ datagrid_id~'-export-type' }}').value = '{{ export }}';">{{ ':ext-Export'|trans({':ext': export|upper}) }}</button>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </form>
 {% endif %}
