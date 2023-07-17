@@ -57,11 +57,11 @@ class SearchMenuHelper {
    * @param string $key
    * @param string|null $type
    * @param string|null $prefix
-   * @param mixed $default
+   * @param mixed|null $default
    *
    * @return mixed
    */
-  public function value(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, $default = NULL) {
+  public function value(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, mixed $default = NULL): mixed {
     if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
       return $this->handleValues([$searchValues[$key]], $type, $prefix)[0];
     }
@@ -74,11 +74,11 @@ class SearchMenuHelper {
    * @param string $key
    * @param string|null $type
    * @param string|null $prefix
-   * @param mixed $default
+   * @param mixed|null $default
    *
    * @return mixed
    */
-  public function values(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, $default = NULL) {
+  public function values(array $searchValues, string $key, string $type = NULL, string $prefix = NULL, mixed $default = NULL): mixed {
     if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
       return $this->handleValues($searchValues[$key], $type, $prefix);
     }
@@ -95,18 +95,18 @@ class SearchMenuHelper {
    */
   private function handleValues(array $values, string $type = NULL, string $prefix = NULL) : array {
     if ($prefix) {
-      $values = array_map(function($item) use ($prefix) {
+      $values = array_map(static function($item) use ($prefix) {
         return str_replace($prefix, '', $item);
       }, $values);
     }
 
     if (in_array($type, ['boolean', 'bool', 'integer', 'int', 'float', 'double', 'string', 'array', 'object'], TRUE)) {
-      $values = array_map(function($item) use ($type) {
+      $values = array_map(static function($item) use ($type) {
         settype($item, $type);
         return $item;
       }, $values);
     } elseif ($type === 'json') {
-      $values = array_map(function($item) use ($type) {
+      $values = array_map(static function($item) use ($type) {
         return json_decode($item, TRUE);
       }, $values);
     }
