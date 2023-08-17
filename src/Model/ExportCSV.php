@@ -66,7 +66,7 @@ class ExportCSV extends Export {
   public function response() : Response {
     $content = utf8_decode(implode("\n", $this->lines));
 
-    return new Response($content, 200, [
+    return new Response($content, Response::HTTP_OK, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',

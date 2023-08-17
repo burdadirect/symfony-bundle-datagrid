@@ -68,7 +68,7 @@ class ExportJSON extends Export {
   public function response() : Response {
     $content = json_encode($this->lines, JSON_THROW_ON_ERROR);
 
-    return new Response($content, 200, [
+    return new Response($content, Response::HTTP_OK, [
       'Pragma' => 'no-cache',
       'Cache-Control' => 'Cache-Control: must-revalidate, post-check=0, pre-check=0',
       'Last-Modified' => gmdate('D, d M Y H:i:s').' GMT',
