@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ca3dbec963a8f4e87aa5ab7bbfd1c56",
+    "content-hash": "c5d3ac90277636fd4eb72674c4d932fc",
     "packages": [
         {
             "name": "burdadirect/symfony-bundle-twig-attributes",
-            "version": "dev-main",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/burdadirect/symfony-bundle-twig-attributes.git",
@@ -30,7 +30,6 @@
             "require-dev": {
                 "roave/security-advisories": "dev-latest"
             },
-            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -48,7 +47,7 @@
             ],
             "description": "HBM Twig Attributes Bundle - HTML attributes helper for twig.",
             "support": {
-                "source": "https://github.com/burdadirect/symfony-bundle-twig-attributes/tree/main",
+                "source": "https://github.com/burdadirect/symfony-bundle-twig-attributes/tree/v1.4.0",
                 "issues": "https://github.com/burdadirect/symfony-bundle-twig-attributes/issues"
             },
             "time": "2023-07-13T16:52:02+00:00"
@@ -6109,7 +6108,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "burdadirect/symfony-bundle-twig-attributes": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
