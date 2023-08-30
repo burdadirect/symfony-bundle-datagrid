@@ -6,17 +6,15 @@ use HBM\DatagridBundle\Twig\Runtime\DatagridRuntime;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class DatagridExtension extends AbstractExtension {
+class DatagridExtension extends AbstractExtension
+{
+    /* DEFINITIONS */
 
-  /****************************************************************************/
-  /* DEFINITIONS                                                              */
-  /****************************************************************************/
-
-  public function getFilters() : array {
-    return [
-      new TwigFilter('hbmDatagridSearchEncode', [DatagridRuntime::class, 'hbmDatagridSearchEncode']),
-      new TwigFilter('hbmDatagridSearchDecode', [DatagridRuntime::class, 'hbmDatagridSearchDecode']),
-    ];
-  }
-
+    public function getFilters(): array
+    {
+        return [
+          new TwigFilter('hbmDatagridSearchEncode', [DatagridRuntime::class, 'hbmDatagridSearchEncode']),
+          new TwigFilter('hbmDatagridSearchDecode', [DatagridRuntime::class, 'hbmDatagridSearchDecode']),
+        ];
+    }
 }

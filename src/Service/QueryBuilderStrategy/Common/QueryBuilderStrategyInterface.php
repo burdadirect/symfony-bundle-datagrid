@@ -4,12 +4,11 @@ namespace HBM\DatagridBundle\Service\QueryBuilderStrategy\Common;
 
 use HBM\DatagridBundle\Model\Export;
 
-interface QueryBuilderStrategyInterface {
+interface QueryBuilderStrategyInterface
+{
+    public function count(): int;
 
-  public function count() : int;
+    public function doExport(Export $export): Export;
 
-  public function doExport(Export $export) : Export;
-
-  public function getResults() : array;
-
+    public function getResults(): array;
 }
