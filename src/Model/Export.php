@@ -4,96 +4,80 @@ namespace HBM\DatagridBundle\Model;
 
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class Export extends Formatter {
+abstract class Export extends Formatter
+{
+    public const CONTENT_TYPE = '';
+    public const EXTENSION    = '';
 
-  public const CONTENT_TYPE = '';
-  public const EXTENSION = '';
+    protected string $name;
 
-  protected string $name;
+    protected array $cells = [];
 
-  protected array $cells = [];
+    /* GETTER/SETTER */
 
-  /****************************************************************************/
-  /* GETTER/SETTER                                                            */
-  /****************************************************************************/
-
-  public function setName(string $name): void {
-    $this->name = $name;
-  }
-
-  public function getName(): string {
-    return $this->name;
-  }
-
-  public function setCells($cells): void {
-    $this->cells = $cells;
-  }
-
-  public function getCells(): array {
-    return $this->cells;
-  }
-
-  /****************************************************************************/
-  /* BASIC                                                                    */
-  /****************************************************************************/
-
-  public function init() : void {
-  }
-
-  public function finish() : void {
-  }
-
-  /**
-   * @param $label
-   *
-   * @return string
-   */
-  protected function prepareLabel($label) : string {
-    return html_entity_decode(strip_tags($label));
-  }
-
-  /**
-   * @param TableCell $cell
-   * @param $value
-   *
-   * @return mixed
-   */
-  public function formatCellValueString(TableCell $cell, $value) {
-    if ($cell->getOption('strip_tags', true)) {
-      return strip_tags($value);
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
-    return $value;
-  }
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-  /**
-   * @return string
-   */
-  public function contenType(): string {
-    return static::CONTENT_TYPE;
-  }
+    public function setCells($cells): void
+    {
+        $this->cells = $cells;
+    }
 
-  /**
-   * @return string
-   */
-  public function filename(): string {
-    return $this->getName().(static::EXTENSION ? '.'.static::EXTENSION : '');
-  }
+    public function getCells(): array
+    {
+        return $this->cells;
+    }
 
-  /****************************************************************************/
-  /* ABSTRACT                                                                 */
-  /****************************************************************************/
+    /* BASIC */
 
-  abstract public function addHeader();
+    public function init(): void
+    {
+    }
 
-  abstract public function addRow($obj);
+    public function finish(): void
+    {
+    }
 
-  /****************************************************************************/
+    protected function prepareLabel($label): string
+    {
+        return html_entity_decode(strip_tags($label));
+    }
 
-  abstract public function response(): Response;
+    public function formatCellValueString(TableCell $cell, $value)
+    {
+        if ($cell->getOption('strip_tags', true)) {
+            return strip_tags($value);
+        }
 
-  abstract public function stream();
+        return $value;
+    }
 
-  abstract public function dump(?string $folder = null, ?string $name = null): string;
+    public function contenType(): string
+    {
+        return static::CONTENT_TYPE;
+    }
 
+    public function filename(): string
+    {
+        return $this->getName() . (static::EXTENSION ? '.' . static::EXTENSION : '');
+    }
+
+    /* ABSTRACT */
+
+    abstract public function addHeader();
+
+    abstract public function addRow($obj);
+
+    abstract public function response(): Response;
+
+    abstract public function stream();
+
+    abstract public function dump(string $folder = null, string $name = null): string;
 }

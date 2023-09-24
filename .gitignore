@@ -11,3 +11,6 @@
 .buildpath
 .project
 /.settings/*
+
+# PHP-CS-Fixer
+.php-cs-fixer.cache
