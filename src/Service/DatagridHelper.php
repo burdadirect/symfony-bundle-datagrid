@@ -296,7 +296,7 @@ class DatagridHelper
 
     public function handleSearch(Request $request, array $searchFields, array $defaults = []): ?RedirectResponse
     {
-        if ($request->isMethod('post') && !$request->request->has('export-type')) {
+        if ($request->isMethod(Request::METHOD_POST) && !$request->request->has('export-type')) {
             $params = $this->handleSearchParams($request, $searchFields);
             $url    = $this->router->generate($this->dg()->getRoute()->getName(), array_merge($defaults, $params));
 
@@ -313,7 +313,7 @@ class DatagridHelper
             $searchParams[$key] = $request->request->get($key, '');
 
             if (isset($value['options'])) {
-                $searchParams[$key . '-options'] = $request->request->get($key . '-options', []);
+                $searchParams[$key . '-options'] = $request->request->all($key . '-options');
             }
         }
 
@@ -333,12 +333,10 @@ class DatagridHelper
      */
     public function handleExport(Request $request, $name, FlashBagInterface $flashBag = null): ?Response
     {
-        if ($request->isMethod('post') && $request->request->has('export-type')) {
+        if ($request->isMethod(Request::METHOD_POST) && $request->request->has('export-type')) {
             // Not allowed.
             if (!$this->dg()->getMenu()->getShowExport()) {
-                if ($flashBag) {
-                    $flashBag->add('error', 'Der Export ist deaktiviert!');
-                }
+                $flashBag?->add('error', 'Der Export ist deaktiviert!');
                 $url = $this->router->generate($this->dg()->getRoute()->getName(), $this->dg()->getRoute()->getDefaults());
 
                 return new RedirectResponse($url);
@@ -357,9 +355,7 @@ class DatagridHelper
             }
 
             // Export failed.
-            if ($flashBag) {
-                $flashBag->add('error', 'Der Export leider fehlgeschlagen!');
-            }
+            $flashBag?->add('error', 'Der Export leider fehlgeschlagen!');
             $url = $this->router->generate($this->dg()->getRoute()->getName(), $this->dg()->getRoute()->getDefaults());
 
             return new RedirectResponse($url);
