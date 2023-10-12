@@ -8,7 +8,10 @@ use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 class Datagrid
 {
     /** @var string */
-    private $translationDomain;
+    private $translationDomainVariableTexts;
+
+    /** @var string */
+    private $translationDomainFixedTexts;
 
     /** @var array */
     private $bootstrap;
@@ -115,7 +118,8 @@ class Datagrid
     {
         $this->results = new ArrayCollection();
 
-        $this->setTranslationDomain($config['translation_domain']);
+        $this->setTranslationDomainVariableTexts($config['translation_domain']['variable_texts']);
+        $this->setTranslationDomainFixedTexts($config['translation_domain']['fixed_texts']);
         $this->setBootstrap($config['bootstrap']);
         $this->setIcons($config['icons']);
 
@@ -141,14 +145,34 @@ class Datagrid
 
     /* GETTER/SETTER ********************************************************* */
 
-    public function setTranslationDomain($translationDomain)
+    public function setTranslationDomainVariableTexts($td)
     {
-        $this->translationDomain = $translationDomain;
+        $this->translationDomainVariableTexts = $td;
     }
 
-    public function getTranslationDomain()
+    public function getTranslationDomainVariableTexts()
     {
-        return $this->translationDomain;
+        return $this->translationDomainVariableTexts;
+    }
+
+    public function transDomainVariable()
+    {
+        return $this->getTranslationDomainVariableTexts();
+    }
+
+    public function setTranslationDomainFixedTexts($td)
+    {
+        $this->translationDomainFixedTexts = $td;
+    }
+
+    public function getTranslationDomainFixedTexts()
+    {
+        return $this->translationDomainFixedTexts;
+    }
+
+    public function transDomainFixed()
+    {
+        return $this->getTranslationDomainFixedTexts();
     }
 
     public function setBootstrap($bootstrap)
