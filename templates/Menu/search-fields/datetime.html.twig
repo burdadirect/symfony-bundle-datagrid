@@ -1,6 +1,6 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain datagrid.transDomainFixed %}
 
-{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
   {% block form_element %}
     {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
@@ -8,7 +8,7 @@
 
     {% set attributes = attributes(searchField['attr']|default([])).add({
       'type': 'date',
-      'placeholder': dg.trans(placeholder, transDomain),
+      'placeholder': dg.trans(placeholder, datagrid.transDomainVariable),
       'name': searchKey,
       'value': datagrid.menu.searchValue(searchKey)
     }).addClasses('form-control') %}

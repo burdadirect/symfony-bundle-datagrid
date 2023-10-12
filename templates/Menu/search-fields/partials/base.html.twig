@@ -1,4 +1,4 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain datagrid.transDomainFixed %}
 
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
@@ -12,7 +12,7 @@
 {% set label = searchField['label']|default(null) %}
 
 <div class="{{ classesGroup }}">
-  {% include '@HBMDatagrid/Menu/search-fields/partials/label.html.twig' with { 'datagrid': datagrid, 'label': label, 'desc': desc, 'transDomain': transDomain } only %}
-  {% include '@HBMDatagrid/Menu/search-fields/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+  {% include '@HBMDatagrid/Menu/search-fields/partials/label.html.twig' with { 'datagrid': datagrid, 'label': label, 'desc': desc } only %}
+  {% include '@HBMDatagrid/Menu/search-fields/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
  {% block form_element %}{% endblock form_element %}
 </div>

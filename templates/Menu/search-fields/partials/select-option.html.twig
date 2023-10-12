@@ -1,5 +1,5 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain datagrid.transDomainFixed %}
 
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
-<option {% if key is not same as('') %}value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}{% else %}disabled{% endif %}>{{ dg.trans(value, transDomain) }}</option>
+<option {% if key is not same as('') %}value="{{ key }}" {% if (keys is iterable and key in keys) or (keys is not iterable and key == keys) %}selected{% endif %}{% else %}disabled{% endif %}>{{ dg.trans(value, datagrid.transDomainVariable) }}</option>
