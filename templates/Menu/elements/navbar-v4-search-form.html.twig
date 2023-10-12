@@ -7,18 +7,20 @@
 
     {% for searchKey, searchField in datagrid.menu.searchFieldsSorted %}
       {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+        {% set transDomainSearchField = (searchField['transDomain'] is defined) ? searchField['transDomain'] : transDomain %}
+
         {% if searchField['type'] == 'hidden' %}
-          {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% elseif searchField['type'] == 'none' %}
-          {% include '@HBMDatagrid/Menu/search-fields/none.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/none.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% elseif searchField['type'] == 'number' %}
-          {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% elseif (searchField['type'] == 'date') or (searchField['type'] == 'datetime') %}
-            {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% elseif searchField['type'] == 'select' %}
-          {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% else %}
-          {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomainSearchField } only %}
         {% endif %}
       {% endif %}
     {% endfor %}

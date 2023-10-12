@@ -1,6 +1,6 @@
 {% macro path(route) %}{{ path(route.name, route.merged) ~ route.hash('#') }}{% endmacro %}
 
-{% macro trans(text, transDomain) %}{{ (transDomain is same as(false) ? text|raw : text|trans({}, transDomain)|raw) }}{% endmacro %}
+{% macro trans(text, transDomain, rawFlag = true) %}xx{{ (transDomain is same as(false) ? text|hbmRaw(rawFlag) : text|trans({}, transDomain)|hbmRaw(rawFlag)) }}{% endmacro %}
 
 {%- macro size(datagrid, component, prefix) -%}
   {%- set key = component|replace({'-': '_'}) -%}

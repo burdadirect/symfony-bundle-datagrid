@@ -1,4 +1,4 @@
 <ul class="list-group list-group-flush list-group-transparent list-group-narrow">
-  <li class="list-group-item"><span title="Erstellt">{{ obj.created|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
-  <li class="list-group-item"><span title="Geändert">{{ obj.modified|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
+  <li class="list-group-item"><span title="{{ 'Erstellt'|trans }}">{{ obj.created|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
+  <li class="list-group-item"><span title="{{ 'Geändert'|trans }}">{{ obj.modified|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
 </ul>

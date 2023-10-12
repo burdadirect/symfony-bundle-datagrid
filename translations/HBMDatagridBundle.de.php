@@ -21,6 +21,8 @@ return [
   'Sortierung/Filter zurücksetzen' => 'Sortierung/Filter zurücksetzen',
   'Reset' => 'Reset',
   'Daten exportieren' => 'Daten exportieren',
+  'Erstellt' => 'Erstellt',
+  'Geändert' => 'Geändert',
   'Export' => 'Export',
   'Daten als :type exportieren' => 'Daten als :type exportieren',
   ':ext-Export' => ':ext-Export',

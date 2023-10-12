@@ -16,11 +16,11 @@
 
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ dg.trans(cell.label, transDomain)|raw }}
+    {{ dg.trans(cell.label, transDomain) }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
     <a class="{{ classesLink }}" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyText(sortKey), transDomain) }}">
-      {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
+      {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain) -}}
       {%- if datagrid.isSorted(sortKey) -%}
         {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="{{ classesSortAsc }}"></span>
@@ -35,8 +35,8 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ dg.trans(cell.label, transDomain)|raw }}
+    {{ dg.trans(cell.label, transDomain) }}
   {%- endif -%}
 {% else %}
-  {{ dg.trans(cell.label, transDomain)|raw }}
+  {{ dg.trans(cell.label, transDomain) }}
 {% endif %}

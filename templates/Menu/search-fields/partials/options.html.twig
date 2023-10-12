@@ -31,10 +31,10 @@
           {% else %}
             {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
           {% endif %}
-          <label class="btn btn-input-group-addon" title="{{ optionData['title']|default(null) }}">
+          <label class="btn btn-input-group-addon" title="{{ dg.trans(optionData['title']|default(null), transDomain) }}">
             <input {{ optionAttributes|raw }}>
-            {%- if optionData['icon']|default(null) -%}<i class="{{ optionData['icon'] }}"></i>{%- endif -%}
-            {{- optionData['content']|default(null)|raw -}}
+            {%- if optionData['icon']|default(null) -%}<i class="{{ dg.trans(optionData['icon'], transDomain) }}"></i>{%- endif -%}
+            {{- dg.trans(optionData['content']|default(null), transDomain) -}}
           </label>
         {% endfor %}
       </div>
