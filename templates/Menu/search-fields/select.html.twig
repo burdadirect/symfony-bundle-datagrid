@@ -1,6 +1,6 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
+{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
   {% block form_element %}
     {% set attributes = attributes(searchField['attr']|default([])).add({
       'name': searchKey
@@ -8,17 +8,17 @@
 
     <select {{ attributes|raw }}>
       <option></option>
-      {% set keys = datagrid.menu.searchValue(searchKey) %}
+      {% set keys = dgo.menu.searchValue(searchKey) %}
       {% if searchField['values'] is defined %}
         {% for key, value in searchField['values'] %}
           {% if value is iterable %}
             <optgroup label="{{ key }}">
               {% for optgroupKey, optgroupValue in value %}
-                {% include '@HBMDatagrid/Menu/search-fields/partials/select-option.html.twig' with { 'key': optgroupKey, 'value': optgroupValue, 'keys': keys, 'transDomain': transDomain } only %}
+                {% include '@HBMDatagrid/Menu/search-fields/partials/select-option.html.twig' with { 'dgo': dgo, 'searchField': searchField, 'key': optgroupKey, 'value': optgroupValue, 'keys': keys } only %}
               {% endfor %}
             </optgroup>
           {% else %}
-            {% include '@HBMDatagrid/Menu/search-fields/partials/select-option.html.twig' with { 'key': key, 'value': value, 'keys': keys, 'transDomain': transDomain } only %}
+            {% include '@HBMDatagrid/Menu/search-fields/partials/select-option.html.twig' with { 'dgo': dgo, 'searchField': searchField, 'key': key, 'value': value, 'keys': keys } only %}
           {% endif %}
         {% endfor %}
       {% endif %}

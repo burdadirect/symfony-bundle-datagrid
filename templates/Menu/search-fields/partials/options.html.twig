@@ -1,15 +1,15 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
+{% if dgo.bootstrap['version'] == 'v4' %}
 
   {% set options = searchField['options']|default(null) %}
 
   {% set optionsMode = options['mode']|default('radio') %}
   {% set optionsValues = options['values']|default([]) %}
-  {% set optionsChecked = datagrid.menu.searchValue(searchKey ~ '-options') %}
+  {% set optionsChecked = dgo.menu.searchValue(searchKey ~ '-options') %}
 
   {% set attributes = attributes(options['attr']|default([])).add({
     'data-toggle': 'buttons',
@@ -29,12 +29,12 @@
           {% if optionsChecked is null %}
             {% set optionAttributes = optionAttributes.set('checked', optionData['default']|default(false)) %}
           {% else %}
-            {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
+            {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in dgo.menu.searchValue(searchKey ~ '-options')) %}
           {% endif %}
-          <label class="btn btn-input-group-addon" title="{{ dg.trans(optionData['title']|default(null), datagrid.transDomainVariable) }}">
+          <label class="btn btn-input-group-addon" title="{{ dgm.trans(optionData['title']|default(null), dgo.tdSearchField(searchField)) }}">
             <input {{ optionAttributes|raw }}>
-            {%- if optionData['icon']|default(null) -%}<i class="{{ dg.trans(optionData['icon'], datagrid.transDomainVariable) }}"></i>{%- endif -%}
-            {{- dg.trans(optionData['content']|default(null), datagrid.transDomainVariable) -}}
+            {%- if optionData['icon']|default(null) -%}<i class="{{ dgm.trans(optionData['icon'], dgo.tdSearchField(searchField)) }}"></i>{%- endif -%}
+            {{- dgm.trans(optionData['content']|default(null), dgo.tdSearchField(searchField)) -}}
           </label>
         {% endfor %}
       </div>

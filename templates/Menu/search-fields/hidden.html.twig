@@ -1,9 +1,9 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
 {% set attributes = attributes(searchField['attr']|default([])).add({
   'type': 'hidden',
   'name': searchKey,
-  'value': datagrid.menu.searchValue(searchKey)
+  'value': dgo.menu.searchValue(searchKey)
 }).addClasses('form-control') %}
 
 <input {{ attributes|raw }}>

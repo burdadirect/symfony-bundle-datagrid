@@ -1,9 +1,9 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.menu.showReset and datagrid.menu.routeReset %}
-  <a class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dg.path(datagrid.menu.routeReset) }}" title="{{ 'Sortierung/Filter zurücksetzen'|trans }}">
-    <span class="{{ dg.icon(datagrid, 'reset') }}"></span> {{ 'Reset'|trans }}
+{% if dgo.menu.showReset and dgo.menu.routeReset %}
+  <a class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeReset) }}" title="{{ dgm.trans('Sortierung/Filter zurücksetzen', dgo.tdFix) }}">
+    <span class="{{ dgm.icon(dgo, 'reset') }}"></span> {{ dgm.trans('Reset', dgo.tdFix) }}
   </a>
 {% endif %}

@@ -1,9 +1,9 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dg.classesAndSize(datagrid, 'input_group') %}
+{% if dgo.bootstrap['version'] == 'v4' %}
+  {% set classesGroup = 'my-1 mr-sm-2 ' ~ dgm.classesAndSize(dgo, 'input_group') %}
 {% else %}
   {% set classesGroup = 'input-group input-group-sm' %}
 {% endif %}
@@ -12,7 +12,7 @@
 {% set label = searchField['label']|default(null) %}
 
 <div class="{{ classesGroup }}">
-  {% include '@HBMDatagrid/Menu/search-fields/partials/label.html.twig' with { 'datagrid': datagrid, 'label': label, 'desc': desc } only %}
-  {% include '@HBMDatagrid/Menu/search-fields/partials/options.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField } only %}
+  {% include '@HBMDatagrid/Menu/search-fields/partials/label.html.twig' with { 'dgo': dgo, 'label': label, 'desc': desc, 'searchField': searchField } only %}
+  {% include '@HBMDatagrid/Menu/search-fields/partials/options.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
  {% block form_element %}{% endblock form_element %}
 </div>

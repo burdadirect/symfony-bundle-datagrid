@@ -1,12 +1,12 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% set datagrid_id = 'datagrid-'~random() %}
 {% set datagrid_actions_classes = 'my-1 mx-1 ' %}
 
-{% if datagrid.menu.show %}
-  <div class="datagrid-menu {{ dg.classes(datagrid, 'navbar') }}">
+{% if dgo.menu.show %}
+  <div class="datagrid-menu {{ dgm.classes(dgo, 'navbar') }}">
     {% block datagrid_menu_stats %}
       {% include '@HBMDatagrid/Menu/elements/navbar-v4-stats.html.twig' %}
     {% endblock datagrid_menu_stats %}

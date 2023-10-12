@@ -1,19 +1,21 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% set dgo = datagrid %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% trans_default_domain dgo.tdFix %}
 
-{% include datagrid.menu.template with { 'datagrid': datagrid } only %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.results|length == 0 %}
-  <p>{{ 'Keine Einträge gefunden.'|trans }}</p>
+{% include dgo.menu.template with { 'dgo': dgo } only %}
+
+{% if dgo.results|length == 0 %}
+  <p>{{ dgm.trans('Keine Einträge gefunden.', dgo.tdFix) }}</p>
 {% else %}
   <div class="datagrid-table-wrapper">
-    <table {{ datagrid.parseTableAttr()|raw }}>
-      {% include '@HBMDatagrid/Datagrid/table-head.html.twig' with { 'datagrid': datagrid } only %}
+    <table {{ dgo.parseTableAttr()|raw }}>
+      {% include '@HBMDatagrid/Datagrid/table-head.html.twig' with { 'dgo': dgo } only %}
 
-      {% include '@HBMDatagrid/Datagrid/table-body.html.twig' with { 'datagrid': datagrid } only %}
+      {% include '@HBMDatagrid/Datagrid/table-body.html.twig' with { 'dgo': dgo } only %}
     </table>
   </div>
 {% endif %}
 
-{% include datagrid.pagination.template with { 'datagrid': datagrid, 'pagination': datagrid.pagination } only %}
+{% include dgo.pagination.template with { 'dgo': dgo, 'pagination': dgo.pagination } only %}

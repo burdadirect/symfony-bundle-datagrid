@@ -1,18 +1,18 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.menu.showExport %}
-  <form id="{{ datagrid_id~'-export' }}" class="datagrid-export-form" action="{{ dg.path(datagrid.menu.route) }}" method="post">
+{% if dgo.menu.showExport %}
+  <form id="{{ datagrid_id~'-export' }}" class="datagrid-export-form" action="{{ dgm.path(dgo.menu.route) }}" method="post">
     <input id="{{ datagrid_id~'-export-type' }}" type="hidden" name="export-type" value="" />
-    <div class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
-      <button class="dropdown-toggle {{ dg.classes(datagrid, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{ 'Export'|trans }}
+    <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
+      <button class="dropdown-toggle {{ dgm.classes(dgo, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ dgm.trans('Export', dgo.tdFix) }}
       </button>
       <ul class="dropdown-menu datagrid-exports" aria-labelledby="{{ datagrid_id~'-export' }}">
-        {% for export in datagrid.menu.exportsSelection %}
+        {% for export in dgo.menu.exportsSelection %}
           <li class="datagrid-export">
-            <button class="dropdown-item" type="submit" title="{{ 'Daten als :type exportieren'|trans({':type': export}) }}" onclick="document.getElementById('{{ datagrid_id~'-export-type' }}').value = '{{ export }}';">{{ ':ext-Export'|trans({':ext': export|upper}) }}</button>
+            <button class="dropdown-item" type="submit" title="{{ dgm.trans('Daten als :type exportieren', dgo.tdFix, false, {':type': export}) }}" onclick="document.getElementById('{{ datagrid_id~'-export-type' }}').value = '{{ export }}';">{{ dgm.trans(':ext-Export', dgo.tdFix, true, {':ext': export|upper}) }}</button>
           </li>
         {% endfor %}
       </ul>

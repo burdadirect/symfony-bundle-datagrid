@@ -155,11 +155,6 @@ class Datagrid
         return $this->translationDomainVariableTexts;
     }
 
-    public function transDomainVariable()
-    {
-        return $this->getTranslationDomainVariableTexts();
-    }
-
     public function setTranslationDomainFixedTexts($td)
     {
         $this->translationDomainFixedTexts = $td;
@@ -168,11 +163,6 @@ class Datagrid
     public function getTranslationDomainFixedTexts()
     {
         return $this->translationDomainFixedTexts;
-    }
-
-    public function transDomainFixed()
-    {
-        return $this->getTranslationDomainFixedTexts();
     }
 
     public function setBootstrap($bootstrap)
@@ -478,6 +468,21 @@ class Datagrid
     }
 
     /* CUSTOM ****************************************************************** */
+
+    public function tdVar()
+    {
+        return $this->getTranslationDomainVariableTexts();
+    }
+
+    public function tdFix()
+    {
+        return $this->getTranslationDomainFixedTexts();
+    }
+
+    public function tdSearchField(array $searchField)
+    {
+      return $searchField['transDomain'] ?? $this->getTranslationDomainVariableTexts();
+    }
 
     public function isSorted($key)
     {

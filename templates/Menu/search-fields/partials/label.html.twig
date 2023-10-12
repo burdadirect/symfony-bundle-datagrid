@@ -1,8 +1,8 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% set classesAddon = 'input-group-prepend' %}
-{% set classesInfo = dg.icon(datagrid, 'search_info') ~ ' ' ~ dg.classes(datagrid, 'search_info') %}
+{% set classesInfo = dgm.icon(dgo, 'search_info') ~ ' ' ~ dgm.classes(dgo, 'search_info') %}
 
-<span class="{{ classesAddon }}"><span class="input-group-text">{{ dg.trans(label, datagrid.transDomainVariable) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dg.trans(desc, datagrid.transDomainVariable) }}"></i>{% endif %}</span></span>
+<span class="{{ classesAddon }}"><span class="input-group-text">{{ dgm.trans(label, dgo.tdSearchField(searchField)) }}{% if desc %}&nbsp;<i class="{{ classesInfo }}" title="{{ dgm.trans(desc, dgo.tdSearchField(searchField)) }}"></i>{% endif %}</span></span>

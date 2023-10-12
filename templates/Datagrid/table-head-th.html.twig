@@ -1,23 +1,23 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% set classesLink = 'datagrid-table-link text-nowrap' %}
-{% set classesSortAsc = dg.icon(datagrid, 'sort-asc') %}
-{% set classesSortDesc = dg.icon(datagrid, 'sort-desc') %}
+{% set classesSortAsc = dgm.icon(dgo, 'sort-asc') %}
+{% set classesSortDesc = dgm.icon(dgo, 'sort-desc') %}
 
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ dg.trans(cell.label, datagrid.transDomainVariable) }}
+    {{ dgm.trans(cell.label, dgo.tdVar) }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="{{ classesLink }}" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyText(sortKey), datagrid.transDomainVariable) }}">
-      {{- dg.trans(cell.getSortKeyLabel(sortKey), datagrid.transDomainVariable) -}}
-      {%- if datagrid.isSorted(sortKey) -%}
-        {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
+    <a class="{{ classesLink }}" href="{{ dgm.path(theadLink) }}" title="{{ dgm.trans('Sortieren nach:', dgo.tdFix) }} {{ dgm.trans(cell.getSortKeyText(sortKey), dgo.tdVar) }}">
+      {{- dgm.trans(cell.getSortKeyLabel(sortKey), dgo.tdVar) -}}
+      {%- if dgo.isSorted(sortKey) -%}
+        {%- if dgo.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="{{ classesSortAsc }}"></span>
         {%- endif -%}
-        {%- if datagrid.getSortationDirection(sortKey) == 'desc' -%}
+        {%- if dgo.getSortationDirection(sortKey) == 'desc' -%}
           &nbsp;<span class="{{ classesSortDesc }}"></span>
         {%- endif -%}
       {%- endif -%}
@@ -27,8 +27,8 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ dg.trans(cell.label, datagrid.transDomainVariable) }}
+    {{ dgm.trans(cell.label, dgo.tdVar) }}
   {%- endif -%}
 {% else %}
-  {{ dg.trans(cell.label, datagrid.transDomainVariable) }}
+  {{ dgm.trans(cell.label, dgo.tdVar) }}
 {% endif %}

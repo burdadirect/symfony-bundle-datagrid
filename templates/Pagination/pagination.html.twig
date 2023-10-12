@@ -1,14 +1,14 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% set classesPagination = dg.classesAndSize(datagrid, 'pagination') %}
-{% set classesPaginationItem = dg.classes(datagrid, 'page-item') %}
-{% set classesPaginationLink = dg.classes(datagrid, 'page-link') %}
-{% set classesFirst = dg.icon(datagrid, 'page-first') %}
-{% set classesPrev = dg.icon(datagrid, 'page-prev') %}
-{% set classesNext = dg.icon(datagrid, 'page-next') %}
-{% set classesLast = dg.icon(datagrid, 'page-last') %}
+{% set classesPagination = dgm.classesAndSize(dgo, 'pagination') %}
+{% set classesPaginationItem = dgm.classes(dgo, 'page-item') %}
+{% set classesPaginationLink = dgm.classes(dgo, 'page-link') %}
+{% set classesFirst = dgm.icon(dgo, 'page-first') %}
+{% set classesPrev = dgm.icon(dgo, 'page-prev') %}
+{% set classesNext = dgm.icon(dgo, 'page-next') %}
+{% set classesLast = dgm.icon(dgo, 'page-last') %}
 
 {% if pagination.pageMax > 1 %}
   <div class="datagrid-pagination">
@@ -16,7 +16,7 @@
 
       {% if pagination.linkFirst is not null and pagination.showFirst %}
         <li class="{{ classesPaginationItem }}">
-          <a class="{{ classesPaginationLink }}" href="{{ dg.path(pagination.linkFirst) }}" title="{{ 'Erste Seite'|trans }}"><span class="{{ classesFirst }}"></span></a>
+          <a class="{{ classesPaginationLink }}" href="{{ dgm.path(pagination.linkFirst) }}" title="{{ dgm.trans('Erste Seite', dgo.tdFix) }}"><span class="{{ classesFirst }}"></span></a>
         </li>
       {% elseif pagination.showFirst %}
         <li class="{{ classesPaginationItem }} disabled">
@@ -26,7 +26,7 @@
 
       {% if pagination.linkPrev is not null and pagination.showPrev %}
         <li class="{{ classesPaginationItem }}">
-          <a class="{{ classesPaginationLink }}" href="{{ dg.path(pagination.linkPrev) }}" title="{{ 'Vorherige Seite'|trans }}"><span class="{{ classesPrev }}"></span></a>
+          <a class="{{ classesPaginationLink }}" href="{{ dgm.path(pagination.linkPrev) }}" title="{{ dgm.trans('Vorherige Seite', dgo.tdFix) }}"><span class="{{ classesPrev }}"></span></a>
         </li>
       {% elseif pagination.showPrev %}
         <li class="{{ classesPaginationItem }} disabled">
@@ -44,7 +44,7 @@
 
         {% if link.value != pagination.pageCurrent %}
           <li class="{{ classesPaginationItem }}">
-            <a class="{{ classesPaginationLink }}" href="{{ dg.path(link) }}">{{ link.value }}</a>
+            <a class="{{ classesPaginationLink }}" href="{{ dgm.path(link) }}">{{ link.value }}</a>
           </li>
         {% else %}
           <li class="{{ classesPaginationItem }} active">
@@ -62,7 +62,7 @@
 
       {% if pagination.linkNext is not null and pagination.showNext %}
         <li class="{{ classesPaginationItem }}">
-          <a class="{{ classesPaginationLink }}" href="{{ dg.path(pagination.linkNext) }}" title="{{ 'Nächste Seite'|trans }}"><span class="{{ classesNext }}"></span></a>
+          <a class="{{ classesPaginationLink }}" href="{{ dgm.path(pagination.linkNext) }}" title="{{ dgm.trans('Nächste Seite', dgo.tdFix) }}"><span class="{{ classesNext }}"></span></a>
         </li>
       {% elseif pagination.showNext %}
         <li class="{{ classesPaginationItem }} disabled">
@@ -72,7 +72,7 @@
 
       {% if pagination.linkLast is not null and pagination.showLast %}
         <li class="{{ classesPaginationItem }}">
-          <a class="{{ classesPaginationLink }}" href="{{ dg.path(pagination.linkLast) }}" title="{{ 'Letzte Seite'|trans }}"><span class="{{ classesLast }}"></span></a>
+          <a class="{{ classesPaginationLink }}" href="{{ dgm.path(pagination.linkLast) }}" title="{{ dgm.trans('Letzte Seite', dgo.tdFix) }}"><span class="{{ classesLast }}"></span></a>
         </li>
       {% elseif pagination.showLast %}
         <li class="{{ classesPaginationItem }} disabled">

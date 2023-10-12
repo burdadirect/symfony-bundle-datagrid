@@ -1,13 +1,13 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-<thead {{ datagrid.parseTableHeadAttr()|raw }}>
+<thead {{ dgo.parseTableHeadAttr()|raw }}>
   <tr>
-    {% for column, cell in datagrid.cells %}
-      {% if (cell.isVisibleNormal and not datagrid.extended) or (cell.isVisibleExtended and datagrid.extended) %}
+    {% for column, cell in dgo.cells %}
+      {% if (cell.isVisibleNormal and not dgo.extended) or (cell.isVisibleExtended and dgo.extended) %}
         <th {{ cell.attr('th')|raw }}>
-          {% include '@HBMDatagrid/Datagrid/table-head-th.html.twig' with { 'datagrid': datagrid, 'cell': cell, 'column': column } only %}
+          {% include '@HBMDatagrid/Datagrid/table-head-th.html.twig' with { 'dgo': dgo, 'cell': cell, 'column': column } only %}
         </th>
       {% endif %}
     {% endfor %}

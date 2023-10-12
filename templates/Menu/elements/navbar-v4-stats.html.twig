@@ -1,17 +1,19 @@
-{% trans_default_domain datagrid.transDomainFixed %}
+{% trans_default_domain dgo.tdFix %}
+
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 <div class="datagrid-menu-header navbar-brand">
-  {% if datagrid.menu.showHeader %}
+  {% if dgo.menu.showHeader %}
     <div class="datagrid-menu-num highlightable">
-      <span class="highlight">{{ datagrid.pagination.numberTotal }}</span> {{ 'Einträge gesamt'|trans }}
+      <span class="highlight">{{ dgo.pagination.numberTotal }}</span> {{ dgm.trans('Einträge gesamt', dgo.tdFix) }}
     </div>
   {% endif %}
-  {% if datagrid.menu.showRange %}
+  {% if dgo.menu.showRange %}
     <div class="datagrid-menu-range highlightable text-nowrap small">
-      {{ 'Einträge'|trans }}
-      <span class="highlight">{{ datagrid.pagination.numberFrom }}</span>
-      {{ 'bis'|trans }}
-      <span class="highlight">{{ datagrid.pagination.numberThru }}</span>
+      {{ dgm.trans('Einträge', dgo.tdFix) }}
+      <span class="highlight">{{ dgo.pagination.numberFrom }}</span>
+      {{ dgm.trans('bis', dgo.tdFix) }}
+      <span class="highlight">{{ dgo.pagination.numberThru }}</span>
     </div>
   {% endif %}
 </div>
