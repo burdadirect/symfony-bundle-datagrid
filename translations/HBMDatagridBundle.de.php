@@ -26,7 +26,7 @@ return [
   'Export' => 'Export',
   'Daten als :type exportieren' => 'Daten als :type exportieren',
   ':ext-Export' => ':ext-Export',
-  'Toggle datagrid navigation' => 'Navigation ein-/ausblenden',
+  'Navigation ein-/ausblenden' => 'Navigation ein-/ausblenden',
 ];
 
 
