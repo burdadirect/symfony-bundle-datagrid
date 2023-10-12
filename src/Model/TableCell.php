@@ -53,6 +53,7 @@ class TableCell
       'format'          => 'string',
       'separator'       => 'string',
       'transformer'     => 'object',
+      'trans_domain'    => 'bool|string',
     ];
 
     /**

@@ -6,13 +6,15 @@
 {% set classesSortAsc = dgm.icon(dgo, 'sort-asc') %}
 {% set classesSortDesc = dgm.icon(dgo, 'sort-desc') %}
 
+{% set tdTableCell = dgo.tdTableCell(cell) %}
+
 {% if cell.theadLinks|length > 0 %}
-  {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ dgm.trans(cell.label, dgo.tdVar) }}
+  {%- if (cell.theadLinks|length > 1) and (cell.labelPos == 'before') -%}
+    {{ dgm.trans(cell.label, tdTableCell) }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="{{ classesLink }}" href="{{ dgm.path(theadLink) }}" title="{{ dgm.trans('Sortieren nach:', dgo.tdFix) }} {{ dgm.trans(cell.getSortKeyText(sortKey), dgo.tdVar) }}">
-      {{- dgm.trans(cell.getSortKeyLabel(sortKey), dgo.tdVar) -}}
+    <a class="{{ classesLink }}" href="{{ dgm.path(theadLink) }}" title="{{ dgm.trans('Sortieren nach:', dgo.tdFix) }} {{ dgm.trans(cell.getSortKeyText(sortKey), tdTableCell) }}">
+      {{- dgm.trans(cell.getSortKeyLabel(sortKey), tdTableCell) -}}
       {%- if dgo.isSorted(sortKey) -%}
         {%- if dgo.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="{{ classesSortAsc }}"></span>
@@ -26,9 +28,9 @@
       {{ cell.getSortKeySep|raw }}
     {%- endif -%}
   {%- endfor -%}
-  {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ dgm.trans(cell.label, dgo.tdVar) }}
+  {%- if (cell.theadLinks|length > 1) and (cell.labelPos == 'after') -%}
+    {{ dgm.trans(cell.label, tdTableCell) }}
   {%- endif -%}
 {% else %}
-  {{ dgm.trans(cell.label, dgo.tdVar) }}
+  {{ dgm.trans(cell.label, tdTableCell) }}
 {% endif %}

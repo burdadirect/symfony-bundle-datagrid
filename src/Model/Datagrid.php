@@ -484,6 +484,11 @@ class Datagrid
       return $searchField['transDomain'] ?? $this->getTranslationDomainVariableTexts();
     }
 
+    public function tdTableCell(TableCell $tableCell)
+    {
+        return $tableCell->getOption('trans_domain') ?? $this->getTranslationDomainVariableTexts();
+    }
+
     public function isSorted($key)
     {
         if (isset($this->sortations[$key])) {

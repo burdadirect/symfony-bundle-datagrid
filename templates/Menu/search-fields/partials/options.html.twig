@@ -17,6 +17,7 @@
 
   {% if options and (optionsValues is iterable) and (optionsValues|length > 0) %}
     {% if options|length > 0 %}
+      {% set tdSearchField = dgo.tdSearchField(searchField) %}
       <div {{ attributes|raw}}>
         {% for optionKey, optionData in optionsValues %}
           {% set optionAttributes = attributes(optionData['attr']|default([])).add({
@@ -31,10 +32,10 @@
           {% else %}
             {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in dgo.menu.searchValue(searchKey ~ '-options')) %}
           {% endif %}
-          <label class="btn btn-input-group-addon" title="{{ dgm.trans(optionData['title']|default(null), dgo.tdSearchField(searchField)) }}">
+          <label class="btn btn-input-group-addon" title="{{ dgm.trans(optionData['title']|default(null), tdSearchField) }}">
             <input {{ optionAttributes|raw }}>
-            {%- if optionData['icon']|default(null) -%}<i class="{{ dgm.trans(optionData['icon'], dgo.tdSearchField(searchField)) }}"></i>{%- endif -%}
-            {{- dgm.trans(optionData['content']|default(null), dgo.tdSearchField(searchField)) -}}
+            {%- if optionData['icon']|default(null) -%}<i class="{{ dgm.trans(optionData['icon'], tdSearchField) }}"></i>{%- endif -%}
+            {{- dgm.trans(optionData['content']|default(null), tdSearchField) -}}
           </label>
         {% endfor %}
       </div>
