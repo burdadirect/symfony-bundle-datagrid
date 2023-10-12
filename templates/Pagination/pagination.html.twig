@@ -2,25 +2,13 @@
 
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
-
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesPagination = dg.classesAndSize(datagrid, 'pagination') %}
-  {% set classesPaginationItem = dg.classes(datagrid, 'page-item') %}
-  {% set classesPaginationLink = dg.classes(datagrid, 'page-link') %}
-  {% set classesFirst = dg.icon(datagrid, 'page-first') %}
-  {% set classesPrev = dg.icon(datagrid, 'page-prev') %}
-  {% set classesNext = dg.icon(datagrid, 'page-next') %}
-  {% set classesLast = dg.icon(datagrid, 'page-last') %}
-{% else %}
-  {% set classesPagination = 'pagination' %}
-  {% set classesPaginationItem = '' %}
-  {% set classesPaginationLink = '' %}
-  {% set classesFirst = 'glyphicon glyphicon-fast-backward' %}
-  {% set classesPrev = 'glyphicon glyphicon-step-backward' %}
-  {% set classesNext = 'glyphicon glyphicon-step-forward' %}
-  {% set classesLast = 'glyphicon glyphicon-fast-forward' %}
-{% endif %}
-
+{% set classesPagination = dg.classesAndSize(datagrid, 'pagination') %}
+{% set classesPaginationItem = dg.classes(datagrid, 'page-item') %}
+{% set classesPaginationLink = dg.classes(datagrid, 'page-link') %}
+{% set classesFirst = dg.icon(datagrid, 'page-first') %}
+{% set classesPrev = dg.icon(datagrid, 'page-prev') %}
+{% set classesNext = dg.icon(datagrid, 'page-next') %}
+{% set classesLast = dg.icon(datagrid, 'page-last') %}
 
 {% if pagination.pageMax > 1 %}
   <div class="datagrid-pagination">

@@ -345,7 +345,7 @@ If the returned value is an `DateTime` instance, it can be formated with the `fo
 
       // Button (with static value)
       new TableCell('field', 'Column 3', new Route('name_of_another_route'), FALSE, [
-        'value' => '<span class="glyphicon glyphicon-wrench"></span>',
+        'value' => '<i class="fa fa-wrench"></i>',
         'a_attr' => ['class' => 'btn btn-primary btn-xs'],
         'params' => function(Bar $obj) {
           return ['id' => $obj->getId()];

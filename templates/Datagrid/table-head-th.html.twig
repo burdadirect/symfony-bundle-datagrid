@@ -2,17 +2,9 @@
 
 {% import '@HBMDatagrid/macros.html.twig' as dg %}
 
-
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesLink = 'datagrid-table-link text-nowrap' %}
-  {% set classesSortAsc = dg.icon(datagrid, 'sort-asc') %}
-  {% set classesSortDesc = dg.icon(datagrid, 'sort-desc') %}
-{% else %}
-  {% set classesLink = 'datagrid-table-link' %}
-  {% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
-  {% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
-{% endif %}
-
+{% set classesLink = 'datagrid-table-link text-nowrap' %}
+{% set classesSortAsc = dg.icon(datagrid, 'sort-asc') %}
+{% set classesSortDesc = dg.icon(datagrid, 'sort-desc') %}
 
 {% if cell.theadLinks|length > 0 %}
   {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
