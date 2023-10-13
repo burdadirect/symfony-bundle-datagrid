@@ -481,7 +481,7 @@ class Datagrid
 
     public function tdSearchField(array $searchField)
     {
-      return $searchField['transDomain'] ?? $this->getTranslationDomainVariableTexts();
+      return $searchField['trans_domain'] ?? $this->getTranslationDomainVariableTexts();
     }
 
     public function tdTableCell(TableCell $tableCell)
