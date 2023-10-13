@@ -7,6 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class TableCell
 {
+    // Visibility constants
     public const VISIBLE_NONE        = 0b000000;
     public const VISIBLE_NORMAL      = 0b000001;
     public const VISIBLE_NORMAL_EX   = 0b000101;
@@ -15,12 +16,13 @@ class TableCell
     public const VISIBLE_BOTH        = 0b000011;
     public const VISIBLE_EXPORT      = 0b000100;
     public const VISIBLE_ALL         = 0b000111;
-    public const LABEL_POS_BEFORE    = 'before';
-    public const LABEL_POS_AFTER     = 'after';
-    public const LABEL_POS_NONE      = false;
 
-    /** @var null|array|string */
-    protected $key;
+    // Label constants
+    public const LABEL_POS_BEFORE = 'before';
+    public const LABEL_POS_AFTER  = 'after';
+    public const LABEL_POS_NONE   = false;
+
+    protected string|array|null $key;
 
     protected ?string $label = null;
 
@@ -30,24 +32,23 @@ class TableCell
 
     protected ?int $visibility = null;
 
-    protected ?array $options = null;
+    protected array $options = [];
 
     protected array $theadLinks = [];
 
     protected Formatter $formatter;
 
-    /** @var array */
-    public static $validOptions = [
-      'value'           => 'string|callback',
+    public static array $validOptions = [
+      'value'           => 'string|callable',
       'th_attr'         => 'string|array',
       'td_attr'         => 'string|array',
       'a_attr'          => 'string|array',
       'sort_key'        => 'string|array',
       'sort_key_sep'    => 'string',
       'label_pos'       => 'string|bool',
-      'params'          => 'array|callback',
-      'template'        => 'string|callback',
-      'template_params' => 'array|callback',
+      'params'          => 'array|callable',
+      'template'        => 'string|callable',
+      'template_params' => 'array|callable',
       'strip_tags'      => 'bool',
       'raw'             => 'bool',
       'format'          => 'string',
@@ -59,9 +60,26 @@ class TableCell
     /**
      * TableCell constructor.
      *
-     * @throws \InvalidArgumentException
+     * @param array{
+     *       value?:           string|callable,
+     *       th_attr?:         string|array,
+     *       td_attr?:         string|array,
+     *       a_attr?:          string|array,
+     *       sort_key?:        string|array,
+     *       sort_key_sep?:    string,
+     *       label_pos?:       string|bool,
+     *       params?:          array|callable,
+     *       template?:        string|callable,
+     *       template_params?: array|callable,
+     *       strip_tags?:      bool,
+     *       raw?:             bool,
+     *       format?:          string,
+     *       separator?:       string,
+     *       transformer?:     object,
+     *       trans_domain?:    bool|string
+     *   } $options
      */
-    public function __construct($key, $label, $route, $visibility, array $options = [])
+    public function __construct(string|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
     {
         $this->key        = $key;
         $this->label      = $label;
@@ -86,10 +104,7 @@ class TableCell
         $this->key = $key;
     }
 
-    /**
-     * @return array|string
-     */
-    public function getKey()
+    public function getKey(): array|string|null
     {
         return $this->key;
     }
@@ -212,7 +227,7 @@ class TableCell
      *
      * @return null|array|mixed
      */
-    public function getParams($obj, $column, $row)
+    public function getParams($obj, $column, $row): mixed
     {
         if ($this->hasOption('params')) {
             $params = $this->getOption('params');
@@ -232,13 +247,11 @@ class TableCell
     }
 
     /**
-     * @param string $default
-     *
      * @throws \InvalidArgumentException
      *
      * @return null|mixed|string
      */
-    public function getTemplate($obj, $column, $row, $default = '@HBMDatagrid/Datagrid/table-cell.html.twig')
+    public function getTemplate($obj, $column, $row, string $default = '@HBMDatagrid/Datagrid/table-cell.html.twig'): mixed
     {
         if ($this->hasOption('template')) {
             $template = $this->getOption('template');
@@ -262,7 +275,7 @@ class TableCell
      *
      * @return null|array|mixed
      */
-    public function getTemplateParams($obj, $column, $row, array $default = [])
+    public function getTemplateParams($obj, $column, $row, array $default = []): mixed
     {
         if ($this->hasOption('template_params')) {
             $templateParams = $this->getOption('template_params');
@@ -306,7 +319,7 @@ class TableCell
     /**
      * @return null|mixed|string
      */
-    public function parseValue($obj, $column, $row)
+    public function parseValue($obj, $column, $row): mixed
     {
         if ($this->hasOption('value')) {
             $value = $this->getOption('value');
@@ -391,7 +404,7 @@ class TableCell
                             $valid = true;
                         }
                     } else {
-                        if ($type === 'callback') {
+                        if ($type === 'callable') {
                             if (is_callable($value)) {
                                 $valid = true;
                             }
@@ -419,7 +432,7 @@ class TableCell
 
         $types = $validOptions[$option];
 
-        if (strpos($types, '|') !== false) {
+        if (str_contains($types, '|')) {
             $types = explode('|', $types);
         } elseif (!is_array($types)) {
             $types = [$types];
