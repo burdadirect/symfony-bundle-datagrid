@@ -1,31 +1,25 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
+{% set classesLink = 'datagrid-table-link text-nowrap' %}
+{% set classesSortAsc = dgm.icon(dgo, 'sort-asc') %}
+{% set classesSortDesc = dgm.icon(dgo, 'sort-desc') %}
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
-  {% set classesLink = 'datagrid-table-link text-nowrap' %}
-  {% set classesSortAsc = dg.icon(datagrid, 'sort-asc') %}
-  {% set classesSortDesc = dg.icon(datagrid, 'sort-desc') %}
-{% else %}
-  {% set classesLink = 'datagrid-table-link' %}
-  {% set classesSortAsc = 'glyphicon glyphicon-sort-by-attributes' %}
-  {% set classesSortDesc = 'glyphicon glyphicon-sort-by-attributes-alt' %}
-{% endif %}
-
+{% set tdTableCell = dgo.tdTableCell(cell) %}
 
 {% if cell.theadLinks|length > 0 %}
-  {%- if cell.theadLinks|length > 1 and cell.labelPos == 'before' -%}
-    {{ dg.trans(cell.label, transDomain)|raw }}
+  {%- if (cell.theadLinks|length > 1) and (cell.labelPos == 'before') -%}
+    {{ dgm.trans(cell.label, tdTableCell) }}
   {%- endif -%}
   {%- for sortKey, theadLink in cell.theadLinks -%}
-    <a class="{{ classesLink }}" href="{{ dg.path(theadLink) }}" title="{{ 'Sortieren nach:'|trans }} {{ dg.trans(cell.getSortKeyText(sortKey), transDomain) }}">
-      {{- dg.trans(cell.getSortKeyLabel(sortKey), transDomain)|raw -}}
-      {%- if datagrid.isSorted(sortKey) -%}
-        {%- if datagrid.getSortationDirection(sortKey) == 'asc' -%}
+    <a class="{{ classesLink }}" href="{{ dgm.path(theadLink) }}" title="{{ dgm.trans('Sortieren nach:', dgo.tdFix) }} {{ dgm.trans(cell.getSortKeyText(sortKey), tdTableCell) }}">
+      {{- dgm.trans(cell.getSortKeyLabel(sortKey), tdTableCell) -}}
+      {%- if dgo.isSorted(sortKey) -%}
+        {%- if dgo.getSortationDirection(sortKey) == 'asc' -%}
           &nbsp;<span class="{{ classesSortAsc }}"></span>
         {%- endif -%}
-        {%- if datagrid.getSortationDirection(sortKey) == 'desc' -%}
+        {%- if dgo.getSortationDirection(sortKey) == 'desc' -%}
           &nbsp;<span class="{{ classesSortDesc }}"></span>
         {%- endif -%}
       {%- endif -%}
@@ -34,9 +28,9 @@
       {{ cell.getSortKeySep|raw }}
     {%- endif -%}
   {%- endfor -%}
-  {%- if cell.theadLinks|length > 1 and cell.labelPos == 'after' -%}
-    {{ dg.trans(cell.label, transDomain)|raw }}
+  {%- if (cell.theadLinks|length > 1) and (cell.labelPos == 'after') -%}
+    {{ dgm.trans(cell.label, tdTableCell) }}
   {%- endif -%}
 {% else %}
-  {{ dg.trans(cell.label, transDomain)|raw }}
+  {{ dgm.trans(cell.label, tdTableCell) }}
 {% endif %}

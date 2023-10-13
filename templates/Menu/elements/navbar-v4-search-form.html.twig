@@ -1,28 +1,28 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.menu.showSearch and datagrid.menu.searchFields|length > 0 %}
-  <form class="{{ classes|default('datagrid-menu-search form-inline justify-content-center') }}" role="search" action="{{ dg.path(datagrid.menu.routeSearch) }}" method="post">
+{% if dgo.menu.showSearch and dgo.menu.searchFields|length > 0 %}
+  <form class="{{ classes|default('datagrid-menu-search form-inline justify-content-center') }}" role="search" action="{{ dgm.path(dgo.menu.routeSearch) }}" method="post">
 
-    {% for searchKey, searchField in datagrid.menu.searchFieldsSorted %}
-      {% if searchField['extended'] is not defined or not searchField['extended'] or datagrid.extended %}
+    {% for searchKey, searchField in dgo.menu.searchFieldsSorted %}
+      {% if searchField['extended'] is not defined or not searchField['extended'] or dgo.extended %}
         {% if searchField['type'] == 'hidden' %}
-          {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/hidden.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% elseif searchField['type'] == 'none' %}
-          {% include '@HBMDatagrid/Menu/search-fields/none.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/none.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% elseif searchField['type'] == 'number' %}
-          {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/number.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% elseif (searchField['type'] == 'date') or (searchField['type'] == 'datetime') %}
-            {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+            {% include '@HBMDatagrid/Menu/search-fields/datetime.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% elseif searchField['type'] == 'select' %}
-          {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/select.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% else %}
-          {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+          {% include '@HBMDatagrid/Menu/search-fields/text.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
         {% endif %}
       {% endif %}
     {% endfor %}
 
-    <button type="submit" class="{{ dg.classesAndSize(datagrid, 'btn_search') }}"> <span class="{{ dg.icon(datagrid, 'search') }}"></span> {{ 'Suchen'|trans }}</button>
+    <button type="submit" class="{{ dgm.classesAndSize(dgo, 'btn_search') }}"> <span class="{{ dgm.icon(dgo, 'search') }}"></span> {{ dgm.trans('Suchen', dgo.tdFix) }}</button>
   </form>
 {% endif %}

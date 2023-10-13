@@ -22,7 +22,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
           ->children()
-            ->scalarNode('translation_domain')->defaultValue(false)->end()
+            ->arrayNode('translation_domain')->addDefaultsIfNotSet()
+              ->children()
+                ->scalarNode('variable_texts')->info('Used for variable texts (search fields, table cells/heads).')->defaultValue(false)->end()
+                ->scalarNode('fixed_texts')->info('Used for fixed texts (buttons, pagination).')->defaultValue('HBMDatagridBundle')->end()
+              ->end()
+            ->end()
 
             // BOOTSTRAP
             ->arrayNode('bootstrap')->addDefaultsIfNotSet()

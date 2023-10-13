@@ -1,15 +1,15 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 
-{% if datagrid.bootstrap['version'] == 'v4' %}
+{% if dgo.bootstrap['version'] == 'v4' %}
 
   {% set options = searchField['options']|default(null) %}
 
   {% set optionsMode = options['mode']|default('radio') %}
   {% set optionsValues = options['values']|default([]) %}
-  {% set optionsChecked = datagrid.menu.searchValue(searchKey ~ '-options') %}
+  {% set optionsChecked = dgo.menu.searchValue(searchKey ~ '-options') %}
 
   {% set attributes = attributes(options['attr']|default([])).add({
     'data-toggle': 'buttons',
@@ -17,6 +17,7 @@
 
   {% if options and (optionsValues is iterable) and (optionsValues|length > 0) %}
     {% if options|length > 0 %}
+      {% set tdSearchField = dgo.tdSearchField(searchField) %}
       <div {{ attributes|raw}}>
         {% for optionKey, optionData in optionsValues %}
           {% set optionAttributes = attributes(optionData['attr']|default([])).add({
@@ -29,12 +30,12 @@
           {% if optionsChecked is null %}
             {% set optionAttributes = optionAttributes.set('checked', optionData['default']|default(false)) %}
           {% else %}
-            {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in datagrid.menu.searchValue(searchKey ~ '-options')) %}
+            {% set optionAttributes = optionAttributes.set('checked', optionAttributes.get('value') in dgo.menu.searchValue(searchKey ~ '-options')) %}
           {% endif %}
-          <label class="btn btn-input-group-addon" title="{{ optionData['title']|default(null) }}">
+          <label class="btn btn-input-group-addon" title="{{ dgm.trans(optionData['title']|default(null), tdSearchField) }}">
             <input {{ optionAttributes|raw }}>
-            {%- if optionData['icon']|default(null) -%}<i class="{{ optionData['icon'] }}"></i>{%- endif -%}
-            {{- optionData['content']|default(null)|raw -}}
+            {%- if optionData['icon']|default(null) -%}<i class="{{ dgm.trans(optionData['icon'], tdSearchField) }}"></i>{%- endif -%}
+            {{- dgm.trans(optionData['content']|default(null), tdSearchField) -}}
           </label>
         {% endfor %}
       </div>

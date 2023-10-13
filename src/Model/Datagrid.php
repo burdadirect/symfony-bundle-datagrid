@@ -8,7 +8,10 @@ use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 class Datagrid
 {
     /** @var string */
-    private $translationDomain;
+    private $translationDomainVariableTexts;
+
+    /** @var string */
+    private $translationDomainFixedTexts;
 
     /** @var array */
     private $bootstrap;
@@ -115,7 +118,8 @@ class Datagrid
     {
         $this->results = new ArrayCollection();
 
-        $this->setTranslationDomain($config['translation_domain']);
+        $this->setTranslationDomainVariableTexts($config['translation_domain']['variable_texts']);
+        $this->setTranslationDomainFixedTexts($config['translation_domain']['fixed_texts']);
         $this->setBootstrap($config['bootstrap']);
         $this->setIcons($config['icons']);
 
@@ -141,14 +145,24 @@ class Datagrid
 
     /* GETTER/SETTER ********************************************************* */
 
-    public function setTranslationDomain($translationDomain)
+    public function setTranslationDomainVariableTexts($td)
     {
-        $this->translationDomain = $translationDomain;
+        $this->translationDomainVariableTexts = $td;
     }
 
-    public function getTranslationDomain()
+    public function getTranslationDomainVariableTexts()
     {
-        return $this->translationDomain;
+        return $this->translationDomainVariableTexts;
+    }
+
+    public function setTranslationDomainFixedTexts($td)
+    {
+        $this->translationDomainFixedTexts = $td;
+    }
+
+    public function getTranslationDomainFixedTexts()
+    {
+        return $this->translationDomainFixedTexts;
     }
 
     public function setBootstrap($bootstrap)
@@ -454,6 +468,26 @@ class Datagrid
     }
 
     /* CUSTOM ****************************************************************** */
+
+    public function tdVar()
+    {
+        return $this->getTranslationDomainVariableTexts();
+    }
+
+    public function tdFix()
+    {
+        return $this->getTranslationDomainFixedTexts();
+    }
+
+    public function tdSearchField(array $searchField)
+    {
+      return $searchField['trans_domain'] ?? $this->getTranslationDomainVariableTexts();
+    }
+
+    public function tdTableCell(TableCell $tableCell)
+    {
+        return $tableCell->getOption('trans_domain') ?? $this->getTranslationDomainVariableTexts();
+    }
 
     public function isSorted($key)
     {

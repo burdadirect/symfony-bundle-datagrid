@@ -1,5 +1,7 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-<button class="datagrid-menu-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ datagrid_id~'-navbar' }}" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ 'Toggle datagrid navigation'|trans }}">
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
+
+<button class="datagrid-menu-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ datagrid_id~'-navbar' }}" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ dgm.trans('Navigation ein-/ausblenden', dgo.tdFix) }}">
   <span class="navbar-toggler-icon"></span>
 </button>

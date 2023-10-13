@@ -1,29 +1,29 @@
 {% macro path(route) %}{{ path(route.name, route.merged) ~ route.hash('#') }}{% endmacro %}
 
-{% macro trans(text, transDomain) %}{{ (transDomain is same as(false) ? text|raw : text|trans({}, transDomain)|raw) }}{% endmacro %}
+{% macro trans(text, transDomain, rawFlag = true, arguments = {}) %}{{ (transDomain is same as(false) ? text|hbmRaw(rawFlag) : text|trans(arguments, transDomain)|hbmRaw(rawFlag)) }}{% endmacro %}
 
-{%- macro size(datagrid, component, prefix) -%}
+{%- macro size(dgo, component, prefix) -%}
   {%- set key = component|replace({'-': '_'}) -%}
-  {%- if datagrid.bootstrap['sizes'][key] is defined and datagrid.bootstrap['sizes'][key]  -%}
-    {{- ' ' ~ prefix|default(component) ~ '-' ~ datagrid.bootstrap['sizes'][key] -}}
+  {%- if dgo.bootstrap['sizes'][key] is defined and dgo.bootstrap['sizes'][key]  -%}
+    {{- ' ' ~ prefix|default(component) ~ '-' ~ dgo.bootstrap['sizes'][key] -}}
   {%- endif -%}
 {% endmacro %}
 
-{%- macro classes(datagrid, component) -%}
+{%- macro classes(dgo, component) -%}
   {%- set key = component|replace({'-': '_'}) -%}
-  {%- if datagrid.bootstrap['classes'][key] is defined -%}
-    {{- datagrid.bootstrap['classes'][key] -}}
+  {%- if dgo.bootstrap['classes'][key] is defined -%}
+    {{- dgo.bootstrap['classes'][key] -}}
   {%- endif -%}
 {%- endmacro -%}
 
-{%- macro classesAndSize(datagrid, component, prefix) -%}
+{%- macro classesAndSize(dgo, component, prefix) -%}
   {% import _self as self %}
-  {{- self.classes(datagrid, component) ~ self.size(datagrid, component, prefix) -}}
+  {{- self.classes(dgo, component) ~ self.size(dgo, component, prefix) -}}
 {%- endmacro -%}
 
-{%- macro icon(datagrid, icon) -%}
+{%- macro icon(dgo, icon) -%}
   {%- set key = icon|replace({'-': '_'}) -%}
-  {%- if datagrid.icons[key] is defined -%}
-    {{- datagrid.icons[key] -}}
+  {%- if dgo.icons[key] is defined -%}
+    {{- dgo.icons[key] -}}
   {%- endif -%}
 {%- endmacro -%}

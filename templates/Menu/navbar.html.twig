@@ -1,11 +1,11 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% set datagrid_menu_id = 'datagrid-'~random()~'-menu' %}
 
 
-{% if datagrid.bootstrap['version'] == 'v5' %}
+{% if dgo.bootstrap['version'] == 'v5' %}
 {#  {% include '@HBMDatagrid/Menu/navbar-v5.html.twig' %}#}
 {% else %}
   {% include '@HBMDatagrid/Menu/navbar-v4.html.twig' %}

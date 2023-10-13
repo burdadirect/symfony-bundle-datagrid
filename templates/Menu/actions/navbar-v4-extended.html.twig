@@ -1,9 +1,9 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% import '@HBMDatagrid/macros.html.twig' as dg %}
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if datagrid.menu.showExtended and datagrid.menu.routeExtended %}
-  <a class="{{ datagrid_actions_classes ~ dg.classesAndSize(datagrid, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dg.path(datagrid.menu.routeExtended) }}" title="{{ 'Erweiterte Felder ein-/ausblenden'|trans }}">
-    <span class="{{ datagrid.extended ? dg.icon(datagrid, 'compress') : dg.icon(datagrid, 'expand') }}"></span> {{ datagrid.extended?'Weniger'|trans:'Mehr'|trans }}
+{% if dgo.menu.showExtended and dgo.menu.routeExtended %}
+  <a class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeExtended) }}" title="{{ dgm.trans('Erweiterte Felder ein-/ausblenden', dgo.tdFix) }}">
+    <span class="{{ dgo.extended ? dgm.icon(dgo, 'compress') : dgm.icon(dgo, 'expand') }}"></span> {{ dgm.trans(dgo.extended ? 'Weniger' : 'Mehr', dgo.tdFix) }}
   </a>
 {% endif %}

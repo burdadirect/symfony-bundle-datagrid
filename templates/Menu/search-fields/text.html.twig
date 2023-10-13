@@ -1,16 +1,16 @@
-{% trans_default_domain 'HBMDatagridBundle' %}
+{% trans_default_domain dgo.tdFix %}
 
-{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'datagrid': datagrid, 'searchKey': searchKey, 'searchField': searchField, 'transDomain': transDomain } only %}
+{% embed '@HBMDatagrid/Menu/search-fields/partials/base.html.twig' with { 'dgo': dgo, 'searchKey': searchKey, 'searchField': searchField } only %}
   {% block form_element %}
-    {% import '@HBMDatagrid/macros.html.twig' as dg %}
+    {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
     {% set placeholder = searchField['placeholder']|default('abc') %}
 
     {% set attributes = attributes(searchField['attr']|default([])).add({
       'type': 'text',
-      'placeholder': dg.trans(placeholder, transDomain),
+      'placeholder': dgm.trans(placeholder, dgo.tdSearchField(searchField)),
       'name': searchKey,
-      'value': datagrid.menu.searchValue(searchKey)
+      'value': dgo.menu.searchValue(searchKey)
     }).addClasses('form-control') %}
 
     <input {{ attributes|raw }}>
