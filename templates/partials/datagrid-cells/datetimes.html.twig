@@ -1,3 +1,5 @@
+{% import '@HBMDatagrid/macros.html.twig' as dgm %}
+
 <ul class="list-group list-group-flush list-group-transparent list-group-narrow">
   <li class="list-group-item"><span title="{{ dgm.trans('Erstellt', dgo.tdFix) }}">{{ obj.created|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
   <li class="list-group-item"><span title="{{ dgm.trans('Geändert', dgo.tdFix) }}">{{ obj.modified|dateOrDefault(datetimeFormat|default('d.m.Y H:i:s'), datetimeDefault|default('n/a')) }}</span></li>
