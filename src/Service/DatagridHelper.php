@@ -119,7 +119,7 @@ class DatagridHelper
      *
      * @param null|bool|int|string $extended
      */
-    public function initDatagrid(string $route, array $defaults = [], int $page = null, int $maxEntries = null, string $sortations = null, string $searchValues = null, $extended = null): void
+    public function initDatagrid(string $route, array $defaults = [], int $page = null, int $maxEntries = null, string $sortations = null, string $searchValues = null, $extended = null, string $columns = null): void
     {
         $this->reset();
 
@@ -128,6 +128,7 @@ class DatagridHelper
         $paramNameSortation  = $this->dg()->getParamNameSortation();
         $paramNameSearch     = $this->dg()->getParamNameSearch();
         $paramNameExtended   = $this->dg()->getParamNameExtended();
+        $paramNameColumns    = $this->dg()->getParamNameColumns();
 
         // Set params
         $paramsOrig = [
@@ -136,6 +137,7 @@ class DatagridHelper
           $paramNameSortation  => $sortations,
           $paramNameSearch     => $searchValues,
           $paramNameExtended   => $extended,
+          $paramNameColumns    => $columns,
         ];
 
         $paramsHandled = [];
@@ -180,6 +182,14 @@ class DatagridHelper
             $this->dg()->setExtended($paramsHandled[$key]);
         }
 
+        $key = $paramNameColumns;
+
+        if (array_key_exists($key, $defaults)) {
+            $fallback            = $defaults[$key] ?: '[]';
+            $paramsHandled[$key] = $this->handleParam($paramsOrig, $key, $fallback);
+            $this->dg()->setColumnsOverride($this->getQueryParams($paramsHandled[$key]));
+        }
+
         // Make sure to include route specific params.
         $paramsHandled = array_merge($defaults, $paramsHandled);
 
@@ -206,9 +216,15 @@ class DatagridHelper
 
         // Set route extended
         if (array_key_exists($paramNameExtended, $defaults)) {
-            $paramsToUse                     = $paramsHandled;
+            $paramsToUse = $paramsHandled;
             $paramsToUse[$paramNameExtended] = ($paramsToUse[$paramNameExtended] === '1') ? '0' : '1';
             $this->dg()->getMenu()->setRouteExtended(new Route($route, $paramsToUse));
+        }
+
+        // Set route columns
+        if (array_key_exists($paramNameColumns, $defaults)) {
+            $paramsToUse = $paramsHandled;
+            $this->dg()->getMenu()->setRouteColumns(new Route($route, $paramsToUse));
         }
     }
 
@@ -267,12 +283,18 @@ class DatagridHelper
         return $this->dg()->getMenu()->getSearchValues();
     }
 
+    public function getColumnsOverride(): array
+    {
+        return $this->dg()->getColumnsOverride();
+    }
+
     public function setDefaultRoute(Route $route): void
     {
         $this->dg()->setRoute($route);
         $this->dg()->getMenu()->setRoute($route);
         $this->dg()->getMenu()->setRouteReset($route);
         $this->dg()->getMenu()->setRouteExtended($route);
+        $this->dg()->getMenu()->setRouteColumns($route);
         $this->dg()->getMenu()->setRouteSearch($route);
         $this->dg()->getPagination()->setRoute($route);
     }
@@ -292,6 +314,32 @@ class DatagridHelper
         $this->queryBuilderStrategy->setDatagrid($this->dg());
         $this->queryBuilderStrategy->setQueryBuilder($qb);
         $this->queryBuilderStrategy->setDocumentManager($dm);
+    }
+
+    public function handleColumns(Request $request, array $columns, array $defaults = []): ?RedirectResponse
+    {
+        if ($request->isMethod(Request::METHOD_POST) && $request->request->has('columns-override') && !$request->request->has('export-type')) {
+            $params = $this->handleColumnParams($request, $columns);
+            $url = $this->router->generate($this->dg()->getRoute()->getName(), array_merge($defaults, $params));
+
+            return new RedirectResponse($url);
+        }
+
+        return null;
+    }
+
+    public function handleColumnParams(Request $request, array $columns): array
+    {
+        $columnKeys = array_intersect(array_keys($columns), $request->request->all('columns'));
+
+        return [
+          $this->dg()->getParamNameMaxEntries()  => $this->dg()->getMaxEntriesPerPage(),
+          $this->dg()->getParamNameCurrentPage() => 1,
+          $this->dg()->getParamNameSortation()   => $this->getQueryString($this->dg()->getSortations()),
+          $this->dg()->getParamNameSearch()      => $this->getQueryString($this->dg()->getMenu()->getSearchValues()),
+          $this->dg()->getParamNameExtended()    => $this->dg()->getExtended() ? '1' : '0',
+          $this->dg()->getParamNameColumns()     => $this->getQueryString($columnKeys),
+        ];
     }
 
     public function handleSearch(Request $request, array $searchFields, array $defaults = []): ?RedirectResponse
@@ -317,14 +365,13 @@ class DatagridHelper
             }
         }
 
-        $sortParams = $this->dg()->getSortations();
-
         return [
           $this->dg()->getParamNameMaxEntries()  => $this->dg()->getMaxEntriesPerPage(),
           $this->dg()->getParamNameCurrentPage() => 1,
-          $this->dg()->getParamNameSortation()   => $this->getQueryString($sortParams),
+          $this->dg()->getParamNameSortation()   => $this->getQueryString($this->dg()->getSortations()),
           $this->dg()->getParamNameSearch()      => $this->getQueryString($searchParams),
-          $this->dg()->getParamNameExtended()    => $this->dg()->getExtended(),
+          $this->dg()->getParamNameExtended()    => $this->dg()->getExtended() ? '1' : '0',
+          $this->dg()->getParamNameColumns()     => $this->getQueryString($this->dg()->getColumnsOverride()),
         ];
     }
 
@@ -462,6 +509,12 @@ class DatagridHelper
         $key          = $this->dg()->getParamNameExtended();
         $default      = '0';
         $params[$key] = $this->handleParam($params, $key, $default);
+
+        // Extended
+        $key          = $this->dg()->getParamNameColumns();
+        $default      = null;
+        $params[$key] = $this->handleParam($params, $key, $default);
+
 
         return $params;
     }
