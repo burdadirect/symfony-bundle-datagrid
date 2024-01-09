@@ -5,7 +5,7 @@
   <tr {{ dgo.parseRowAttr(obj, row)|raw }}>
     {% for column, cell in dgo.cells %}
       {% if (cell.isVisibleNormal and not dgo.extended) or (cell.isVisibleExtended and dgo.extended) %}
-        <td {{ cell.attr('td')|raw }}>
+        <td {{ cell.attr('td', obj, column, row)|raw }}>
           {% include cell.template(obj, column, row) with cell.templateParams(obj, column, row)|merge({ 'dgo': dgo, 'cell': cell, 'column': column, 'row': row, 'obj': obj }) only %}
         </td>
       {% endif %}

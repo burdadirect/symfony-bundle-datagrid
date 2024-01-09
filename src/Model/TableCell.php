@@ -2,11 +2,14 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use HBM\DatagridBundle\Traits\ParseAttrTrait;
 use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class TableCell
 {
+    use ParseAttrTrait;
+
     // Visibility constants
     public const VISIBLE_NONE        = 0b000000;
     public const VISIBLE_NORMAL      = 0b000001;
@@ -40,9 +43,9 @@ class TableCell
 
     public static array $validOptions = [
       'value'           => 'string|callable',
-      'th_attr'         => 'string|array',
-      'td_attr'         => 'string|array',
-      'a_attr'          => 'string|array',
+      'th_attr'         => 'string|array|callable',
+      'td_attr'         => 'string|array|callable',
+      'a_attr'          => 'string|array|callable',
       'sort_key'        => 'string|array',
       'sort_key_sep'    => 'string',
       'label_pos'       => 'string|bool',
@@ -62,9 +65,9 @@ class TableCell
      *
      * @param array{
      *       value?:           string|callable,
-     *       th_attr?:         string|array,
-     *       td_attr?:         string|array,
-     *       a_attr?:          string|array,
+     *       th_attr?:         string|array|callable,
+     *       td_attr?:         string|array|callable,
+     *       a_attr?:          string|array|callable,
      *       sort_key?:        string|array,
      *       sort_key_sep?:    string,
      *       label_pos?:       string|bool,
@@ -304,9 +307,11 @@ class TableCell
         return isset($this->options[$key]);
     }
 
-    public function getAttr($scope): HtmlAttributes
+    public function getAttr($scope, $obj = null, $column = null, $row = null): HtmlAttributes
     {
-        return new HtmlAttributes($this->getOption($scope . '_attr', []));
+        $attributes = new HtmlAttributes();
+
+        return $this->parseAttr($attributes, $this->getOption($scope . '_attr', []), [$obj, $column, $row]);
     }
 
     public function getValue($obj, $column, $row)

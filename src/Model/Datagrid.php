@@ -3,10 +3,13 @@
 namespace HBM\DatagridBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use HBM\DatagridBundle\Traits\ParseAttrTrait;
 use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 
 class Datagrid
 {
+    use ParseAttrTrait;
+
     /** @var string */
     private $translationDomainVariableTexts;
 
@@ -570,19 +573,6 @@ class Datagrid
         $attributes = new HtmlAttributes();
 
         return $this->parseAttr($attributes, $this->getRowAttr(), [$obj, $row]);
-    }
-
-    private function parseAttr(HtmlAttributes $htmlAttributes, $attributes, array $callbackParams = []): HtmlAttributes
-    {
-        if (is_callable($attributes)) {
-            $htmlAttributes->add($attributes(...$callbackParams));
-        }
-
-        if (is_string($attributes) || is_array($attributes) || ($attributes instanceof HtmlAttributes)) {
-            $htmlAttributes->add($attributes);
-        }
-
-        return $htmlAttributes;
     }
 
     public function __toString()
