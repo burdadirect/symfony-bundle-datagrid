@@ -42,44 +42,52 @@ class TableCell
     protected Formatter $formatter;
 
     public static array $validOptions = [
-      'value'           => 'string|callable',
-      'th_attr'         => 'string|array|callable',
-      'td_attr'         => 'string|array|callable',
-      'a_attr'          => 'string|array|callable',
-      'sort_key'        => 'string|array',
-      'sort_key_sep'    => 'string',
-      'label_pos'       => 'string|bool',
-      'params'          => 'array|callable',
-      'template'        => 'string|callable',
-      'template_params' => 'array|callable',
-      'strip_tags'      => 'bool',
-      'raw'             => 'bool',
-      'format'          => 'string',
-      'separator'       => 'string',
-      'transformer'     => 'object',
-      'trans_domain'    => 'bool|string',
+      'value'             => 'string|callable',
+      'th_attr'           => 'string|array|callable',
+      'td_attr'           => 'string|array|callable',
+      'a_attr'            => 'string|array|callable',
+      'sort_key'          => 'string|array',
+      'sort_key_sep'      => 'string',
+      'label_pos'         => 'string|bool',
+      'label_prefix'      => 'string',
+      'label_prefix_raw'  => 'bool',
+      'label_postfix'     => 'string',
+      'label_postfix_raw' => 'bool',
+      'params'            => 'array|callable',
+      'template'          => 'string|callable',
+      'template_params'   => 'array|callable',
+      'strip_tags'        => 'bool',
+      'raw'               => 'bool',
+      'format'            => 'string',
+      'separator'         => 'string',
+      'transformer'       => 'object',
+      'trans_domain'      => 'bool|string',
     ];
 
     /**
      * TableCell constructor.
      *
      * @param array{
-     *       value?:           string|callable,
-     *       th_attr?:         string|array|callable,
-     *       td_attr?:         string|array|callable,
-     *       a_attr?:          string|array|callable,
-     *       sort_key?:        string|array,
-     *       sort_key_sep?:    string,
-     *       label_pos?:       string|bool,
-     *       params?:          array|callable,
-     *       template?:        string|callable,
-     *       template_params?: array|callable,
-     *       strip_tags?:      bool,
-     *       raw?:             bool,
-     *       format?:          string,
-     *       separator?:       string,
-     *       transformer?:     object,
-     *       trans_domain?:    bool|string
+     *       value?:             string|callable,
+     *       th_attr?:           string|array|callable,
+     *       td_attr?:           string|array|callable,
+     *       a_attr?:            string|array|callable,
+     *       sort_key?:          string|array,
+     *       sort_key_sep?:      string,
+     *       label_pos?:         string|bool,
+     *       label_prefix?:      string,
+     *       label_prefix_raw?:  string,
+     *       label_postfix?:     string,
+     *       label_postfix_raw?: string,
+     *       params?:            array|callable,
+     *       template?:          string|callable,
+     *       template_params?:   array|callable,
+     *       strip_tags?:        bool,
+     *       raw?:               bool,
+     *       format?:            string,
+     *       separator?:         string,
+     *       transformer?:       object,
+     *       trans_domain?:      bool|string
      *   } $options
      */
     public function __construct(string|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
@@ -498,19 +506,30 @@ class TableCell
 
     public function getSortKeySep()
     {
-        if ($this->hasOption('sort_key_sep')) {
-            return $this->getOption('sort_key_sep');
-        }
-
-        return ' | ';
+        return $this->getOptionValueWithFallback('sort_key_sep', ' | ');
     }
 
     public function getLabelPos()
     {
-        if ($this->hasOption('label_pos')) {
-            return $this->getOption('label_pos');
+        return $this->getOptionValueWithFallback('label_pos', self::LABEL_POS_BEFORE);
+    }
+
+    public function getLabelPrefix(): ?string
+    {
+        return $this->getOptionValueWithFallback('label_prefix', null);
+    }
+
+    public function getLabelPostFix(): ?string
+    {
+        return $this->getOptionValueWithFallback('label_postfix', null);
+    }
+
+    private function getOptionValueWithFallback(string $optionKey, mixed $fallback): mixed
+    {
+        if ($this->hasOption($optionKey)) {
+            return $this->getOption($optionKey);
         }
 
-        return self::LABEL_POS_BEFORE;
+        return $fallback;
     }
 }

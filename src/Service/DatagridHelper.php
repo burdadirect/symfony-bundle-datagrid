@@ -716,7 +716,7 @@ class DatagridHelper
                             // If desc is set, unset direction
                             unset($new_sortations[$sortKeyKey]);
                         } else {
-                            // If nothing is set, offer as as next direction
+                            // If nothing is set, offer asc as next direction
                             $new_sortations[$sortKeyKey] = 'asc';
                         }
 
