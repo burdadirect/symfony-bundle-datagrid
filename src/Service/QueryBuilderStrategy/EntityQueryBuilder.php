@@ -8,8 +8,7 @@ use HBM\DatagridBundle\Service\QueryBuilderStrategy\Common\AbstractQueryBuilderS
 
 class EntityQueryBuilder extends AbstractQueryBuilderStrategy
 {
-    /** @var QueryBuilder */
-    private $qb;
+    private ?QueryBuilder $qb = null;
 
     /**
      * Set queryBuilder.
@@ -32,7 +31,6 @@ class EntityQueryBuilder extends AbstractQueryBuilderStrategy
     /* INTERFACE */
 
     /**
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function count(): int
@@ -81,9 +79,6 @@ class EntityQueryBuilder extends AbstractQueryBuilderStrategy
         return $query->getResult();
     }
 
-    /**
-     * @throws \Doctrine\Persistence\Mapping\MappingException
-     */
     public function doExport(Export $export): Export
     {
         if (!$this->getQueryBuilder()) {

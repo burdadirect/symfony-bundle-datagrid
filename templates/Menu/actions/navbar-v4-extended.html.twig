@@ -2,8 +2,44 @@
 
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% if dgo.menu.showExtended and dgo.menu.routeExtended %}
-  <a class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeExtended) }}" title="{{ dgm.trans('Erweiterte Felder ein-/ausblenden', dgo.tdFix) }}">
-    <span class="{{ dgo.extended ? dgm.icon(dgo, 'compress') : dgm.icon(dgo, 'expand') }}"></span> {{ dgm.trans(dgo.extended ? 'Weniger' : 'Mehr', dgo.tdFix) }}
-  </a>
+{% set extendedActive = dgo.menu.showExtended and dgo.menu.routeExtended %}
+{% set columnsActive = dgo.menu.showColumns and dgo.menu.routeColumns and (dgo.menu.columnsSelection|length > 0) %}
+
+{% if extendedActive or columnsActive %}
+  {% if columnsActive %}
+  <form id="{{ datagrid_id~'-columns-form' }}" class="datagrid-columns-form" action="{{ dgm.path(dgo.menu.routeColumns) }}" method="post">
+    <input type="hidden" name="columns-override" value="yes" />
+  {% endif %}
+
+    <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
+
+      {% if extendedActive %}
+        <a class="{{ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeExtended) }}" title="{{ dgm.trans('Erweiterte Felder ein-/ausblenden', dgo.tdFix) }}">
+          <span class="{{ dgo.extended ? dgm.icon(dgo, 'compress') : dgm.icon(dgo, 'expand') }}"></span> {{ dgm.trans(dgo.extended ? 'Weniger' : 'Mehr', dgo.tdFix) }}
+        </a>
+      {% endif %}
+
+      {% if columnsActive %}
+        <button type="button" class="{{ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }} dropdown-toggle dropdown-toggle-split border-left" id="{{ datagrid_id~'-columns-dropdown' }}" data-toggle="dropdown" aria-expanded="false">
+          <span class="badge badge-primary">{{ dgo.columnsOverride|length }}</span><span class="sr-only">Toggle Dropdown</span>
+        </button>
+
+        <ul class="dropdown-menu datagrid-columns" aria-labelledby="{{ datagrid_id~'-columns-dropdown' }}">
+          {% for columnKey, columnName in dgo.menu.columnsSelection %}
+            <li class="datagrid-column">
+              <label class="dropdown-item" for="columns-{{ columnKey }}">
+                <input id="columns-{{ columnKey }}" type="checkbox" name="columns[]" value="{{ columnKey }}" class="mr-2" {% if columnKey in dgo.columnsOverride %}checked="checked"{% endif %} />{{ columnName }}
+              </label>
+            </li>
+          {% endfor %}
+          <div class="dropdown-divider"></div>
+          <li class="datagrid-column text-center">
+            <button class="btn btn-secondary" type="submit">{{ dgm.trans('Anwenden') }}</button>
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+  {% if columnsActive %}
+  </form>
+  {% endif %}
 {% endif %}

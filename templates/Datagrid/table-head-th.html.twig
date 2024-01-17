@@ -8,6 +8,8 @@
 
 {% set tdTableCell = dgo.tdTableCell(cell) %}
 
+{{ cell.labelPrefix|hbmRaw(cell.option('label_prefix_raw', false)) }}
+
 {% if cell.theadLinks|length > 0 %}
   {%- if (cell.theadLinks|length > 1) and (cell.labelPos == 'before') -%}
     {{ dgm.trans(cell.label, tdTableCell) }}
@@ -34,3 +36,5 @@
 {% else %}
   {{ dgm.trans(cell.label, tdTableCell) }}
 {% endif %}
+
+{{ cell.labelPostfix|hbmRaw(cell.option('label_postfix_raw', false)) }}

@@ -2,8 +2,9 @@
 
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
+{% set tag = tag() %}
 {% if cell.route %}
-  <a href="{{ dgm.path(cell.link(obj, column, row)) }}" {{ cell.attr('a')|raw }}>{{ cell.value(obj, column, row)|hbmRaw(cell.option('raw', false)) }}</a>
-{% else %}
-  {{ cell.value(obj, column, row)|hbmRaw(cell.option('raw', false)) }}
+  {% set tag = tag.tag('a').href(dgm.path(cell.link(obj, column, row))).add(cell.attr('a', obj, column, row)) %}
 {% endif %}
+
+{{ tag.tag ? tag.open|raw : '' }}{{ cell.value(obj, column, row)|hbmRaw(cell.option('raw', false)) }}{{ tag.tag ? tag.close|raw : '' }}

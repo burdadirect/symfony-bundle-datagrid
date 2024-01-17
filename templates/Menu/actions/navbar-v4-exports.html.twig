@@ -3,13 +3,13 @@
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% if dgo.menu.showExport %}
-  <form id="{{ datagrid_id~'-export' }}" class="datagrid-export-form" action="{{ dgm.path(dgo.menu.route) }}" method="post">
+  <form id="{{ datagrid_id~'-export-form' }}" class="datagrid-export-form" action="{{ dgm.path(dgo.menu.route) }}" method="post">
     <input id="{{ datagrid_id~'-export-type' }}" type="hidden" name="export-type" value="" />
     <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
-      <button class="dropdown-toggle {{ dgm.classes(dgo, 'btn') }}" type="button" id="{{ datagrid_id~'-export' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="dropdown-toggle {{ dgm.classes(dgo, 'btn') }}" type="button" id="{{ datagrid_id~'-export-dropdown' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{ dgm.trans('Export', dgo.tdFix) }}
       </button>
-      <ul class="dropdown-menu datagrid-exports" aria-labelledby="{{ datagrid_id~'-export' }}">
+      <ul class="dropdown-menu datagrid-exports" aria-labelledby="{{ datagrid_id~'-export-dropdown' }}">
         {% for export in dgo.menu.exportsSelection %}
           <li class="datagrid-export">
             <button class="dropdown-item" type="submit" title="{{ dgm.trans('Daten als :type exportieren', dgo.tdFix, false, {':type': export}) }}" onclick="document.getElementById('{{ datagrid_id~'-export-type' }}').value = '{{ export }}';">{{ dgm.trans(':ext-Export', dgo.tdFix, true, {':ext': export|upper}) }}</button>

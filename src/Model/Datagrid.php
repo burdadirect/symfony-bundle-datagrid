@@ -3,10 +3,13 @@
 namespace HBM\DatagridBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use HBM\DatagridBundle\Traits\ParseAttrTrait;
 use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 
 class Datagrid
 {
+    use ParseAttrTrait;
+
     /** @var string */
     private $translationDomainVariableTexts;
 
@@ -49,6 +52,9 @@ class Datagrid
     /** @var string */
     private $paramNameExtended;
 
+    /** @var string */
+    private $paramNameColumns;
+
     /* QUERY ******************************************************************* */
 
     /** @var string */
@@ -58,6 +64,9 @@ class Datagrid
 
     /** @var bool */
     private $extended;
+
+    /** @var array */
+    private $columnsOverride;
 
     /** @var bool */
     private $sort;
@@ -125,6 +134,7 @@ class Datagrid
 
         $this->setSort($config['datagrid']['sort']);
         $this->setMultiSort($config['datagrid']['multi_sort']);
+        $this->setColumnsOverride($config['datagrid']['columns_override'] ?? []);
         $this->setMaxEntriesPerPage($config['datagrid']['max_entries_per_page']);
 
         $this->setCacheEnabled($config['cache']['enabled']);
@@ -136,6 +146,7 @@ class Datagrid
         $this->setParamNameSortation($config['query']['param_names']['sortation']);
         $this->setParamNameSearch($config['query']['param_names']['search']);
         $this->setParamNameExtended($config['query']['param_names']['extended']);
+        $this->setParamNameColumns($config['query']['param_names']['columns']);
 
         $this->setQueryEncode($config['query']['encode']);
 
@@ -295,6 +306,16 @@ class Datagrid
         return $this->paramNameExtended;
     }
 
+    public function setParamNameColumns($paramName)
+    {
+        $this->paramNameColumns = $paramName;
+    }
+
+    public function getParamNameColumns()
+    {
+        return $this->paramNameColumns;
+    }
+
     public function setQueryEncode($queryEncode)
     {
         $this->queryEncode = $queryEncode;
@@ -308,6 +329,16 @@ class Datagrid
     public function setExtended($extended)
     {
         $this->extended = (bool) $extended;
+    }
+
+    public function setColumnsOverride($columnsOverride)
+    {
+        $this->columnsOverride = $columnsOverride;
+    }
+
+    public function getColumnsOverride()
+    {
+        return $this->columnsOverride;
     }
 
     public function getExtended()
@@ -544,19 +575,6 @@ class Datagrid
         return $this->parseAttr($attributes, $this->getRowAttr(), [$obj, $row]);
     }
 
-    private function parseAttr(HtmlAttributes $htmlAttributes, $attributes, array $callbackParams = []): HtmlAttributes
-    {
-        if (is_callable($attributes)) {
-            $htmlAttributes->add($attributes(...$callbackParams));
-        }
-
-        if (is_string($attributes) || is_array($attributes) || ($attributes instanceof HtmlAttributes)) {
-            $htmlAttributes->add($attributes);
-        }
-
-        return $htmlAttributes;
-    }
-
     public function __toString()
     {
         $string = '';
@@ -569,6 +587,7 @@ class Datagrid
         $string .= 'multiSort: ' . $this->getMultiSort() . "\n";
         $string .= 'sort: ' . $this->getSort() . "\n";
         $string .= 'extended: ' . $this->getExtended() . "\n";
+        $string .= 'columns: ' . json_encode($this->getColumnsOverride()) . "\n";
         $string .= "\n";
         $string .= 'DATAGRID-PARAM-NAMES:' . "\n";
         $string .= 'currentPage: ' . $this->getParamNameCurrentPage() . "\n";
@@ -576,6 +595,7 @@ class Datagrid
         $string .= 'sortation: ' . $this->getParamNameSortation() . "\n";
         $string .= 'search: ' . $this->getParamNameSearch() . "\n";
         $string .= 'extended: ' . $this->getParamNameExtended() . "\n";
+        $string .= 'columns: ' . $this->getParamNameColumns() . "\n";
         $string .= "\n";
         $string .= 'DATAGRID-ROUTE:' . "\n";
         $string .= $this->route . "\n";

@@ -25,6 +25,12 @@ class DatagridMenu
     private $showExtended;
 
     /** @var bool */
+    private $showColumns;
+
+    /** @var array */
+    private $columnsSelection;
+
+    /** @var bool */
     private $showExport;
 
     /** @var array */
@@ -63,6 +69,9 @@ class DatagridMenu
     private $routeExtended;
 
     /** @var Route */
+    private $routeColumns;
+
+    /** @var Route */
     private $routeSearch;
 
     /* LINKS ******************************************************************* */
@@ -79,6 +88,8 @@ class DatagridMenu
         $this->setSearchFields($config['menu']['search_fields']);
         $this->setShowReset($config['menu']['show_reset']);
         $this->setShowExtended($config['menu']['show_extended']);
+        $this->setShowColumns($config['menu']['show_columns']);
+        $this->setColumnsSelection($config['datagrid']['columns_selection'] ?? []);
         $this->setShowExport($config['menu']['show_export']);
         $this->setExportsSelection($config['menu']['exports_selection']);
         $this->setExportsResources($config['menu']['exports_resources']);
@@ -149,6 +160,26 @@ class DatagridMenu
     public function getShowExtended()
     {
         return $this->showExtended;
+    }
+
+    public function setShowColumns($showColumns)
+    {
+        $this->showColumns = $showColumns;
+    }
+
+    public function getShowColumns()
+    {
+        return $this->showColumns;
+    }
+
+    public function setColumnsSelection($columnsSelection)
+    {
+        $this->columnsSelection = $columnsSelection;
+    }
+
+    public function getColumnsSelection()
+    {
+        return $this->columnsSelection;
     }
 
     public function setShowExport($showExport)
@@ -261,6 +292,16 @@ class DatagridMenu
         return $this->routeExtended;
     }
 
+    public function setRouteColumns(Route $routeColumns)
+    {
+        $this->routeColumns = $routeColumns;
+    }
+
+    public function getRouteColumns()
+    {
+        return $this->routeColumns;
+    }
+
     public function setRouteReset(Route $routeReset)
     {
         $this->routeReset = $routeReset;
@@ -341,6 +382,8 @@ class DatagridMenu
         $string .= 'show: ' . $this->getShow() . "\n";
         $string .= 'showSearch: ' . $this->getShowSearch() . "\n";
         $string .= 'showExport: ' . $this->getShowExport() . "\n";
+        $string .= 'showExtended: ' . $this->getShowExtended() . "\n";
+        $string .= 'showColumns: ' . $this->getShowColumns() . "\n";
         $string .= 'showMaxEntriesSelection: ' . $this->getShowMaxEntriesSelection() . "\n";
         $string .= 'maxEntriesSelection: ' . json_encode($this->getMaxEntriesSelection()) . "\n";
         $string .= "\n";
@@ -355,6 +398,9 @@ class DatagridMenu
         $string .= "\n";
         $string .= 'MENU-ROUTE-EXTENDED:' . "\n";
         $string .= $this->routeExtended . "\n";
+        $string .= "\n";
+        $string .= 'MENU-ROUTE-COLUMNS:' . "\n";
+        $string .= $this->routeColumns . "\n";
         $string .= "\n";
         $string .= 'MENU-LINKS:' . "\n";
         foreach ($this->links as $link) {

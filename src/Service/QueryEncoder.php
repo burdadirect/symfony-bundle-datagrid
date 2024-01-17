@@ -4,18 +4,17 @@ namespace HBM\DatagridBundle\Service;
 
 class QueryEncoder
 {
-    private $mode;
+    private string $mode;
 
-    public function __construct($mode)
+    public function __construct(string $mode)
     {
-        //    dd(func_get_args());
         $this->mode = $mode;
     }
 
     /**
      * @return null|array|mixed
      */
-    public function getQueryParams(?string $var, string $mode = null)
+    public function getQueryParams(?string $var, string $mode = null): mixed
     {
         $modes      = explode('+', $mode ?: $this->mode);
         $modeQuery  = $modes[0] ?? null;
@@ -28,7 +27,7 @@ class QueryEncoder
             case 'json':
                 try {
                     $queryParams = json_decode($var, true, 512, JSON_THROW_ON_ERROR) ?? [];
-                } catch (\JsonException $e) {
+                } catch (\JsonException) {
                     $queryParams = [];
                 }
 
@@ -67,7 +66,7 @@ class QueryEncoder
             case 'json':
                 try {
                     return json_decode($queryParams, true, 512, JSON_THROW_ON_ERROR) ?? [];
-                } catch (\JsonException $e) {
+                } catch (\JsonException) {
                     return [];
                 }
 
@@ -77,9 +76,12 @@ class QueryEncoder
     }
 
     /**
+     * @param mixed $vars
+     * @param string|null $mode
+     *
      * @return false|string
      */
-    public function getQueryString($vars, string $mode = null)
+    public function getQueryString(mixed $vars, string $mode = null): false|string
     {
         $modes      = explode('+', $mode ?: $this->mode);
         $modeQuery  = $modes[0] ?? null;
@@ -104,7 +106,7 @@ class QueryEncoder
             case 'json':
                 try {
                     $vars = json_encode($vars, JSON_THROW_ON_ERROR);
-                } catch (\JsonException $e) {
+                } catch (\JsonException) {
                     $vars = '';
                 }
 
@@ -116,7 +118,7 @@ class QueryEncoder
             case 'json':
                 try {
                     return json_encode($vars, JSON_THROW_ON_ERROR);
-                } catch (\JsonException $e) {
+                } catch (\JsonException) {
                     return '';
                 }
 
