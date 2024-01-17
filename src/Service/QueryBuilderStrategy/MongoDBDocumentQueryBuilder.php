@@ -10,11 +10,8 @@ use HBM\DatagridBundle\Service\QueryBuilderStrategy\Common\AbstractQueryBuilderS
 
 class MongoDBDocumentQueryBuilder extends AbstractQueryBuilderStrategy
 {
-    /** @var Builder */
-    private $qb;
-
-    /** @var DocumentManager */
-    private $dm;
+    private ?Builder $qb = null;
+    private ?DocumentManager $dm = null;
 
     /**
      * Set queryBuilder.
@@ -54,6 +51,9 @@ class MongoDBDocumentQueryBuilder extends AbstractQueryBuilderStrategy
 
     /* INTERFACE */
 
+    /**
+     * @throws MongoDBException
+     */
     public function count(): int
     {
         if (!$this->getQueryBuilder()) {
