@@ -19,6 +19,10 @@
     },
     {
       "type": "vcs",
+      "url": "git@github.com:burdadirect/symfony-bundle-twig-extensions.git"
+    },
+    {
+      "type": "vcs",
       "url": "git@github.com:burdadirect/codestyle.git"
     }
   ],
@@ -26,6 +30,7 @@
     "php": "^8.2.0",
     "ext-json": "*",
     "burdadirect/symfony-bundle-twig-attributes": "dev-main",
+    "burdadirect/symfony-bundle-twig-extensions": "dev-main",
     "symfony/config": "^6.3",
     "symfony/form": "^6.3",
     "symfony/routing": "^6.3",
