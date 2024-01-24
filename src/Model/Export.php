@@ -3,6 +3,7 @@
 namespace HBM\DatagridBundle\Model;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class Export extends Formatter
 {
@@ -12,6 +13,10 @@ abstract class Export extends Formatter
     protected string $name;
 
     protected array $cells = [];
+
+    protected ?TranslatorInterface $translator = null;
+
+    protected ?string $translationDomain = null;
 
     /* GETTER/SETTER */
 
@@ -35,6 +40,26 @@ abstract class Export extends Formatter
         return $this->cells;
     }
 
+    public function getTranslator(): ?TranslatorInterface
+    {
+        return $this->translator;
+    }
+
+    public function setTranslator(?TranslatorInterface $translator): void
+    {
+        $this->translator = $translator;
+    }
+
+    public function getTranslationDomain(): ?string
+    {
+        return $this->translationDomain;
+    }
+
+    public function setTranslationDomain(?string $translationDomain): void
+    {
+        $this->translationDomain = $translationDomain;
+    }
+
     /* BASIC */
 
     public function init(): void
@@ -48,6 +73,25 @@ abstract class Export extends Formatter
     protected function prepareLabel($label): string
     {
         return html_entity_decode(strip_tags($label));
+    }
+
+    protected function translateLabel($label, $transDomain = null): string
+    {
+        if ($this->translator === null) {
+            return $label;
+        }
+
+        if ($transDomain === false) {
+            return $label;
+        }
+
+        $transDomain ??= $this->translationDomain;
+
+        if (empty($transDomain)) {
+            return $label;
+        }
+
+        return $this->translator->trans($label, [], $transDomain);
     }
 
     public function formatCellValueString(TableCell $cell, $value)

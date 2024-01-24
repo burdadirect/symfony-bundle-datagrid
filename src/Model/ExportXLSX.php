@@ -84,7 +84,7 @@ class ExportXLSX extends Export
         $column = 1;
         foreach ($this->getCells() as $cell) {
             if ($cell->isVisibleExport()) {
-                $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($cell->getLabelText()));
+                $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($this->translateLabel($cell->getLabelText())));
                 ++$column;
             }
         }

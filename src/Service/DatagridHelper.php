@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service
@@ -46,6 +47,8 @@ class DatagridHelper
 
     private LoggerInterface $logger;
 
+    private TranslatorInterface $translator;
+
     private ?SessionInterface $session = null;
 
     private ?string $sessionPrefixAdditional = null;
@@ -63,12 +66,13 @@ class DatagridHelper
     /**
      * DatagridHelper constructor.
      */
-    public function __construct(array $config, QueryEncoder $queryEncoder, RouterInterface $router, LoggerInterface $logger)
+    public function __construct(array $config, QueryEncoder $queryEncoder, RouterInterface $router, LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->config       = $config;
         $this->queryEncoder = $queryEncoder;
         $this->router       = $router;
         $this->logger       = $logger;
+        $this->translator   = $translator;
 
         $this->setExport(self::EXPORT_CSV, new ExportCSV());
         $this->setExport(self::EXPORT_JSON, new ExportJSON());
@@ -412,6 +416,11 @@ class DatagridHelper
 
         if ($name !== null) {
             $export->setName($name);
+        }
+
+        if (is_string($this->dg()->getTranslationDomainVariableTexts()) && !empty($this->dg()->getTranslationDomainVariableTexts())) {
+            $export->setTranslator($this->translator);
+            $export->setTranslationDomain($this->dg()->getTranslationDomainVariableTexts());
         }
 
         $export->setCells($this->dg()->getCells());
