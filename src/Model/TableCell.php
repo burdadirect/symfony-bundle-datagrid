@@ -366,7 +366,6 @@ class TableCell
 
     private function getValueFromObject(object $obj, string|array|callable|null $key)
     {
-        dump($key);
         $callable       = [$obj];
         $callableParams = [];
 
