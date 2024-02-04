@@ -98,10 +98,7 @@ class TableCellHelper
         ];
     }
 
-    /**
-     * @param array|callable $params
-     */
-    public function list(string $key, string $label, $params = [], ?string $tdClass = 'list-group-cell-narrow', string $thClass = null, array $options = []): TableCell
+    public function list(string $key, string $label, array|callable $params = [], ?string $tdClass = 'list-group-cell-narrow', string $thClass = null, array $options = []): TableCell
     {
         return new TableCell($key, $label, null, TableCell::VISIBLE_BOTH, array_merge([
           'template'        => '@HBMDatagrid/partials/datagrid-cells/list.html.twig',

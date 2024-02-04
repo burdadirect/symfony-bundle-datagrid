@@ -25,7 +25,7 @@ class TableCell
     public const LABEL_POS_AFTER  = 'after';
     public const LABEL_POS_NONE   = false;
 
-    protected string|array|null $key;
+    protected string|array|\Closure|null $key;
 
     protected ?string $label = null;
 
@@ -90,7 +90,7 @@ class TableCell
      *       trans_domain?:      bool|string
      *   } $options
      */
-    public function __construct(string|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
+    public function __construct(string|callable|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
     {
         $this->key        = $key;
         $this->label      = $label;
@@ -110,17 +110,17 @@ class TableCell
     }
     /* GETTER/SETTER *********************************************************** */
 
-    public function setKey($key): void
+    public function setKey(string|array|callable|null $key): void
     {
         $this->key = $key;
     }
 
-    public function getKey(): array|string|null
+    public function getKey(): array|string|callable|null
     {
         return $this->key;
     }
 
-    public function setLabel($label): void
+    public function setLabel(?string $label): void
     {
         $this->label = $label;
     }
@@ -130,7 +130,7 @@ class TableCell
         return $this->label;
     }
 
-    public function setLabelText($labelText): void
+    public function setLabelText(?string $labelText): void
     {
         $this->labelText = $labelText;
     }
@@ -140,7 +140,7 @@ class TableCell
         return $this->labelText;
     }
 
-    public function setRoute(Route $route): void
+    public function setRoute(?Route $route): void
     {
         $this->route = $route;
     }
@@ -150,7 +150,7 @@ class TableCell
         return $this->route;
     }
 
-    public function setVisibility($visibility): void
+    public function setVisibility(?int $visibility): void
     {
         $this->visibility = $visibility;
     }
@@ -160,11 +160,14 @@ class TableCell
         return $this->visibility;
     }
 
-    public function addTheadLink($sortKey, $theadLink)
+    public function addTheadLink(string $sortKey, RouteLink $theadLink): void
     {
-        return $this->theadLinks[$sortKey] = $theadLink;
+        $this->theadLinks[$sortKey] = $theadLink;
     }
 
+    /**
+     * @return RouteLink[]
+     */
     public function getTheadLinks(): array
     {
         return $this->theadLinks;
@@ -173,11 +176,9 @@ class TableCell
     /**
      * Set formatter.
      */
-    public function setFormatter(Formatter $formatter): self
+    public function setFormatter(Formatter $formatter): void
     {
         $this->formatter = $formatter;
-
-        return $this;
     }
 
     /**
@@ -191,9 +192,9 @@ class TableCell
     /**
      * @throws \InvalidArgumentException
      */
-    public function setOptions($options): void
+    public function setOptions(array $options): void
     {
-        $this->validateOptions($options, self::$validOptions);
+        $this->validateOptions($options);
 
         $this->options = $options;
     }
@@ -205,7 +206,7 @@ class TableCell
 
     /* CUSTOM ****************************************************************** */
 
-    public function isVisible($visibility): bool
+    public function isVisible(int $visibility): bool
     {
         return ($this->getVisibility() & $visibility) === $visibility;
     }
@@ -363,8 +364,9 @@ class TableCell
         return $value;
     }
 
-    private function getValueFromObject($obj, $key)
+    private function getValueFromObject(object $obj, string|array|callable|null $key)
     {
+        dump($key);
         $callable       = [$obj];
         $callableParams = [];
 
@@ -377,6 +379,8 @@ class TableCell
         } elseif (is_array($key)) {
             $callable[]     = $key[0] ?? false;
             $callableParams = $key[1] ?? [];
+        } elseif (is_callable($key)) {
+            return $key($obj);
         }
 
         $value = null;
@@ -391,10 +395,10 @@ class TableCell
     /**
      * @throws \InvalidArgumentException
      */
-    private function validateOptions($options, $validOptions): void
+    private function validateOptions(array $options): void
     {
         foreach ($options as $option => $value) {
-            $types = $this->getOptionTypes($option, $validOptions);
+            $types = $this->getOptionTypes($option);
 
             $valid = false;
 
@@ -411,20 +415,16 @@ class TableCell
                     if (is_object($value)) {
                         $valid = true;
                     }
-                } else {
-                    if ($type === 'array') {
-                        if (is_array($value)) {
-                            $valid = true;
-                        }
-                    } else {
-                        if ($type === 'callable') {
-                            if (is_callable($value)) {
-                                $valid = true;
-                            }
-                        } else {
-                            throw new \InvalidArgumentException('Datagrid: Unknown type for option "' . $option . '".');
-                        }
+                } elseif ($type === 'array') {
+                    if (is_array($value)) {
+                        $valid = true;
                     }
+                } elseif ($type === 'callable') {
+                    if (is_callable($value)) {
+                        $valid = true;
+                    }
+                } else {
+                    throw new \InvalidArgumentException('Datagrid: Unknown type for option "' . $option . '".');
                 }
             }
 
@@ -437,13 +437,13 @@ class TableCell
     /**
      * @throws \InvalidArgumentException
      */
-    private function getOptionTypes($option, $validOptions): array
+    private function getOptionTypes(string $option): array
     {
-        if (!isset($validOptions[$option])) {
+        if (!isset(self::$validOptions[$option])) {
             throw new \InvalidArgumentException('Datagrid: Not a valid option "' . $option . '".');
         }
 
-        $types = $validOptions[$option];
+        $types = self::$validOptions[$option];
 
         if (str_contains($types, '|')) {
             $types = explode('|', $types);
@@ -470,7 +470,7 @@ class TableCell
         return $sortKey;
     }
 
-    public function getSortKeyLabel($sortKey)
+    public function getSortKeyLabel(string $sortKey)
     {
         $sortKeys = $this->getSortKeys();
 
@@ -487,7 +487,7 @@ class TableCell
         return $this->getLabel();
     }
 
-    public function getSortKeyText($sortKey)
+    public function getSortKeyText(string $sortKey)
     {
         $sortKeys = $this->getSortKeys();
 
