@@ -176,9 +176,11 @@ class TableCell
     /**
      * Set formatter.
      */
-    public function setFormatter(Formatter $formatter): void
+    public function setFormatter(Formatter $formatter): self
     {
         $this->formatter = $formatter;
+
+        return $this;
     }
 
     /**
