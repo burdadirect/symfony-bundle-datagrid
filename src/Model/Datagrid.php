@@ -556,7 +556,13 @@ class Datagrid
 
     public function parseTableHeadAttr(): HtmlAttributes
     {
-        $attributes = new HtmlAttributes(['class' => 'datagrid-table-head']);
+        $classes = ['datagrid-table-head'];
+
+        if ($this->getBootstrap()['version'] === 'v4') {
+            $classes[] = $this->getBootstrap()['classes']['thead'] ?? null;
+        }
+
+        $attributes = new HtmlAttributes(['class' => $classes]);
 
         return $this->parseAttr($attributes, $this->getTableHeadAttr());
     }

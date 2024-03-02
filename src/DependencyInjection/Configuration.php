@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('input_group')->defaultValue('input-group')->end()
                     ->scalarNode('navbar')->defaultValue('navbar navbar-light bg-light navbar-expand-sm mb-3')->end()
                     ->scalarNode('table')->defaultValue('table table-hover table-bordered')->end()
+                    ->scalarNode('thead')->defaultValue('')->end()
                     ->scalarNode('pagination')->defaultValue('pagination justify-content-center')->end()
                     ->scalarNode('page_item')->defaultValue('page-item')->end()
                     ->scalarNode('page_link')->defaultValue('page-link')->end()
