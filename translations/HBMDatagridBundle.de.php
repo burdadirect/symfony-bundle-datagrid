@@ -21,6 +21,8 @@ return [
   'Sortierung/Filter zurücksetzen' => 'Sortierung/Filter zurücksetzen',
   'Reset' => 'Reset',
   'Daten exportieren' => 'Daten exportieren',
+  'Ersteller (Name)' => 'Ersteller (Name)',
+  'Ersteller (E-Mail)' => 'Ersteller (E-Mail)',
   'Erstellt' => 'Erstellt',
   'Geändert' => 'Geändert',
   'Export' => 'Export',
