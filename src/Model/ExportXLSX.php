@@ -143,8 +143,11 @@ class ExportXLSX extends Export
             return false;
         }
 
+        $width = $cell->getOption('img_max_width') ?? $imageInfo[0];
+        $height = $cell->getOption('img_max_height') ?? $imageInfo[1];
+
         $columnName   = Coordinate::stringFromColumnIndex($column);
-        $columnWidth  = max($columnWidth, $imageInfo[0]);
+        $columnWidth  = max($columnWidth, $width);
         $columnOffset = 10;
 
         $this->columnsWidths[$columnName] = ($columnWidth + 2 * $columnOffset) . 'px';
@@ -156,12 +159,12 @@ class ExportXLSX extends Export
         $drawing->setOffsetX($columnOffset);
         $drawing->setOffsetY($columnOffset);
         $drawing->setCoordinates($columnName . $row);
-        $drawing->setWidth($imageInfo[0]);
-        $drawing->setHeight($imageInfo[1]);
+        $drawing->setWidth($width);
+        $drawing->setHeight($height);
 
         $drawing->setWorksheet($this->getWorksheet());
 
-        $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($imageInfo[1] + 2 * $columnOffset));
+        $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($height + 2 * $columnOffset));
 
         return true;
     }

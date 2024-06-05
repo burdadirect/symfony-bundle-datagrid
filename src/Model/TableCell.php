@@ -62,6 +62,8 @@ class TableCell
       'separator'         => 'string',
       'transformer'       => 'object',
       'trans_domain'      => 'bool|string',
+      'img_max_width'     => 'int',
+      'img_max_height'    => 'int',
     ];
 
     /**
@@ -87,7 +89,9 @@ class TableCell
      *       format?:            string,
      *       separator?:         string,
      *       transformer?:       object,
-     *       trans_domain?:      bool|string
+     *       trans_domain?:      bool|string,
+     *       img_max_width?:     int,
+     *       img_max_height?:    int
      *   } $options
      */
     public function __construct(string|callable|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
@@ -422,6 +426,10 @@ class TableCell
                     }
                 } elseif ($type === 'callable') {
                     if (is_callable($value)) {
+                        $valid = true;
+                    }
+                } elseif ($type === 'int') {
+                    if (is_int($value)) {
                         $valid = true;
                     }
                 } else {
