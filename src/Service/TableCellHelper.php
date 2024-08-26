@@ -107,4 +107,9 @@ class TableCellHelper
           'td_attr'         => ['class' => $tdClass],
         ], $options));
     }
+
+    public function columnOverride(array $columnsOverride, string $key, int $defaultVisibility = TableCell::VISIBLE_NONE): int
+    {
+        return in_array($key, $columnsOverride, true) ? TableCell::VISIBLE_ALL : $defaultVisibility;
+    }
 }

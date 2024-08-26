@@ -29,6 +29,7 @@ return [
   'Daten als :type exportieren' => 'Daten als :type exportieren',
   ':ext-Export' => ':ext-Export',
   'Navigation ein-/ausblenden' => 'Navigation ein-/ausblenden',
+  'Anwenden' => 'Anwenden',
 ];
 
 
