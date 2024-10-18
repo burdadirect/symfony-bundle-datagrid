@@ -77,6 +77,9 @@ abstract class Export extends Formatter
 
     protected function translateLabel($label, $transDomain = null): string
     {
+        // make sure label is a string to prevent null as possible return
+        $label ??= '';
+
         if ($this->translator === null) {
             return $label;
         }
