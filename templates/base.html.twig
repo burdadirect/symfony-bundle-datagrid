@@ -1,21 +1,24 @@
 {% set dgo = datagrid %}
+{% set datagrid_id = 'datagrid-'~random() %}
 
 {% trans_default_domain dgo.tdFix %}
 
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
-{% include dgo.menu.template with { 'dgo': dgo } only %}
+<div {{ attributes(attributes|default([])).class('datagrid').set('data-id', datagrid_id)|raw }}>
+  {% include dgo.menu.template with { 'dgo': dgo, 'datagrid_id': datagrid_id } only %}
 
-{% if dgo.results|length == 0 %}
-  <p>{{ dgm.trans('Keine Einträge gefunden.', dgo.tdFix) }}</p>
-{% else %}
-  <div class="datagrid-table-wrapper">
-    <table {{ dgo.parseTableAttr()|raw }}>
-      {% include '@HBMDatagrid/Datagrid/table-head.html.twig' with { 'dgo': dgo } only %}
+  {% if dgo.results|length == 0 %}
+    <p>{{ dgm.trans('Keine Einträge gefunden.', dgo.tdFix) }}</p>
+  {% else %}
+    <div class="datagrid-table-wrapper">
+      <table {{ dgo.parseTableAttr()|raw }}>
+        {% include '@HBMDatagrid/Datagrid/table-head.html.twig' with { 'dgo': dgo } only %}
 
-      {% include '@HBMDatagrid/Datagrid/table-body.html.twig' with { 'dgo': dgo } only %}
-    </table>
-  </div>
-{% endif %}
+        {% include '@HBMDatagrid/Datagrid/table-body.html.twig' with { 'dgo': dgo } only %}
+      </table>
+    </div>
+  {% endif %}
 
-{% include dgo.pagination.template with { 'dgo': dgo, 'pagination': dgo.pagination } only %}
+  {% include dgo.pagination.template with { 'dgo': dgo, 'pagination': dgo.pagination } only %}
+</div>

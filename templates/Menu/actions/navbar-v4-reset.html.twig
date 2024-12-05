@@ -3,7 +3,7 @@
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% if dgo.menu.showReset and dgo.menu.routeReset %}
-  <a class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeReset) }}" title="{{ dgm.trans('Sortierung/Filter zurücksetzen', dgo.tdFix) }}">
+  <a class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeReset) }}" title="{{ dgm.trans('Sortierung/Filter zurücksetzen', dgo.tdFix) }}" data-action="reset">
     <span class="{{ dgm.icon(dgo, 'reset') }}"></span> {{ dgm.trans('Reset', dgo.tdFix) }}
   </a>
 {% endif %}

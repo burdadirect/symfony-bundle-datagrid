@@ -11,7 +11,7 @@
     <input type="hidden" name="columns-override" value="yes" />
   {% endif %}
 
-    <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
+    <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group" data-action="extended">
 
       {% if extendedActive %}
         <a class="{{ dgm.classesAndSize(dgo, 'btn') ~ ' ' ~ classes|default('') }}" href="{{ dgm.path(dgo.menu.routeExtended) }}" title="{{ dgm.trans('Erweiterte Felder ein-/ausblenden', dgo.tdFix) }}">

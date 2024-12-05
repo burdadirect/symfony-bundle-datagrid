@@ -3,7 +3,7 @@
 {% import '@HBMDatagrid/macros.html.twig' as dgm %}
 
 {% if dgo.menu.showExport %}
-  <form id="{{ datagrid_id~'-export-form' }}" class="datagrid-export-form" action="{{ dgm.path(dgo.menu.route) }}" method="post">
+  <form id="{{ datagrid_id~'-export-form' }}" class="datagrid-export-form" action="{{ dgm.path(dgo.menu.route) }}" method="post"  data-action="export">
     <input id="{{ datagrid_id~'-export-type' }}" type="hidden" name="export-type" value="" />
     <div class="{{ datagrid_actions_classes ~ dgm.classesAndSize(dgo, 'btn_group') ~ ' ' ~ classes|default('') }}" role="group">
       <button class="dropdown-toggle {{ dgm.classes(dgo, 'btn') }}" type="button" id="{{ datagrid_id~'-export-dropdown' }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
