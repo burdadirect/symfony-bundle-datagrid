@@ -2,7 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
-class Route
+class Route implements \Stringable
 {
     protected ?string $name;
 
@@ -63,7 +63,7 @@ class Route
         return $this->getDefaults();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'ROUTE: ' . $this->name . '(' . json_encode($this->getDefaults()) . ')';
     }

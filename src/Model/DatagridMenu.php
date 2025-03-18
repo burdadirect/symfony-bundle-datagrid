@@ -2,7 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
-class DatagridMenu
+class DatagridMenu implements \Stringable
 {
     /** @var Datagrid */
     private $datagrid;
@@ -349,11 +349,7 @@ class DatagridMenu
 
     public function getSearchValue($key)
     {
-        if (isset($this->searchValues[$key])) {
-            return $this->searchValues[$key];
-        }
-
-        return null;
+        return $this->searchValues[$key] ?? null;
     }
 
     public function getSearchFieldsSorted(): array
@@ -375,7 +371,7 @@ class DatagridMenu
         return $searchFieldsSorted;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $string = '';
         $string .= 'MENU-VARS:' . "\n";

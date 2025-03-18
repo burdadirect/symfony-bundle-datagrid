@@ -2,7 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
-class DatagridPagination
+class DatagridPagination implements \Stringable
 {
     /** @var Datagrid */
     private $datagrid;
@@ -344,7 +344,7 @@ class DatagridPagination
         return $routeLink;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $string = '';
         $string .= 'PAGINATION-VARS:' . "\n";

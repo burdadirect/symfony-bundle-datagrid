@@ -55,7 +55,7 @@ class RouteLink extends Route
         return array_merge($this->getDefaults(), $this->getParams());
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name . '(' . json_encode($this->getMerged()) . ') [' . $this->value . ']';
     }

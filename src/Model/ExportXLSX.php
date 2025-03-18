@@ -71,7 +71,7 @@ class ExportXLSX extends Export
         foreach ($this->columnsWidths as $columnName => $columnWidth) {
             $columnWidthCalculated = $columnWidth;
 
-            if (substr($columnWidthCalculated, -2) === 'px') {
+            if (str_ends_with($columnWidthCalculated, 'px')) {
                 $columnWidthCalculated = SharedDrawing::pixelsToCellDimension((int) substr($columnWidthCalculated, 0, -2), $this->getSpreadsheet()->getDefaultStyle()->getFont());
             }
             $this->getWorksheet()->getColumnDimension($columnName)->setWidth($columnWidthCalculated);

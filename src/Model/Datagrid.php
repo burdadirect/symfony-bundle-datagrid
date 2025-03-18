@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use HBM\DatagridBundle\Traits\ParseAttrTrait;
 use HBM\TwigAttributesBundle\Utils\HtmlAttributes;
 
-class Datagrid
+class Datagrid implements \Stringable
 {
     use ParseAttrTrait;
 
@@ -581,7 +581,7 @@ class Datagrid
         return $this->parseAttr($attributes, $this->getRowAttr(), [$obj, $row]);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $string = '';
         $string .= 'DATAGRID-COLLECTIONS:' . "\n";

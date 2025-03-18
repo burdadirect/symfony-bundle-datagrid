@@ -29,14 +29,14 @@
   "require": {
     "php": "^8.2.0",
     "ext-json": "*",
-    "burdadirect/symfony-bundle-twig-attributes": "dev-main",
-    "burdadirect/symfony-bundle-twig-extensions": "dev-main",
-    "symfony/config": "^6.3",
-    "symfony/form": "^6.3",
-    "symfony/routing": "^6.3",
-    "symfony/http-foundation": "^6.3",
-    "symfony/http-kernel": "^6.3",
-    "symfony/dependency-injection": "^6.3",
+    "burdadirect/symfony-bundle-twig-attributes": "dev-sf_7",
+    "burdadirect/symfony-bundle-twig-extensions": "dev-sf_7",
+    "symfony/config": "^7.0",
+    "symfony/form": "^7.0",
+    "symfony/routing": "^7.0",
+    "symfony/http-foundation": "^7.0",
+    "symfony/http-kernel": "^7.0",
+    "symfony/dependency-injection": "^7.0",
     "psr/log": "^1.0 || ^2 || ^3",
     "phpoffice/phpspreadsheet": "^1.2",
     "twig/twig": "^3.3"
@@ -45,7 +45,7 @@
     "burdadirect/codestyle": "dev-main",
     "roave/security-advisories": "dev-latest",
     "doctrine/orm": "^2.7",
-    "doctrine/mongodb-odm-bundle": "^4.3"
+    "doctrine/mongodb-odm-bundle": "^5.0"
 
   },
   "config": {
