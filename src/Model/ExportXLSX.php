@@ -159,12 +159,12 @@ class ExportXLSX extends Export
         $drawing->setName($cell->getLabelText());
         $drawing->setDescription($file->getBasename());
         $drawing->setPath($file->getPathname());
+        $drawing->setResizeProportional(true);
+        $drawing->setWidth($width);
+        $drawing->setHeight($height);
         $drawing->setOffsetX($columnOffset);
         $drawing->setOffsetY($columnOffset);
         $drawing->setCoordinates($columnName . $row);
-        $drawing->setWidth($width);
-        $drawing->setHeight($height);
-
         $drawing->setWorksheet($this->getWorksheet());
 
         $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($height + 2 * $columnOffset));
