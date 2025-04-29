@@ -2,6 +2,7 @@
 
 namespace HBM\DatagridBundle\Model;
 
+use PhpOffice\PhpSpreadsheet\Cell\CellAddress;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Shared\Drawing as SharedDrawing;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -71,7 +72,7 @@ class ExportXLSX extends Export
         foreach ($this->columnsWidths as $columnName => $columnWidth) {
             $columnWidthCalculated = $columnWidth;
 
-            if (substr($columnWidthCalculated, -2) === 'px') {
+            if (str_ends_with($columnWidthCalculated, 'px')) {
                 $columnWidthCalculated = SharedDrawing::pixelsToCellDimension((int) substr($columnWidthCalculated, 0, -2), $this->getSpreadsheet()->getDefaultStyle()->getFont());
             }
             $this->getWorksheet()->getColumnDimension($columnName)->setWidth($columnWidthCalculated);
@@ -84,7 +85,8 @@ class ExportXLSX extends Export
         $column = 1;
         foreach ($this->getCells() as $cell) {
             if ($cell->isVisibleExport()) {
-                $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $this->prepareLabel($this->translateLabel($cell->getLabelText())));
+                $cellAddress = CellAddress::fromColumnAndRow($column, $this->row);
+                $this->getWorksheet()->setCellValue($cellAddress, $this->prepareLabel($this->translateLabel($cell->getLabelText())));
                 ++$column;
             }
         }
@@ -113,7 +115,8 @@ class ExportXLSX extends Export
                     }
                 }
 
-                $this->getWorksheet()->setCellValueByColumnAndRow($column, $this->row, $value);
+                $cellAddress = CellAddress::fromColumnAndRow($column, $this->row);
+                $this->getWorksheet()->setCellValue($cellAddress, $value);
 
                 ++$column;
             }
