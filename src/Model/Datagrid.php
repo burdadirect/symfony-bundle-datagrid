@@ -55,11 +55,6 @@ class Datagrid
     /** @var string */
     private $paramNameColumns;
 
-    /* QUERY ******************************************************************* */
-
-    /** @var string */
-    private $queryEncode;
-
     /* CONFIG ****************************************************************** */
 
     /** @var bool */
@@ -147,8 +142,6 @@ class Datagrid
         $this->setParamNameSearch($config['query']['param_names']['search']);
         $this->setParamNameExtended($config['query']['param_names']['extended']);
         $this->setParamNameColumns($config['query']['param_names']['columns']);
-
-        $this->setQueryEncode($config['query']['encode']);
 
         $this->setSessionPrefix($config['session']['prefix']);
         $this->setSessionUseFor($config['session']['use_for']);
@@ -314,16 +307,6 @@ class Datagrid
     public function getParamNameColumns()
     {
         return $this->paramNameColumns;
-    }
-
-    public function setQueryEncode($queryEncode)
-    {
-        $this->queryEncode = $queryEncode;
-    }
-
-    public function getQueryEncode()
-    {
-        return $this->queryEncode;
     }
 
     public function setExtended($extended)

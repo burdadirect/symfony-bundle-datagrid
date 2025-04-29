@@ -11,9 +11,7 @@ services:
     hbm.helper.datagrid:
         alias: HBM\DatagridBundle\Service\DatagridHelper
 
-    HBM\DatagridBundle\Service\QueryEncoder:
-        arguments:
-            $mode: "%hbm.datagrid.query_encode_mode%"
+    HBM\DatagridBundle\Service\QueryEncoder: ~
 
     hbm.helper.datagrid.query_encoder:
         alias: HBM\DatagridBundle\Service\QueryEncoder
