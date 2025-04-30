@@ -18,31 +18,31 @@ class ExportXLSX extends Export
     public const EXTENSION    = 'xlsx';
 
     protected Spreadsheet $spreadsheet;
-
     protected Worksheet $worksheet;
 
     protected int $row = 1;
 
-    protected array $columnsWidths = [];
+    protected ?\Closure $callbackRow = null;
+    protected ?\Closure $callbackFinish = null;
 
-    protected ?string $password = null;
-
-    /**
-     * Set password.
-     */
-    public function setPassword(?string $password): self
+    public function getCallbackRow(): ?\Closure
     {
-        $this->password = $password;
-
-        return $this;
+        return $this->callbackRow;
     }
 
-    /**
-     * Get password.
-     */
-    public function getPassword(): ?string
+    public function setCallbackRow(?\Closure $callbackRow): void
     {
-        return $this->password;
+        $this->callbackRow = $callbackRow;
+    }
+
+    public function getCallbackFinish(): ?\Closure
+    {
+        return $this->callbackFinish;
+    }
+
+    public function setCallbackFinish(?\Closure $callbackFinish): void
+    {
+        $this->callbackFinish = $callbackFinish;
     }
 
     public function getSpreadsheet(): Spreadsheet
@@ -69,13 +69,9 @@ class ExportXLSX extends Export
      */
     public function finish(): void
     {
-        foreach ($this->columnsWidths as $columnName => $columnWidth) {
-            $columnWidthCalculated = $columnWidth;
-
-            if (str_ends_with($columnWidthCalculated, 'px')) {
-                $columnWidthCalculated = SharedDrawing::pixelsToCellDimension((int) substr($columnWidthCalculated, 0, -2), $this->getSpreadsheet()->getDefaultStyle()->getFont());
-            }
-            $this->getWorksheet()->getColumnDimension($columnName)->setWidth($columnWidthCalculated);
+        $callableFinish = $this->getCallbackFinish();
+        if (is_callable($callableFinish)) {
+            $callableFinish($this->getWorksheet());
         }
     }
 
@@ -86,7 +82,25 @@ class ExportXLSX extends Export
         foreach ($this->getCells() as $cell) {
             if ($cell->isVisibleExport()) {
                 $cellAddress = CellAddress::fromColumnAndRow($column, $this->row);
-                $this->getWorksheet()->setCellValue($cellAddress, $this->prepareLabel($this->translateLabel($cell->getLabelText())));
+                $cellObject = $this->getWorksheet()->getCell($cellAddress);
+
+                $cellObject->setValue($this->prepareLabel($this->translateLabel($cell->getLabelText())));
+                $cellObject->getStyle()->getFont()->setBold(true);
+
+                $columnWidth = $cell->getOption('xlsx_column_width');
+                if ($columnWidth !== false) {
+                    if (is_numeric($columnWidth)) {
+                        $this->getWorksheet()->getColumnDimension($cellAddress->columnName())->setAutoSize(false)->setWidth($columnWidth);
+                    } else {
+                        $this->getWorksheet()->getColumnDimension($cellAddress->columnName())->setAutoSize(true);
+                    }
+                }
+
+                $cellCallable = $cell->getOption('xlsx_header_callback');
+                if (is_callable($cellCallable)) {
+                    $cellCallable($cellObject);
+                }
+
                 ++$column;
             }
         }
@@ -99,8 +113,7 @@ class ExportXLSX extends Export
      */
     public function addRow($obj): void
     {
-        $column      = 1;
-        $columnWidth = 0;
+        $column = 1;
 
         /** @var TableCell $cell */
         foreach ($this->getCells() as $cell) {
@@ -108,7 +121,7 @@ class ExportXLSX extends Export
                 $value = $cell->setFormatter($this)->getValue($obj, $column, $this->row - 2);
 
                 if ($value instanceof \SplFileInfo) {
-                    if (!$this->setCellImageByColumnAndRow($cell, $column, $this->row, $value, $columnWidth)) {
+                    if (!$this->setCellImageByColumnAndRow($cell, $column, $this->row, $value)) {
                         $value = $value->getBasename();
                     } else {
                         $value = null;
@@ -116,10 +129,21 @@ class ExportXLSX extends Export
                 }
 
                 $cellAddress = CellAddress::fromColumnAndRow($column, $this->row);
-                $this->getWorksheet()->setCellValue($cellAddress, $value);
+                $cellObject = $this->getWorksheet()->getCell($cellAddress);
+                $cellObject->setValue($value);
+
+                $cellCallable = $cell->getOption('xlsx_cell_callback');
+                if (is_callable($cellCallable)) {
+                    $cellCallable($cellObject, $obj, $value);
+                }
 
                 ++$column;
             }
+        }
+
+        $callableRow = $this->getCallbackRow();
+        if (is_callable($callableRow)) {
+            $callableRow($this->getWorksheet(), $obj, $this->row);
         }
 
         ++$this->row;
@@ -138,36 +162,33 @@ class ExportXLSX extends Export
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function setCellImageByColumnAndRow(TableCell $cell, $column, $row, \SplFileInfo $file, &$columnWidth): bool
+    private function setCellImageByColumnAndRow(TableCell $cell, $column, $row, \SplFileInfo $file): bool
     {
-        $imageInfo = getimagesize($file->getPathname());
-
-        if ($imageInfo === false) {
-            return false;
-        }
-
-        $width = $cell->getOption('img_max_width') ?? $imageInfo[0];
-        $height = $cell->getOption('img_max_height') ?? $imageInfo[1];
-
         $columnName   = Coordinate::stringFromColumnIndex($column);
-        $columnWidth  = max($columnWidth, $width);
         $columnOffset = 10;
 
-        $this->columnsWidths[$columnName] = ($columnWidth + 2 * $columnOffset) . 'px';
+        $width = $cell->getOption('img_max_width');
+        $height = $cell->getOption('img_max_height');
 
         $drawing = new Drawing();
         $drawing->setName($cell->getLabelText());
         $drawing->setDescription($file->getBasename());
         $drawing->setPath($file->getPathname());
         $drawing->setResizeProportional(true);
-        $drawing->setWidth($width);
-        $drawing->setHeight($height);
+        if ($width && $height) {
+            $drawing->setWidthAndHeight($width, $height);
+        } elseif ($width) {
+            $drawing->setWidth($width);
+        } elseif ($height) {
+            $drawing->setHeight($height);
+        }
         $drawing->setOffsetX($columnOffset);
         $drawing->setOffsetY($columnOffset);
         $drawing->setCoordinates($columnName . $row);
         $drawing->setWorksheet($this->getWorksheet());
 
         $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($height + 2 * $columnOffset));
+        $this->getWorksheet()->getColumnDimension($columnName)->setWidth(SharedDrawing::pixelsToPoints($width + 2 * $columnOffset));
 
         return true;
     }
