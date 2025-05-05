@@ -14,13 +14,13 @@ class DatagridRuntime implements RuntimeExtensionInterface
         $this->queryEncoder = $queryEncoder;
     }
 
-    public function hbmDatagridSearchEncode($var, string $mode = null)
+    public function hbmDatagridSearchEncode($var)
     {
-        return $this->queryEncoder->getQueryString($var, $mode);
+        return $this->queryEncoder->getQueryString($var);
     }
 
-    public function hbmDatagridSearchDecode($var, string $mode = null)
+    public function hbmDatagridSearchDecode($var)
     {
-        return $this->queryEncoder->getQueryParams($var, $mode);
+        return $this->queryEncoder->getQueryParams($var);
     }
 }

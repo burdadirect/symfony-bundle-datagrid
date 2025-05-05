@@ -64,6 +64,9 @@ class TableCell
       'trans_domain'      => 'bool|string',
       'img_max_width'     => 'int',
       'img_max_height'    => 'int',
+      'xlsx_column_width' => 'bool|int',
+      'xlsx_cell_callback' => 'callable',
+      'xlsx_header_callback' => 'callable',
     ];
 
     /**

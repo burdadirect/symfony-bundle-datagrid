@@ -333,6 +333,7 @@ class DatagridHelper
     public function handleColumnParams(Request $request, array $columns): array
     {
         $columnKeys = array_intersect(array_keys($columns), $request->request->all('columns'));
+        $columnKeys = array_values($columnKeys);
 
         return [
           $this->dg()->getParamNameMaxEntries()  => $this->dg()->getMaxEntriesPerPage(),
@@ -360,21 +361,32 @@ class DatagridHelper
     {
         $searchParams = [];
         foreach ($searchFields as $key => $value) {
-            $searchParams[$key] = $request->request->get($key, '');
+            $searchValue = $request->request->get($key, '');
+            if ($searchValue !== '') {
+                $searchParams[$key] = $searchValue;
+            }
 
             if (isset($value['options'])) {
-                $searchParams[$key . '-options'] = $request->request->all($key . '-options');
+                $searchOptions = $request->request->all($key . '-options');
+                if (count($searchOptions) > 0) {
+                    $searchParams[$key . '-options'] = $searchOptions;
+                }
             }
         }
 
-        return [
+        $params = [
           $this->dg()->getParamNameMaxEntries()  => $this->dg()->getMaxEntriesPerPage(),
           $this->dg()->getParamNameCurrentPage() => 1,
           $this->dg()->getParamNameSortation()   => $this->getQueryString($this->dg()->getSortations()),
           $this->dg()->getParamNameSearch()      => $this->getQueryString($searchParams),
           $this->dg()->getParamNameExtended()    => $this->dg()->getExtended() ? '1' : '0',
-          $this->dg()->getParamNameColumns()     => $this->getQueryString($this->dg()->getColumnsOverride()),
         ];
+
+        if (count($this->dg()->getColumnsOverride()) > 0) {
+            $params[$this->dg()->getParamNameColumns()] = $this->getQueryString($this->dg()->getColumnsOverride());
+        }
+
+        return $params;
     }
 
     public function handleExport(Request $request, string $name, FlashBagInterface $flashBag = null): ?Response
@@ -733,11 +745,11 @@ class DatagridHelper
 
     private function getQueryString(array $var)
     {
-        return $this->queryEncoder->getQueryString($var, $this->dg()->getQueryEncode());
+        return $this->queryEncoder->getQueryString($var);
     }
 
     private function getQueryParams(?string $var)
     {
-        return $this->queryEncoder->getQueryParams($var, $this->dg()->getQueryEncode());
+        return $this->queryEncoder->getQueryParams($var);
     }
 }
