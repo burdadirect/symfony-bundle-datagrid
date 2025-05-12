@@ -4,7 +4,6 @@ namespace HBM\DatagridBundle\Model;
 
 use PhpOffice\PhpSpreadsheet\Cell\CellAddress;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Shared\Drawing as SharedDrawing;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -187,8 +186,8 @@ class ExportXLSX extends Export
         $drawing->setCoordinates($columnName . $row);
         $drawing->setWorksheet($this->getWorksheet());
 
-        $this->getWorksheet()->getRowDimension($row)->setRowHeight(SharedDrawing::pixelsToPoints($height + 2 * $columnOffset));
-        $this->getWorksheet()->getColumnDimension($columnName)->setWidth(SharedDrawing::pixelsToPoints($width + 2 * $columnOffset));
+        $this->getWorksheet()->getRowDimension($row)->setRowHeight($drawing->getHeight() + 2 * $columnOffset, 'px');
+        $this->getWorksheet()->getColumnDimension($columnName)->setWidth($drawing->getWidth() + 2 * $columnOffset, 'px');
 
         return true;
     }
