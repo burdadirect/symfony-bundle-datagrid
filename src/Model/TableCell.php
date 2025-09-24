@@ -74,9 +74,9 @@ class TableCell
      *
      * @param array{
      *       value?:             string|callable,
-     *       th_attr?:           string|array|callable,
-     *       td_attr?:           string|array|callable,
-     *       a_attr?:            string|array|callable,
+     *       th_attr?:           string|string[]|array|callable,
+     *       td_attr?:           string|string[]|array|callable,
+     *       a_attr?:            string|string[]|array|callable,
      *       sort_key?:          string|array,
      *       sort_key_sep?:      string,
      *       label_pos?:         string|bool,
