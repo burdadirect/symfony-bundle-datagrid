@@ -61,6 +61,8 @@ class DatagridHelper
 
     private ?int $resultsNumber = null;
 
+    private ?\Closure $resultsCallback = null;
+
     private array $exports = [];
 
     /**
@@ -82,9 +84,10 @@ class DatagridHelper
     public function reset(): void
     {
         //    $this->session = NULL;
-        $this->datagrid      = null;
-        $this->results       = null;
-        $this->resultsNumber = null;
+        $this->datagrid        = null;
+        $this->results         = null;
+        $this->resultsNumber   = null;
+        $this->resultsCallback = null;
     }
 
     public function getConfigValue($scope, $key)
@@ -493,6 +496,16 @@ class DatagridHelper
         $this->resultsNumber = $resultsNumber;
     }
 
+    public function setResultsCallback(?\Closure $resultsCallback): void
+    {
+        $this->resultsCallback = $resultsCallback;
+    }
+
+    public function getResultsCallback(): ?\Closure
+    {
+        return $this->resultsCallback;
+    }
+
     public function setSession(SessionInterface $session, string $additionalPrefix = null): void
     {
         $this->session                 = $session;
@@ -673,6 +686,12 @@ class DatagridHelper
 
         // Query results
         $results = $this->getResults();
+        $resultsCallback = $this->getResultsCallback();
+        if (is_callable($resultsCallback)) {
+          foreach ($results as $resultIndex => $result) {
+            $results[$resultIndex] = call_user_func($resultsCallback, $result);
+          }
+        }
 
         $pagination->setNumber(count($results));
         $datagrid->setResults($results);
