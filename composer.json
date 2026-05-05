@@ -29,8 +29,8 @@
   "require": {
     "php": "^8.2.0",
     "ext-json": "*",
-    "burdadirect/symfony-bundle-twig-attributes": "dev-sf_7",
-    "burdadirect/symfony-bundle-twig-extensions": "dev-sf_7",
+    "burdadirect/symfony-bundle-twig-attributes": "dev-main",
+    "burdadirect/symfony-bundle-twig-extensions": "dev-main",
     "symfony/config": "^7.0",
     "symfony/form": "^7.0",
     "symfony/routing": "^7.0",
