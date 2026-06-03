@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class SearchMenuHelper
 {
-    public function flags(?string $minus = 'nein', ?string $plus = 'ja', string $zero = null): array
+    public function flags(?string $minus = 'nein', ?string $plus = 'ja', ?string $zero = null): array
     {
         $flags = [];
 
@@ -30,7 +30,7 @@ class SearchMenuHelper
         return $this->flags(null, 'ja', 'nein');
     }
 
-    public function tokens(array $searchValues, string $key, string $type = null, string $prefix = null): array
+    public function tokens(array $searchValues, string $key, ?string $type = null, ?string $prefix = null): array
     {
         $values = [];
 
@@ -43,7 +43,7 @@ class SearchMenuHelper
         return $values;
     }
 
-    public function value(array $searchValues, string $key, string $type = null, string $prefix = null, mixed $default = null): mixed
+    public function value(array $searchValues, string $key, ?string $type = null, ?string $prefix = null, mixed $default = null): mixed
     {
         if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
             return $this->handleValues([$searchValues[$key]], $type, $prefix)[0];
@@ -52,7 +52,7 @@ class SearchMenuHelper
         return $default;
     }
 
-    public function values(array $searchValues, string $key, string $type = null, string $prefix = null, mixed $default = null): mixed
+    public function values(array $searchValues, string $key, ?string $type = null, ?string $prefix = null, mixed $default = null): mixed
     {
         if (isset($searchValues[$key]) && ($searchValues[$key] !== '')) {
             return $this->handleValues($searchValues[$key], $type, $prefix);
@@ -61,7 +61,7 @@ class SearchMenuHelper
         return $default;
     }
 
-    private function handleValues(array $values, string $type = null, string $prefix = null): array
+    private function handleValues(array $values, ?string $type = null, ?string $prefix = null): array
     {
         if ($prefix) {
             $values = array_map(static function ($item) use ($prefix) {

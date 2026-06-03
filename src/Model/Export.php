@@ -126,5 +126,5 @@ abstract class Export extends Formatter
 
     abstract public function stream();
 
-    abstract public function dump(string $folder = null, string $name = null): string;
+    abstract public function dump(?string $folder = null, ?string $name = null): string;
 }

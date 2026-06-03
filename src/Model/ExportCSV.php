@@ -83,7 +83,7 @@ class ExportCSV extends Export
         return $resource ?: null;
     }
 
-    public function dump(string $folder = null, string $name = null): string
+    public function dump(?string $folder = null, ?string $name = null): string
     {
         $folder = rtrim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $path   = $folder . ($name ?: $this->getName() . '.csv');

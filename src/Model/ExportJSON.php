@@ -88,7 +88,7 @@ class ExportJSON extends Export
     /**
      * @throws \JsonException
      */
-    public function dump(string $folder = null, string $name = null): string
+    public function dump(?string $folder = null, ?string $name = null): string
     {
         $folder = rtrim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $path   = $folder . ($name ?: $this->getName() . '.json');

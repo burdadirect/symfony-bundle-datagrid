@@ -13,7 +13,7 @@ class Route implements \Stringable
     /**
      * Route constructor.
      */
-    public function __construct(string $name = null, array $defaults = [], string $hash = null)
+    public function __construct(?string $name = null, array $defaults = [], ?string $hash = null)
     {
         $this->name     = $name;
         $this->defaults = $defaults;
