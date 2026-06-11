@@ -124,7 +124,7 @@ class DatagridHelper
     /**
      * Inits a datagrid.
      */
-    public function initDatagrid(string $route, array $defaults = [], int $page = null, int $maxEntries = null, string $sortations = null, string $searchValues = null, bool|int|string $extended = null, string $columns = null): void
+    public function initDatagrid(string $route, array $defaults = [], ?int $page = null, ?int $maxEntries = null, ?string $sortations = null, ?string $searchValues = null, bool|int|string|null $extended = null, ?string $columns = null): void
     {
         $this->reset();
 
@@ -392,7 +392,7 @@ class DatagridHelper
         return $params;
     }
 
-    public function handleExport(Request $request, string $name, FlashBagInterface $flashBag = null): ?Response
+    public function handleExport(Request $request, string $name, ?FlashBagInterface $flashBag = null): ?Response
     {
         if ($request->isMethod(Request::METHOD_POST) && $request->request->has('export-type')) {
             // Not allowed.
@@ -425,7 +425,7 @@ class DatagridHelper
         return null;
     }
 
-    public function runExport(Export $export, string $name = null): Export
+    public function runExport(Export $export, ?string $name = null): Export
     {
         $export->init();
 
@@ -454,7 +454,7 @@ class DatagridHelper
         return $export;
     }
 
-    public function dumpExport(string $exportType, string $folder = null, string $name = null): ?string
+    public function dumpExport(string $exportType, ?string $folder = null, ?string $name = null): ?string
     {
         if ($export = $this->getExport($exportType)) {
             $export = $this->runExport($export, $name);
@@ -506,7 +506,7 @@ class DatagridHelper
         return $this->resultsCallback;
     }
 
-    public function setSession(SessionInterface $session, string $additionalPrefix = null): void
+    public function setSession(SessionInterface $session, ?string $additionalPrefix = null): void
     {
         $this->session                 = $session;
         $this->sessionPrefixAdditional = $additionalPrefix;

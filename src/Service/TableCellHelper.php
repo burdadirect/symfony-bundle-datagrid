@@ -13,7 +13,7 @@ class TableCellHelper
         ], $options));
     }
 
-    public function group(string $alias, callable $value = null, int $visibility = TableCell::VISIBLE_ALL, array $options = []): TableCell
+    public function group(string $alias, ?callable $value = null, int $visibility = TableCell::VISIBLE_ALL, array $options = []): TableCell
     {
         $defaultOptions = [
           'sort_key' => $alias . '.group',
@@ -26,7 +26,7 @@ class TableCellHelper
         return new TableCell('group', 'Gruppe', null, $visibility, array_merge($defaultOptions, $options));
     }
 
-    public function icon(?string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', string $field = null, ?string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH, array $options = []): TableCell
+    public function icon(?string $alias, string $template = 'partials/table-column-status.html.twig', string $headline = 'Status', ?string $field = null, ?string $thClass = 'fixed-10-center', int $visibility = TableCell::VISIBLE_BOTH, array $options = []): TableCell
     {
         $defaultOptions = [
           'th_attr'  => ['class' => $thClass],
@@ -98,7 +98,7 @@ class TableCellHelper
         ];
     }
 
-    public function list(string $key, string $label, array|callable $params = [], ?string $tdClass = 'list-group-cell-narrow', string $thClass = null, array $options = []): TableCell
+    public function list(string $key, string $label, array|callable $params = [], ?string $tdClass = 'list-group-cell-narrow', ?string $thClass = null, array $options = []): TableCell
     {
         return new TableCell($key, $label, null, TableCell::VISIBLE_BOTH, array_merge([
           'template'        => '@HBMDatagrid/partials/datagrid-cells/list.html.twig',

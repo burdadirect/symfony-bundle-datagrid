@@ -233,7 +233,7 @@ class ExportXLSX extends Export
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function dump(string $folder = null, string $name = null): string
+    public function dump(?string $folder = null, ?string $name = null): string
     {
         $folder = rtrim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $path   = $folder . ($name ?: $this->filename());
