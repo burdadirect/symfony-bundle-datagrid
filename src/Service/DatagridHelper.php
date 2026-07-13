@@ -762,12 +762,12 @@ class DatagridHelper
         }
     }
 
-    private function getQueryString(array $var)
+    public function getQueryString(array $var): false|string
     {
         return $this->queryEncoder->getQueryString($var);
     }
 
-    private function getQueryParams(?string $var)
+    public function getQueryParams(?string $var): mixed
     {
         return $this->queryEncoder->getQueryParams($var);
     }

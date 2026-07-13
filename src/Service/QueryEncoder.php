@@ -5,9 +5,6 @@ namespace HBM\DatagridBundle\Service;
 class QueryEncoder
 {
 
-    /**
-     * @return null|array|mixed
-     */
     public function getQueryParams(?string $var): mixed
     {
         // DECODE QUERY
@@ -25,11 +22,6 @@ class QueryEncoder
         return $queryParams;
     }
 
-    /**
-     * @param mixed $vars
-     *
-     * @return false|string
-     */
     public function getQueryString(mixed $vars): false|string
     {
         // ENCODE PARAMS
