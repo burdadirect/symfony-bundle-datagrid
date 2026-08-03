@@ -77,7 +77,7 @@ class TableCell
      *       th_attr?:              string|string[]|array|callable,
      *       td_attr?:              string|string[]|array|callable,
      *       a_attr?:               string|string[]|array|callable,
-     *       sort_key?:             string|string[]|array,
+     *       sort_key?:             string|string[]|array|array[],
      *       sort_key_sep?:         string,
      *       label_pos?:            string|bool,
      *       label_prefix?:         string,
