@@ -86,7 +86,7 @@ class TableCell
      *       label_postfix_raw?:    bool,
      *       params?:               string[]|array|callable,
      *       template?:             string|callable,
-     *       template_params?:      string[]|array|callable,
+     *       template_params?:      string[]|array|array[]|callable,
      *       strip_tags?:           bool,
      *       raw?:                  bool,
      *       format?:               string,
