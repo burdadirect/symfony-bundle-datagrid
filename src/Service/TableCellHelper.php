@@ -112,4 +112,24 @@ class TableCellHelper
     {
         return in_array($key, $columnsOverride, true) ? TableCell::VISIBLE_ALL : $defaultVisibility;
     }
+
+    public function unifyTableCellFlag(TableCell $tableCell, string $classesIcon = 'fa fa-th'): TableCell
+    {
+        $options = $tableCell->getOptions();
+        $options['th_attr'] = array_merge($options['th_attr'] ?? [], ['class' => 'fixed-10-center']);
+        $options['td_attr'] = array_merge($options['td_attr'] ?? [], ['class' => 'fixed-10-center']);
+        $tableCell->setOptions($options);
+        $tableCell->setLabel(sprintf('<span class="text-nowrap" title="%s"><i class="%s"></i></span>', $tableCell->getLabelText(), $classesIcon));
+        return $tableCell;
+    }
+
+    public function unifyTableCellNum(TableCell $tableCell, string $classesIcon = 'fa fa-th', string $classesHashtag = 'text-400'): TableCell
+    {
+        $options = $tableCell->getOptions();
+        $options['th_attr'] = array_merge($options['th_attr'] ?? [], ['class' => 'fixed-10-center']);
+        $options['td_attr'] = array_merge($options['td_attr'] ?? [], ['class' => 'fixed-10-center']);
+        $tableCell->setOptions($options);
+        $tableCell->setLabel(sprintf('<span class="text-nowrap" title="%s"><i class="fa fa-hashtag mr-2 %s"></i><i class="%s"></i></span>', $tableCell->getLabelText(), $classesHashtag, $classesIcon));
+        return $tableCell;
+    }
 }
