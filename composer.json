@@ -27,7 +27,7 @@
     }
   ],
   "require": {
-    "php": "^8.2.0",
+    "php": "^8.4.0",
     "ext-json": "*",
     "burdadirect/symfony-bundle-twig-attributes": "dev-main",
     "burdadirect/symfony-bundle-twig-extensions": "dev-main",
@@ -44,7 +44,7 @@
   "require-dev": {
     "burdadirect/codestyle": "dev-main",
     "roave/security-advisories": "dev-latest",
-    "doctrine/orm": "^2.12",
+    "doctrine/orm": "^3.5",
     "doctrine/mongodb-odm-bundle": "^5.0"
 
   },

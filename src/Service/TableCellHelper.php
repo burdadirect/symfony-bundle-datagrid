@@ -30,7 +30,7 @@ class TableCellHelper
     {
         $defaultOptions = [
           'th_attr'  => ['class' => $thClass],
-          'td_attr'  => ['class' => 'text-center'],
+          'td_attr'  => ['class' => $thClass],
           'template' => $template,
         ];
 
@@ -113,23 +113,20 @@ class TableCellHelper
         return in_array($key, $columnsOverride, true) ? TableCell::VISIBLE_ALL : $defaultVisibility;
     }
 
-    public function unifyTableCellFlag(TableCell $tableCell, string $classesIcon = 'fa fa-th'): TableCell
+    public function unifyTableCellNarrow(TableCell $tableCell, string $label, string $classesCells = 'fixed-10-center'): TableCell
     {
-        $options = $tableCell->getOptions();
-        $options['th_attr'] = array_merge($options['th_attr'] ?? [], ['class' => 'fixed-10-center']);
-        $options['td_attr'] = array_merge($options['td_attr'] ?? [], ['class' => 'fixed-10-center']);
-        $tableCell->setOptions($options);
-        $tableCell->setLabel(sprintf('<span class="text-nowrap" title="%s"><i class="%s"></i></span>', $tableCell->getLabelText(), $classesIcon));
-        return $tableCell;
+        return $tableCell->ui($label, $classesCells);
     }
 
-    public function unifyTableCellNum(TableCell $tableCell, string $classesIcon = 'fa fa-th', string $classesHashtag = 'text-400'): TableCell
+    public function unifyTableCellFlag(TableCell $tableCell, string $classesIcon = 'fa fa-th', string $classesCells = 'fixed-10-center'): TableCell
     {
-        $options = $tableCell->getOptions();
-        $options['th_attr'] = array_merge($options['th_attr'] ?? [], ['class' => 'fixed-10-center']);
-        $options['td_attr'] = array_merge($options['td_attr'] ?? [], ['class' => 'fixed-10-center']);
-        $tableCell->setOptions($options);
-        $tableCell->setLabel(sprintf('<span class="text-nowrap" title="%s"><i class="fa fa-hashtag mr-2 %s"></i><i class="%s"></i></span>', $tableCell->getLabelText(), $classesHashtag, $classesIcon));
-        return $tableCell;
+        $label = sprintf('<i class="%s"></i>', $classesIcon);
+        return $tableCell->ui($label, $classesCells);
+    }
+
+    public function unifyTableCellNum(TableCell $tableCell, string $classesIcon = 'fa fa-th', string $classesHashtag = 'text-400', string $classesCells = 'fixed-10-center'): TableCell
+    {
+        $label = sprintf('<i class="fa fa-hashtag mr-2 %s"></i><i class="%s"></i>', $classesHashtag, $classesIcon);
+        return $tableCell->ui($label, $classesCells);
     }
 }

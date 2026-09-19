@@ -11,19 +11,19 @@ class TableCell
     use ParseAttrTrait;
 
     // Visibility constants
-    public const VISIBLE_NONE        = 0b000000;
-    public const VISIBLE_NORMAL      = 0b000001;
-    public const VISIBLE_NORMAL_EX   = 0b000101;
-    public const VISIBLE_EXTENDED    = 0b000010;
-    public const VISIBLE_EXTENDED_EX = 0b000110;
-    public const VISIBLE_BOTH        = 0b000011;
-    public const VISIBLE_EXPORT      = 0b000100;
-    public const VISIBLE_ALL         = 0b000111;
+    public const int VISIBLE_NONE        = 0b000000;
+    public const int VISIBLE_NORMAL      = 0b000001;
+    public const int VISIBLE_NORMAL_EX   = 0b000101;
+    public const int VISIBLE_EXTENDED    = 0b000010;
+    public const int VISIBLE_EXTENDED_EX = 0b000110;
+    public const int VISIBLE_BOTH        = 0b000011;
+    public const int VISIBLE_EXPORT      = 0b000100;
+    public const int VISIBLE_ALL         = 0b000111;
 
     // Label constants
-    public const LABEL_POS_BEFORE = 'before';
-    public const LABEL_POS_AFTER  = 'after';
-    public const LABEL_POS_NONE   = false;
+    public const string LABEL_POS_BEFORE = 'before';
+    public const string LABEL_POS_AFTER  = 'after';
+    public const bool   LABEL_POS_NONE   = false;
 
     protected string|array|\Closure|null $key;
 
@@ -100,7 +100,7 @@ class TableCell
      *       xlsx_header_callback?: callable
      *   } $options
      */
-    public function __construct(string|callable|array|null $key, ?string $label, ?Route $route, int|bool $visibility, array $options = [])
+    public function __construct(string|callable|array|null $key, ?string $label, ?Route $route = null, int|bool $visibility = self::VISIBLE_NONE, array $options = [])
     {
         $this->key        = $key;
         $this->label      = $label;
@@ -120,9 +120,11 @@ class TableCell
     }
     /* GETTER/SETTER *********************************************************** */
 
-    public function setKey(string|array|callable|null $key): void
+    public function setKey(string|array|callable|null $key): self
     {
         $this->key = $key;
+
+        return $this;
     }
 
     public function getKey(): array|string|callable|null
@@ -130,9 +132,11 @@ class TableCell
         return $this->key;
     }
 
-    public function setLabel(?string $label): void
+    public function setLabel(?string $label): self
     {
         $this->label = $label;
+
+        return $this;
     }
 
     public function getLabel(): ?string
@@ -140,9 +144,11 @@ class TableCell
         return $this->label;
     }
 
-    public function setLabelText(?string $labelText): void
+    public function setLabelText(?string $labelText): self
     {
         $this->labelText = $labelText;
+
+        return $this;
     }
 
     public function getLabelText(): ?string
@@ -150,9 +156,11 @@ class TableCell
         return $this->labelText;
     }
 
-    public function setRoute(?Route $route): void
+    public function setRoute(?Route $route): self
     {
         $this->route = $route;
+
+        return $this;
     }
 
     public function getRoute(): ?Route
@@ -160,9 +168,11 @@ class TableCell
         return $this->route;
     }
 
-    public function setVisibility(?int $visibility): void
+    public function setVisibility(?int $visibility): self
     {
         $this->visibility = $visibility;
+
+        return $this;
     }
 
     public function getVisibility(): ?int
@@ -204,11 +214,13 @@ class TableCell
     /**
      * @throws \InvalidArgumentException
      */
-    public function setOptions(array $options): void
+    public function setOptions(array $options): self
     {
         $this->validateOptions($options);
 
         $this->options = $options;
+
+        return $this;
     }
 
     public function getOptions(): array
@@ -547,4 +559,57 @@ class TableCell
 
         return $fallback;
     }
+
+    /**************************************************************************/
+
+    public function optionSort(string|array $sort): self
+    {
+        $this->options['sort_key'] = $sort;
+
+        return $this;
+    }
+
+    public function optionTemplate(string|callable $template, array|callable $templateParams): self
+    {
+        $this->options['template'] = $template;
+        $this->options['template_params'] = $templateParams;
+
+        return $this;
+    }
+
+    /**************************************************************************/
+
+    public function uiCss(?string $cells = null, ?string $th = null, ?string $td = null): self
+    {
+        $this->options['th_attr'] = array_merge($this->options['th_attr'] ?? [], ['class' => $cells.' '.$th]);
+        $this->options['td_attr'] = array_merge($this->options['td_attr'] ?? [], ['class' => $cells.' '.$td]);
+
+        return $this;
+    }
+
+    public function uiLabel(?string $label = null, ?string $labelText = null, ?string $classesSpan = 'text-nowrap'): self
+    {
+        if ($labelText) {
+            $this->setLabelText($labelText);
+        }
+        if ($label) {
+            $this->setLabel(sprintf('<span class="%s" title="%s">%s</span>', $classesSpan, $this->getLabelText(), $label));
+        }
+
+        return $this;
+    }
+
+    public function ui(?string $label = null, ?string $cssCells = null, ?string $labelText = null, ?string $cssSpan = null, ?string $cssTh = null, ?string $cssTd = null): self
+    {
+        return $this->uiLabel($label, $labelText, $cssSpan)->uiCss($cssCells, $cssTh, $cssTd);
+    }
+
+    /**************************************************************************/
+
+    public function visibleNone(): self     { return $this->setVisibility(self::VISIBLE_NONE); }
+    public function visibleNormal(): self   { return $this->setVisibility($this->getVisibility() | self::VISIBLE_NORMAL); }
+    public function visibleExtended(): self { return $this->setVisibility($this->getVisibility() | self::VISIBLE_EXTENDED); }
+    public function visibleBoth(): self     { return $this->setVisibility($this->getVisibility() | self::VISIBLE_BOTH); }
+    public function visibleExport(): self   { return $this->setVisibility($this->getVisibility() | self::VISIBLE_EXPORT); }
+    public function visibleAll(): self      { return $this->setVisibility($this->getVisibility() | self::VISIBLE_ALL); }
 }
