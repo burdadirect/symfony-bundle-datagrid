@@ -2,7 +2,7 @@
 
 {% macro trans(text, transDomain, rawFlag = true, arguments = {}) %}{{ (transDomain is same as(false) ? text|hbmRaw(rawFlag) : text|trans(arguments, transDomain)|hbmRaw(rawFlag)) }}{% endmacro %}
 
-{%- macro size(dgo, component, prefix) -%}
+{%- macro size(dgo, component, prefix = null) -%}
   {%- set key = component|replace({'-': '_'}) -%}
   {%- if dgo.bootstrap['sizes'][key] is defined and dgo.bootstrap['sizes'][key]  -%}
     {{- ' ' ~ prefix|default(component) ~ '-' ~ dgo.bootstrap['sizes'][key] -}}
@@ -16,7 +16,7 @@
   {%- endif -%}
 {%- endmacro -%}
 
-{%- macro classesAndSize(dgo, component, prefix) -%}
+{%- macro classesAndSize(dgo, component, prefix = null) -%}
   {% import _self as self %}
   {{- self.classes(dgo, component) ~ self.size(dgo, component, prefix) -}}
 {%- endmacro -%}
